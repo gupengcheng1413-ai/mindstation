@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1640,initial-scale=1">
+<title>心灵驿站 · 每日星语</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="stage">
+<div class="device" id="device">
+
+  <!-- 全局氛围 canvas（仅 daily / overlay 等夜空场景显示） -->
+  <canvas class="starfield" id="starfield" width="1640" height="348" aria-hidden="true"></canvas>
+
+  <!-- ============== 1. 首页 home（整张 Figma 画布做背景，叠 4 个透明热区） ============== -->
+  <section class="scene scene-home" data-scene="home">
+    <img class="home-bg" src="assets/illustrations/home-bg.png" alt="" draggable="false">
+    <button type="button" class="hcard hcard-1" data-card="answer" aria-label="答案之书"></button>
+    <button type="button" class="hcard hcard-2" data-card="star" aria-label="每日星语"></button>
+    <span class="hcard hcard-3" aria-hidden="true"></span>
+    <span class="hcard hcard-4" aria-hidden="true"></span>
+  </section>
+
+  <!-- ============== 2. 未绑定 unbound（整张 Figma 画布做背景，叠 2 个透明热区） ============== -->
+  <section class="scene scene-unbound" data-scene="unbound" hidden>
+    <img class="unb-bg-img" src="assets/illustrations/unbound-bg.png" alt="" draggable="false">
+    <button type="button" class="hot hot-back" data-go="home" aria-label="返回"></button>
+    <button type="button" class="hot hot-cta" data-go="select" aria-label="去选择"></button>
+  </section>
+
+  <!-- ============== 2b. 已绑定提示 reminder（按 Figma 4092:70，整图 1:1，无动效） ============== -->
+  <section class="scene scene-reminder" data-scene="reminder" hidden>
+    <img class="rm-bg" src="assets/illustrations/reminder-bg.png" alt="" draggable="false">
+    <!-- 3 个透明热区：左上返回 / 右上"我的收藏"胶囊 (1404,15 218×60) / 中部"去查看" CTA (980,201 340×77) -->
+    <button type="button" class="hot hot-back" data-go="home" aria-label="返回"></button>
+    <button type="button" class="hot hot-fav" data-go="collect" aria-label="我的收藏"></button>
+    <button type="button" class="hot hot-cta" data-go="daily" aria-label="去查看"></button>
+  </section>
+
+  <!-- ============== 3. 星座选择 select（按 Figma 3912:495 + 4228:11；整张 PNG 1:1 还原） ============== -->
+  <section class="scene scene-select" data-scene="select" hidden>
+    <div class="sel-scroll" id="selectTrack">
+      <img class="sel-bg" src="assets/illustrations/select-bg.png" alt="" draggable="false">
+      <!-- 遮掉 Figma 整图里画死的右上对号（避免滚动时下方跟随出现一个对号） -->
+      <span class="sel-bg-mask" aria-hidden="true"></span>
+      <!-- 12 张选中态 chip：每个星座各自一张（从 Figma 3912:495 切出，含 #383b42 灰底覆盖默认图标） -->
+      <img class="zhot-on" data-for="aries"       src="assets/illustrations/chips/aries.png"       alt="" hidden style="left:131px;top:154px">
+      <img class="zhot-on" data-for="leo"         src="assets/illustrations/chips/leo.png"         alt="" hidden style="left:629px;top:154px">
+      <img class="zhot-on" data-for="sagittarius" src="assets/illustrations/chips/sagittarius.png" alt="" hidden style="left:1127px;top:154px">
+      <img class="zhot-on" data-for="taurus"      src="assets/illustrations/chips/taurus.png"      alt="" hidden style="left:131px;top:322px">
+      <img class="zhot-on" data-for="virgo"       src="assets/illustrations/chips/virgo.png"       alt="" hidden style="left:629px;top:322px">
+      <img class="zhot-on" data-for="capricorn"   src="assets/illustrations/chips/capricorn.png"   alt="" hidden style="left:1127px;top:322px">
+      <img class="zhot-on" data-for="gemini"      src="assets/illustrations/chips/gemini.png"      alt="" hidden style="left:131px;top:490px">
+      <img class="zhot-on" data-for="libra"       src="assets/illustrations/chips/libra.png"       alt="" hidden style="left:629px;top:490px">
+      <img class="zhot-on" data-for="aquarius"    src="assets/illustrations/chips/aquarius.png"    alt="" hidden style="left:1127px;top:490px">
+      <img class="zhot-on" data-for="cancer"      src="assets/illustrations/chips/cancer.png"      alt="" hidden style="left:131px;top:658px">
+      <img class="zhot-on" data-for="scorpio"     src="assets/illustrations/chips/scorpio.png"     alt="" hidden style="left:629px;top:658px">
+      <img class="zhot-on" data-for="pisces"      src="assets/illustrations/chips/pisces.png"      alt="" hidden style="left:1127px;top:658px">
+      <!-- 12 个透明热区（按卡片整体 482×90 给点击区） -->
+      <button type="button" class="zhot" style="left:80px;top:138px"   data-zo="aries"      aria-label="白羊座"></button>
+      <button type="button" class="zhot" style="left:578px;top:138px"  data-zo="leo"        aria-label="狮子座"></button>
+      <button type="button" class="zhot" style="left:1076px;top:138px" data-zo="sagittarius" aria-label="射手座"></button>
+      <button type="button" class="zhot" style="left:80px;top:306px"   data-zo="taurus"     aria-label="金牛座"></button>
+      <button type="button" class="zhot" style="left:578px;top:306px"  data-zo="virgo"      aria-label="处女座"></button>
+      <button type="button" class="zhot" style="left:1076px;top:306px" data-zo="capricorn"  aria-label="摩羯座"></button>
+      <button type="button" class="zhot" style="left:80px;top:474px"   data-zo="gemini"     aria-label="双子座"></button>
+      <button type="button" class="zhot" style="left:578px;top:474px"  data-zo="libra"      aria-label="天秤座"></button>
+      <button type="button" class="zhot" style="left:1076px;top:474px" data-zo="aquarius"   aria-label="水瓶座"></button>
+      <button type="button" class="zhot" style="left:80px;top:642px"   data-zo="cancer"     aria-label="巨蟹座"></button>
+      <button type="button" class="zhot" style="left:578px;top:642px"  data-zo="scorpio"    aria-label="天蝎座"></button>
+      <button type="button" class="zhot" style="left:1076px;top:642px" data-zo="pisces"     aria-label="双鱼座"></button>
+    </div>
+    <header class="sel-topbar">
+      <button type="button" class="sel-back" aria-label="返回" data-go="back">
+        <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="sel-confirm" id="selConfirm" aria-label="确定" disabled>
+        <img src="assets/illustrations/check.png" alt="" draggable="false">
+      </button>
+    </header>
+    <span class="sel-scroll-hint" aria-hidden="true">↓ 下滑查看更多</span>
+  </section>
+
+  <!-- ============== 4. loading ============== -->
+  <section class="scene scene-loading" data-scene="loading" hidden>
+    <header class="topbar topbar-dark">
+      <span class="back-btn back-btn-quiet" aria-hidden="true">
+        <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h1 class="topbar-title">每日星语</h1>
+    </header>
+
+    <div class="ld-illu" aria-hidden="true">
+      <img class="ld-egg" src="assets/illustrations/egg-loading.png" alt="">
+      <span class="ld-orbit ld-orbit-1"></span>
+      <span class="ld-orbit ld-orbit-2"></span>
+      <span class="ld-orbit ld-orbit-3"></span>
+      <span class="ld-twinkle ld-tw-1"></span>
+      <span class="ld-twinkle ld-tw-2"></span>
+      <span class="ld-twinkle ld-tw-3"></span>
+    </div>
+
+    <div class="ld-bar"><div class="ld-bar-fill" id="loadFill"></div></div>
+    <p class="ld-hint">正在加载中，请稍后...</p>
+  </section>
+
+  <!-- ============== 6. 每日星语主页 daily（按 Figma 4238:150 狮子 / 4238:410 金牛，整图 1:1，无动效） ============== -->
+  <section class="scene scene-daily" data-scene="daily" hidden>
+    <div class="daily-scroll" id="dailyScroll">
+      <img class="daily-bg" id="dailyBg" src="assets/illustrations/daily-leo-bg.png" alt="" draggable="false">
+
+      <!-- 顶部 2 个透明热区：左上返回 → reminder / 右上"星座名"胶囊 Group 156 → select -->
+      <button type="button" class="daily-hot daily-hot-back" data-go="reminder" aria-label="返回"></button>
+      <button type="button" class="daily-hot daily-hot-zo"   data-go="select" aria-label="切换星座"></button>
+
+      <!-- 底部一个收藏按钮（按 Figma Group 228 / Group 229 切换 src） -->
+      <button type="button" class="daily-fav" id="favBtn" aria-label="收藏" aria-pressed="false">
+        <img id="favBtnImg" src="assets/illustrations/fav-off.png" alt="" draggable="false">
+      </button>
+    </div>
+    <span class="scroll-hint" id="scrollHint">↓ 下滑查看星愿 Buff</span>
+  </section>
+
+  <!-- ============== 7. 我的收藏 collect（按 Figma 3944:479 整图 1:1，无序号） ============== -->
+  <section class="scene scene-collect" data-scene="collect" hidden>
+    <img class="cl-bg" src="assets/illustrations/collect-bg.png" alt="" draggable="false">
+    <!-- 左上返回热区 (0,1 80×68 → daily) -->
+    <button type="button" class="cl-hot cl-hot-back" data-go="daily" aria-label="返回"></button>
+    <!-- 右下垃圾桶热区 (1578,281 46×47 → 删除确认) -->
+    <button type="button" class="cl-hot cl-hot-trash" id="trashBtn" aria-label="批量删除"></button>
+    <!-- 三张收藏卡片热区 -->
+    <div class="cl-cards" id="colList"><!-- JS 渲染 --></div>
+    <!-- 空状态 -->
+    <div class="col-empty" id="colEmpty" hidden>
+      <img src="assets/illustrations/empty-egg.png" alt="" aria-hidden="true">
+      <p>还没有收藏的内容</p>
+    </div>
+  </section>
+
+  <!-- ============== 8. 删除确认 overlay ============== -->
+  <section class="scene scene-confirm" data-scene="confirm" hidden>
+    <div class="conf-mask"></div>
+    <h2 class="conf-text">确定要删除这<span id="confCount">三</span>条星语吗？</h2>
+    <div class="conf-btns">
+      <button type="button" class="cta-ghost" data-conf="cancel">取消</button>
+      <button type="button" class="cta-primary" data-conf="ok">确认</button>
+    </div>
+  </section>
+
+  <!-- ============== 9. 答案之书 answer（集成 v1/answer-book 子项目，1640×348 同尺寸 iframe） ============== -->
+  <section class="scene scene-answer" data-scene="answer" hidden>
+    <iframe class="ans-frame" id="ansFrame" title="答案之书" src="about:blank" frameborder="0"></iframe>
+    <button type="button" class="ans-back" data-go="home" aria-label="返回首页">
+      <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </section>
+
+  <!-- 顶部 toast -->
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+</div><!-- /device -->
+</div><!-- /stage -->
+
+<!-- inline svg sprite (12 zodiac) -->
+<svg width="0" height="0" style="position:absolute;visibility:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="sym-aries" viewBox="0 0 64 64"><path d="M16 18 Q22 8 32 16 Q42 8 48 18 M32 16 V52" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-taurus" viewBox="0 0 64 64"><circle cx="32" cy="40" r="11" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M14 22 Q22 14 32 22 Q42 14 50 22" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-gemini" viewBox="0 0 64 64"><path d="M18 12 V52 M46 12 V52 M14 16 H50 M14 48 H50" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-cancer" viewBox="0 0 64 64"><circle cx="20" cy="22" r="6" fill="currentColor"/><circle cx="44" cy="42" r="6" fill="currentColor"/><path d="M14 24 Q32 14 50 24 M14 40 Q32 50 50 40" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-leo" viewBox="0 0 64 64"><circle cx="26" cy="22" r="9" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M26 31 Q24 44 36 50 Q50 50 50 38" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-virgo" viewBox="0 0 64 64"><path d="M14 18 V46 M14 18 Q22 14 26 22 V46 M26 22 Q34 14 38 22 V46 Q38 54 48 50 Q44 42 38 46" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-libra" viewBox="0 0 64 64"><path d="M10 50 H54 M10 42 H54 M22 42 Q22 24 32 24 Q42 24 42 42" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-scorpio" viewBox="0 0 64 64"><path d="M10 22 V46 Q10 52 18 52 Q26 52 26 46 V22 Q26 16 32 16 Q38 16 38 22 V46 Q38 52 46 50 L52 56" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-sagittarius" viewBox="0 0 64 64"><path d="M14 50 L50 14 M40 14 H50 V24 M30 28 L36 34" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sym-capricorn" viewBox="0 0 64 64"><path d="M10 22 Q14 14 22 18 V46 Q22 52 30 50 Q38 46 38 36 Q38 26 46 26 Q56 26 50 38 Q44 50 38 44" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+    <symbol id="sym-aquarius" viewBox="0 0 64 64"><path d="M10 24 L18 18 L26 24 L34 18 L42 24 L50 18 L54 24 M10 40 L18 34 L26 40 L34 34 L42 40 L50 34 L54 40" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sym-pisces" viewBox="0 0 64 64"><path d="M14 14 Q22 32 14 50 M50 14 Q42 32 50 50 M14 32 H50" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<script src="app.js"></script>
+</body>
+</html>

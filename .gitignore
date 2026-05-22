@@ -1,0 +1,17 @@
+# 设计稿参考与调试截图（不入库）
+figma-refs/
+v1/_screens/
+
+# 备份图（按钮抠图前的原始 PNG）
+*.bak.png
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# 临时文件
+/tmp/
+*.log

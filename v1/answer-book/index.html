@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>答案之书 · 心灵驿站</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-state="menu">
+  <div class="fit">
+    <div class="stage">
+
+      <!-- ========== 共享环境层（S2 / S3 / S4 可见） ========== -->
+      <div class="env" aria-hidden="true">
+        <div class="env__gradient"></div>
+        <img class="env__stars env__stars--a" src="assets/bg-stars.png" alt="" />
+        <img class="env__stars env__stars--b" src="assets/bg-stars.png" alt="" />
+        <img class="env__glow env__glow--1" src="assets/ellipse-glow-1.svg" alt="" />
+        <img class="env__glow env__glow--2" src="assets/ellipse-glow-2.svg" alt="" />
+      </div>
+
+      <!-- ========== S1 入口菜单 ========== -->
+      <section id="screen-menu" class="screen screen--menu">
+        <button class="card card--primary" type="button" data-action="enter">
+          <img class="card__bg" src="assets/menu-card-primary.png" alt="答案之书" draggable="false" />
+        </button>
+        <div class="card card--ghost"></div>
+        <div class="card card--ghost"></div>
+        <div class="card card--ghost"></div>
+      </section>
+
+      <!-- ========== S2 提问页 ========== -->
+      <section id="screen-question" class="screen screen--question" aria-hidden="true">
+        <div class="books books--closed">
+          <!-- Figma 图层顺序（从底到顶，按 Rectangle ID）：
+               49 → 51 → 47 → 55(side-back) → 52(small-back) → 50(small-front)
+               → 56(small-back-overlay) → 54(border, 用户调到 57 下方)
+               → 57(small-front-overlay) → 48(side-front, 用户调到最前) -->
+          <img class="book book--stack-1"    src="assets/book-stack-1.svg" alt="" />
+          <img class="book book--stack-2"    src="assets/book-stack-2.svg" alt="" />
+          <img class="book book--cover"      src="assets/book-cover.svg" alt="" />
+          <img class="book book--side-back"  src="assets/book-side-back.svg" alt="" />
+          <img class="book book--small-back" src="assets/book-small-back.svg" alt="" />
+          <img class="book book--small-front" src="assets/book-small-front.svg" alt="" />
+          <img class="book book--small-back-overlay" src="assets/book-small-back-overlay.svg" alt="" />
+          <div class="book__border" aria-hidden="true"></div>
+          <img class="book book--small-front-overlay" src="assets/book-small-front.svg" alt="" />
+          <img class="book book--side-front"  src="assets/book-side-front.svg" alt="" />
+        </div>
+
+        <div class="title-glow" aria-hidden="true"></div>
+        <img class="title-img" src="assets/answer-book-title.svg" alt="答案之书" />
+        <span class="title-spark title-spark--1" aria-hidden="true"></span>
+        <span class="title-spark title-spark--2" aria-hidden="true"></span>
+        <span class="title-spark title-spark--3" aria-hidden="true"></span>
+        <img class="title-star" src="assets/star-tiny.svg" alt="" />
+        <img class="dot-glow dot-glow--q" src="assets/dot-glow.svg" alt="" />
+
+        <ul class="hints" aria-hidden="true">
+          <li class="hint hint--1">这一年的努力是否值得</li>
+          <li class="hint hint--2">这次能考好吗</li>
+          <li class="hint hint--3">会是一场美妙的旅行吗？</li>
+        </ul>
+
+        <img class="float-star float-star--lg" src="assets/star-large.svg" alt="" />
+        <img class="float-star float-star--md" src="assets/star-medium.svg" alt="" />
+
+        <div class="prompt">
+          <p class="prompt__text">心中默念你的问题</p>
+          <button class="cta" type="button" data-action="find-answer">
+            <span class="cta__halo" aria-hidden="true"></span>
+            <span class="cta__star cta__star--l" aria-hidden="true"></span>
+            <span class="cta__star cta__star--r" aria-hidden="true"></span>
+            <span class="cta__label">寻找答案</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ========== S3 答案 / S4 次数耗尽（共用） ========== -->
+      <section id="screen-answer" class="screen screen--answer" aria-hidden="true">
+        <div class="books books--open">
+          <!-- 图层（从底到顶）：stack-1 → stack-2 → robot(被 cover 盖底) → cover → content-frame
+               → side-back(55) → small-back → small-front → side-front(48 最前) -->
+          <img class="book book--stack-1"    src="assets/book-stack-1.svg" alt="" />
+          <img class="book book--stack-2"    src="assets/book-stack-2.svg" alt="" />
+          <img class="robot" src="assets/robot.png" alt="" />
+          <img class="book book--cover"      src="assets/book-cover.svg" alt="" />
+          <img class="book book--content-frame" src="assets/content-frame.svg" alt="" />
+          <img class="book book--side-back"  src="assets/book-side-back.svg" alt="" />
+          <img class="book book--small-back" src="assets/book-small-back.svg" alt="" />
+          <img class="book book--small-front" src="assets/book-small-front.svg" alt="" />
+          <img class="book book--side-front" src="assets/book-side-front.svg" alt="" />
+        </div>
+
+        <div class="answer">
+          <h2 class="answer__title" id="answerTitle">不要犹豫</h2>
+          <p class="answer__sub" id="answerSub">Do not worry</p>
+        </div>
+
+        <img class="float-star float-star--lg float-star--lg-a" src="assets/star-large.svg" alt="" />
+        <img class="float-star float-star--md float-star--md-a" src="assets/star-medium.svg" alt="" />
+        <img class="float-star float-star--m2" src="assets/star-medium-2.svg" alt="" />
+        <img class="dot-glow dot-glow--a" src="assets/dot-glow.svg" alt="" />
+
+        <div class="prompt prompt--answer">
+          <p class="prompt__text depleted-only">今天的魔法已经用完啦<br />明天再来和宇宙对话吧</p>
+          <button class="cta cta--again" type="button" data-action="ask-again">
+            <span class="cta__halo" aria-hidden="true"></span>
+            <span class="cta__star cta__star--l" aria-hidden="true"></span>
+            <span class="cta__star cta__star--r" aria-hidden="true"></span>
+            <span class="cta__label" id="ctaLabel">再问一次</span>
+          </button>
+        </div>
+
+        <button class="close" type="button" data-action="close" aria-label="关闭">
+          <img src="assets/close-x.png" alt="" />
+        </button>
+      </section>
+
+      <!-- ========== S2→S3 过场动画层（沙子被风吹走 + 答案浮现） ========== -->
+      <div class="fx" id="fx" aria-hidden="true">
+        <div class="fx__wind"></div>
+        <div class="fx__sand-layer"></div>
+      </div>
+
+      <!-- 调试提示 -->
+      <p class="debug-hint" aria-hidden="true">
+        <span>键盘 1/2/3/4 切换状态 · R 重置</span>
+      </p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
