@@ -150,10 +150,11 @@ function onSceneEnter(name){
   if(name === "daily")   runDailyEnter();
   if(name === "collect") renderCollect();
   if(name === "answer"){
-    // 进入时 lazy-load iframe，离开时清空 src 释放音频/timer
+    // 进入时 lazy-load iframe，?skip-menu=1 让答案之书启动直接进 question 状态
     const fr = $("#ansFrame");
-    if(fr && fr.getAttribute("src") !== "answer-book/index.html"){
-      fr.setAttribute("src","answer-book/index.html");
+    const target = "answer-book/index.html?skip-menu=1";
+    if(fr && fr.getAttribute("src") !== target){
+      fr.setAttribute("src", target);
     }
   }
 }

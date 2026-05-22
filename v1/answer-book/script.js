@@ -160,4 +160,9 @@
 
   // ---------- 初始：预填一个答案以便 #3 键直接看到 ----------
   writeAnswer(ANSWERS[0]);
+
+  // ---------- 启动参数：?skip-menu=1 跳过入口菜单，直接进 question ----------
+  if (new URLSearchParams(location.search).get('skip-menu') === '1') {
+    setState('question');
+  }
 })();
