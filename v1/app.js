@@ -263,23 +263,14 @@ function bindEvents(){
   document.body.addEventListener("click", (e) => {
     const t = e.target.closest("[data-conf]");
     if(!t) return;
+    const conf = $(`.scene[data-scene="confirm"]`);
     if(t.dataset.conf === "ok"){
-      $$(".col-card").forEach((c, i) => {
-        c.style.animation = "none";
-        setTimeout(() => {
-          c.classList.add("is-removing");
-        }, i * 60);
-      });
-      setTimeout(() => {
-        state.collect = [];
-        // 关闭 confirm，回到 collect 显示空态
-        const conf = $(`.scene[data-scene="confirm"]`);
-        conf.hidden = true;
-        state.scene = "collect";
-        renderCollect();
-      }, 700);
+      // 立刻清空 + 重渲染，避免老卡片残留在视觉上
+      state.collect = [];
+      conf.hidden = true;
+      state.scene = "collect";
+      renderCollect();
     }else{
-      const conf = $(`.scene[data-scene="confirm"]`);
       conf.hidden = true;
       state.scene = "collect";
     }
