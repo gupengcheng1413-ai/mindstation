@@ -88,12 +88,18 @@ const $$ = sel => Array.from(document.querySelectorAll(sel));
 function fitDevice(){
   const dev = $("#device");
   const stage = $(".stage");
-  const sx = stage.clientWidth / 1640;
-  const sy = stage.clientHeight / 348;
-  const s = Math.min(sx, sy, 1);
+  // 用 visualViewport（手机端键盘弹起/工具栏隐显时更准），否则回退 client*
+  const vw = (window.visualViewport?.width)  || stage.clientWidth  || window.innerWidth;
+  const vh = (window.visualViewport?.height) || stage.clientHeight || window.innerHeight;
+  const sx = vw / 1640;
+  const sy = vh / 348;
+  // contain 模式：取较小，确保整机完整可见；不再卡 1 上限——大屏（如 1920x1080 横屏）也能放大显示
+  const s = Math.min(sx, sy);
   dev.style.setProperty("--device-scale", s);
 }
 addEventListener("resize", fitDevice);
+addEventListener("orientationchange", fitDevice);
+window.visualViewport?.addEventListener("resize", fitDevice);
 fitDevice();
 
 // ---------- 场景切换 ----------

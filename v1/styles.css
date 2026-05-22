@@ -52,6 +52,8 @@ img{display:block;user-select:none;-webkit-user-drag:none}
 /* ===== 舞台容器：自适应缩放 ===== */
 .stage{
   width:100vw;height:100vh;
+  /* 安全区适配：刘海/底部 home indicator */
+  width:100dvw;height:100dvh;
   display:grid;place-items:center;
   background:#2a2e35;
   overflow:hidden;
@@ -69,6 +71,8 @@ img{display:block;user-select:none;-webkit-user-drag:none}
   transform-origin:center center;
   --device-scale:1;
   transform:scale(var(--device-scale));
+  /* 缩放后仍参与 grid 居中，但 grid 用的是 1640×348 原尺寸；
+     需要 flex 子元素居中：scale 后渲染居中由 transform-origin:center 决定，OK */
 }
 
 .starfield{
