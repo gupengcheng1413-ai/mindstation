@@ -52,9 +52,8 @@ img{display:block;user-select:none;-webkit-user-drag:none}
 /* ===== 舞台容器：自适应缩放 ===== */
 .stage{
   width:100vw;height:100vh;
-  /* 安全区适配：刘海/底部 home indicator */
   width:100dvw;height:100dvh;
-  display:grid;place-items:center;
+  display:flex;align-items:center;justify-content:center;
   background:#2a2e35;
   overflow:hidden;
 }
@@ -68,11 +67,13 @@ img{display:block;user-select:none;-webkit-user-drag:none}
     0 30px 90px rgba(0,0,0,.6),
     0 0 0 1px rgba(255,255,255,.04),
     inset 0 0 0 1px rgba(255,255,255,.02);
-  transform-origin:center center;
+  transform-origin:top left;
   --device-scale:1;
+  /* 缩放后真实占位 = 1640*scale × 348*scale，让 flex 居中能算对位置 */
   transform:scale(var(--device-scale));
-  /* 缩放后仍参与 grid 居中，但 grid 用的是 1640×348 原尺寸；
-     需要 flex 子元素居中：scale 后渲染居中由 transform-origin:center 决定，OK */
+  flex-shrink:0;
+  margin-right:calc(-1640px * (1 - var(--device-scale)));
+  margin-bottom:calc(-348px * (1 - var(--device-scale)));
 }
 
 .starfield{
