@@ -73,12 +73,8 @@ const state = {
   meteorTimer:null
 };
 
-const seed = [
-  { z:"taurus", text:"步履从容深耕自有收获", date:"5-20" },
-  { z:"leo",    text:"心怀热血，自赴前路荣光", date:"5-21" },
-  { z:"gemini", text:"双面光芒，皆是真实自我", date:"5-22" }
-];
-state.collect = seed.slice();
+// 启动初始为空收藏列表（之前用 seed 假数据，会让"清空后再次收藏"显示混乱）
+state.collect = [];
 
 // ---------- DOM 短手 ----------
 const $ = sel => document.querySelector(sel);
@@ -510,7 +506,7 @@ function spawnMeteor(){
 // ---------- 工具 ----------
 function fmtDate(){
   const d = new Date();
-  return `${d.getMonth()+1}.${d.getDate()}`;
+  return `${d.getMonth()+1}-${d.getDate()}`;
 }
 function numToZh(n){
   const map = ["零","一","二","三","四","五","六","七","八","九","十"];
