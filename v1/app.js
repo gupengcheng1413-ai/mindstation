@@ -376,17 +376,17 @@ function animateNum(el, from, to, dur){
 function renderCollect(){
   const list = $("#colList");
   const empty = $("#colEmpty");
-  const bg    = document.querySelector(".scene-collect .cl-bg");
   const trash = $("#trashBtn");
+  const scene = document.querySelector(".scene-collect");
   list.innerHTML = "";
   if(state.collect.length === 0){
-    // 空态：隐藏 Figma 整图底（底图里画着 3 张卡片）+ 垃圾桶热区，只露缺省图标
-    if(bg)    bg.hidden = true;
+    // 空态：用 .is-empty 让 CSS 盖住卡片区（保留顶栏的返回 + 标题）+ 隐藏垃圾桶 + 显示缺省图标
+    if(scene) scene.classList.add("is-empty");
     if(trash) trash.hidden = true;
     empty.hidden = false;
     return;
   }
-  if(bg)    bg.hidden = false;
+  if(scene) scene.classList.remove("is-empty");
   if(trash) trash.hidden = false;
   empty.hidden = true;
   // 按 Figma 3944:479 的 3 张卡片绝对坐标排版（第一行两张并排，第二行一张）
