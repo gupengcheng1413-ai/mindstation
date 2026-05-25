@@ -558,43 +558,74 @@ img{display:block;user-select:none;-webkit-user-drag:none}
 
 
 /* ============================================================
-   7. 收藏 collect —— 整张 Figma PNG 1:1 (3944:479) + 透明卡片热区 (无序号)
+   7. 收藏 collect —— 全 DOM 渲染（顶栏 + 卡片自适应数量）
    ============================================================ */
 .scene-collect{background:#000;overflow:hidden}
-.scene-collect .cl-bg{
-  position:absolute;left:0;top:0;
-  width:1640px;height:348px;
-  pointer-events:none;user-select:none;
-}
-.cl-hot{
-  position:absolute;background:transparent;border:0;padding:0;cursor:pointer;
-}
-.cl-hot-back {left:0;   top:1px;  width:80px; height:68px; border-radius:8px}
-.cl-hot-trash{left:1574px;top:277px;width:54px;height:54px;border-radius:8px}
 
-/* 三个卡片热区：第一行 (80,84) (828,84) 732×90，第二行 (80,190) 732×90 */
-.cl-cards{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none}
-
-/* 空态：用底色矩形盖住卡片区 (y:80+)，保留顶栏返回按钮+标题 */
-.scene-collect.is-empty::after{
-  content:"";
-  position:absolute;left:0;top:80px;right:0;bottom:0;
-  background:#000;
-  z-index:1;
-  pointer-events:none;
+/* 顶栏：返回 + "我的收藏"标题 + 垃圾桶 */
+.cl-topbar{
+  position:absolute;left:0;top:0;right:0;height:80px;
+  display:flex;align-items:center;
+  padding:0 30px;gap:20px;
+  z-index:5;
 }
-.cl-card{
-  position:absolute;width:732px;height:90px;
+.cl-back,.cl-trash{
+  width:50px;height:50px;
   background:transparent;border:0;padding:0;
-  cursor:pointer;border-radius:14px;
+  display:grid;place-items:center;
+  cursor:pointer;border-radius:10px;
+  transition:background var(--t-fast),transform var(--t-fast);
+}
+.cl-back:hover,.cl-trash:hover{background:rgba(255,255,255,.08)}
+.cl-back:active,.cl-trash:active{transform:scale(.92)}
+.cl-title{
+  flex:1;
+  font-size:32px;font-weight:500;letter-spacing:2px;
+  color:#fff;
+}
+
+/* 卡片网格：2 列自适应 */
+.cl-cards{
+  position:absolute;left:80px;top:84px;right:80px;bottom:30px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:18px 24px;
+  align-content:start;
   pointer-events:auto;
 }
-/* 空收藏：图比文字 */
+.cl-card{
+  height:90px;
+  background:#23272e;
+  border-radius:14px;
+  border:0;padding:0 28px;
+  display:flex;align-items:center;gap:16px;
+  cursor:pointer;
+  transition:background var(--t-fast),transform var(--t-fast);
+  text-align:left;
+}
+.cl-card:hover{background:#2c3138}
+.cl-card:active{transform:scale(.99)}
+.cl-zname{
+  font-size:24px;font-weight:500;color:#cfd6e2;
+  letter-spacing:1px;flex-shrink:0;
+}
+.cl-text{
+  flex:1;
+  font-size:22px;color:#cfd6e2;
+  letter-spacing:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.cl-date{
+  font-size:20px;color:#7b8396;
+  letter-spacing:1px;flex-shrink:0;
+}
+
+/* 空态 */
 .col-empty{
   position:absolute;inset:80px 0 0 0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;pointer-events:none;z-index:2;
-}.col-empty img{
+}
+.col-empty img{
   width:170px;height:auto;
   filter:drop-shadow(0 6px 12px rgba(0,0,0,.4));
   animation:figureBob 4s ease-in-out infinite alternate;
