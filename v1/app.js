@@ -205,11 +205,11 @@ function bindEvents(){
       setScene(back);
       return;
     }
-    if(go === "home")    return setScene("home");
+    if(go === "home")    { state.cameFrom = null; return setScene("home"); }
     if(go === "select")  return setScene("select");
     if(go === "daily")   return setScene("daily");
     if(go === "collect") return setScene("collect");
-    if(go === "reminder")return setScene("reminder");
+    if(go === "reminder"){ state.cameFrom = null; return setScene("reminder"); }
   });
 
   // select：点星座卡（仅选中，不跳转）
@@ -354,6 +354,11 @@ function runDailyEnter(){
   // 给 daily 场景打 data-z，CSS 据此切换收藏按钮位置（leo:1072 / 其他:1110）
   const scene = document.querySelector(".scene-daily");
   if(scene) scene.setAttribute("data-z", DAILY_TAURUS_BG.has(z) ? "taurus" : "leo");
+  // 返回按钮目标：从 collect 进来则回 collect，否则默认回 reminder
+  const back = $("#dailyBack");
+  if(back){
+    back.dataset.go = (state.cameFrom === "collect") ? "collect" : "reminder";
+  }
   // 重置滚动
   const sc = $("#dailyScroll");
   if(sc) sc.scrollTop = 0;
@@ -406,6 +411,7 @@ function renderCollect(){
     // 点卡片 → 切到对应星座的 daily 页
     card.addEventListener("click", () => {
       state.bound = it.z;
+      state.cameFrom = "collect";
       setScene("daily");
     });
     list.appendChild(card);
