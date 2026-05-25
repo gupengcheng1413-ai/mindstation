@@ -558,65 +558,87 @@ img{display:block;user-select:none;-webkit-user-drag:none}
 
 
 /* ============================================================
-   7. 收藏 collect —— 全 DOM 渲染（顶栏 + 卡片自适应数量）
+   7. 收藏 collect —— Figma 3944:479 1:1（DOM 渲染按实际 state.collect 长度）
    ============================================================ */
 .scene-collect{background:#000;overflow:hidden}
 
-/* 顶栏：返回 + "我的收藏"标题 + 垃圾桶 */
-.cl-topbar{
-  position:absolute;left:0;top:0;right:0;height:80px;
-  display:flex;align-items:center;
-  padding:0 30px;gap:20px;
+/* 返回按钮：Group 152 SVG，80×68 在 (0,1) */
+.cl-back{
+  position:absolute;left:0;top:1px;
+  width:80px;height:68px;
+  background:transparent;border:0;padding:0;
+  cursor:pointer;
   z-index:5;
 }
-.cl-back,.cl-trash{
-  width:50px;height:50px;
-  background:transparent;border:0;padding:0;
-  display:grid;place-items:center;
-  cursor:pointer;border-radius:10px;
-  transition:background var(--t-fast),transform var(--t-fast);
-}
-.cl-back:hover,.cl-trash:hover{background:rgba(255,255,255,.08)}
-.cl-back:active,.cl-trash:active{transform:scale(.92)}
+.cl-back img{display:block;width:80px;height:68px;pointer-events:none;user-select:none}
+
+/* "我的收藏"标题：Noto Sans SC Regular 34px #636973，位置 (80,12) */
 .cl-title{
-  flex:1;
-  font-size:32px;font-weight:500;letter-spacing:2px;
-  color:#fff;
+  position:absolute;left:80px;top:12px;
+  font-family:"Noto Sans SC",sans-serif;
+  font-weight:400;
+  font-size:34px;line-height:46px;
+  color:#636973;
+  letter-spacing:0;
+  white-space:nowrap;
+  z-index:5;
+  margin:0;
 }
 
-/* 卡片网格：2 列自适应 */
+/* 删除按钮：image 4 PNG 46×47 在 (1578, 281) */
+.cl-trash{
+  position:absolute;left:1578px;top:281px;
+  width:46px;height:47px;
+  background:transparent;border:0;padding:0;
+  cursor:pointer;
+  z-index:5;
+}
+.cl-trash img{display:block;width:46px;height:47px;object-fit:contain;pointer-events:none;user-select:none}
+.cl-trash:active{transform:scale(.92)}
+
+/* 卡片绝对定位：3 槽位 (80,84) (828,84) (80,190)，按数组顺序填入 */
 .cl-cards{
-  position:absolute;left:80px;top:84px;right:80px;bottom:30px;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:18px 24px;
-  align-content:start;
-  pointer-events:auto;
+  position:absolute;inset:0;
+  pointer-events:none;
 }
 .cl-card{
-  height:90px;
+  position:absolute;
+  width:732px;height:90px;
   background:#23272e;
   border-radius:14px;
-  border:0;padding:0 28px;
-  display:flex;align-items:center;gap:16px;
+  border:0;padding:0;
   cursor:pointer;
-  transition:background var(--t-fast),transform var(--t-fast);
+  pointer-events:auto;
   text-align:left;
+  transition:background var(--t-fast),transform var(--t-fast);
 }
 .cl-card:hover{background:#2c3138}
 .cl-card:active{transform:scale(.99)}
+
+/* 卡内文字：星座名 (左) + 星语 (中) + 日期 (右)
+   Figma: 星座名 36px #cfd6e2, 星语+日期 32px #7b8396 */
 .cl-zname{
-  font-size:24px;font-weight:500;color:#cfd6e2;
-  letter-spacing:1px;flex-shrink:0;
+  position:absolute;left:30px;top:22px;
+  font-family:"Noto Sans SC",sans-serif;
+  font-weight:400;
+  font-size:36px;line-height:46px;
+  color:#cfd6e2;
 }
 .cl-text{
-  flex:1;
-  font-size:22px;color:#cfd6e2;
-  letter-spacing:1px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  position:absolute;left:178px;top:26px;
+  font-family:"Noto Sans SC",sans-serif;
+  font-weight:500;
+  font-size:32px;line-height:46px;
+  color:#7b8396;
+  letter-spacing:0;
+  white-space:nowrap;
 }
 .cl-date{
-  font-size:20px;color:#7b8396;
-  letter-spacing:1px;flex-shrink:0;
+  position:absolute;right:30px;top:26px;
+  font-family:"Noto Sans SC",sans-serif;
+  font-weight:500;
+  font-size:32px;line-height:46px;
+  color:#7b8396;
 }
 
 /* 空态 */

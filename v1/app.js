@@ -386,12 +386,20 @@ function renderCollect(){
   }
   if(trash) trash.hidden = false;
   empty.hidden = true;
-  // 完全 DOM 渲染：每张卡内嵌 星座名 + 星语文字 + 系统日期
-  state.collect.forEach((it) => {
+  // Figma 3 槽位绝对定位：(80,84) (828,84) (80,190)，按 state.collect 顺序填入
+  const SLOTS = [
+    { left:  80, top:  84 },
+    { left: 828, top:  84 },
+    { left:  80, top: 190 },
+  ];
+  state.collect.slice(0, 3).forEach((it, i) => {
+    const slot = SLOTS[i];
     const z = ZODIACS[it.z];
     const card = document.createElement("button");
     card.type = "button";
     card.className = "cl-card";
+    card.style.left = slot.left + "px";
+    card.style.top  = slot.top  + "px";
     card.innerHTML = `
       <span class="cl-zname">${z?.name || ""}</span>
       <span class="cl-text">${it.text}</span>
