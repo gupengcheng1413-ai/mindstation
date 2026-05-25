@@ -9,12 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-state="menu">
+<body data-state="question">
 <script>
-// 在样式应用前根据 URL 参数预切 data-state，避免 menu 闪现
+// 默认 data-state="question" 避免 menu 闪现；如果没有 skip-menu 参数，IIFE 启动时会切回 menu
 (function(){
-  if (new URLSearchParams(location.search).get('skip-menu') === '1') {
-    document.body.dataset.state = 'question';
+  if (new URLSearchParams(location.search).get('skip-menu') !== '1') {
+    document.body.dataset.state = 'menu';
   }
 })();
 </script>
