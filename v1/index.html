@@ -128,15 +128,22 @@
     <span class="scroll-hint" id="scrollHint">↓ 下滑查看星愿 Buff</span>
   </section>
 
-  <!-- ============== 7. 我的收藏 collect（按 Figma 3944:479 整图 1:1，无序号） ============== -->
+  <!-- ============== 7. 我的收藏 collect（DOM 渲染，按实际 state.collect 长度展示） ============== -->
   <section class="scene scene-collect" data-scene="collect" hidden>
-    <img class="cl-bg" src="assets/illustrations/collect-bg.png" alt="" draggable="false">
-    <!-- 左上返回热区 (0,1 80×68 → daily) -->
-    <button type="button" class="cl-hot cl-hot-back" data-go="reminder" aria-label="返回"></button>
-    <!-- 右下垃圾桶热区 (1578,281 46×47 → 删除确认) -->
-    <button type="button" class="cl-hot cl-hot-trash" id="trashBtn" aria-label="批量删除"></button>
-    <!-- 三张收藏卡片热区 -->
+    <!-- 顶栏 -->
+    <header class="cl-topbar">
+      <button type="button" class="cl-back" data-go="reminder" aria-label="返回">
+        <svg viewBox="0 0 12 22" width="12" height="22" aria-hidden="true"><path d="M11 1 L1 11 L11 21" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 class="cl-title">我的收藏</h1>
+      <button type="button" class="cl-trash" id="trashBtn" aria-label="批量删除">
+        <svg viewBox="0 0 24 26" width="22" height="24" aria-hidden="true"><path d="M3 6 H21 M9 6 V4 H15 V6 M5 6 L6.5 23 H17.5 L19 6 M10 10 V19 M14 10 V19" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <!-- 卡片：完全 DOM 渲染 -->
     <div class="cl-cards" id="colList"><!-- JS 渲染 --></div>
+
     <!-- 空状态 -->
     <div class="col-empty" id="colEmpty" hidden>
       <img src="assets/illustrations/empty-egg.png" alt="" aria-hidden="true">

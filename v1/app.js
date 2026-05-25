@@ -378,33 +378,25 @@ function renderCollect(){
   const list = $("#colList");
   const empty = $("#colEmpty");
   const trash = $("#trashBtn");
-  const scene = document.querySelector(".scene-collect");
   list.innerHTML = "";
   if(state.collect.length === 0){
-    // 空态：用 .is-empty 让 CSS 盖住卡片区（保留顶栏的返回 + 标题）+ 隐藏垃圾桶 + 显示缺省图标
-    if(scene) scene.classList.add("is-empty");
     if(trash) trash.hidden = true;
     empty.hidden = false;
     return;
   }
-  if(scene) scene.classList.remove("is-empty");
   if(trash) trash.hidden = false;
   empty.hidden = true;
-  // 按 Figma 3944:479 的 3 张卡片绝对坐标排版（第一行两张并排，第二行一张）
-  const SLOTS = [
-    { left: 80,  top: 84  },
-    { left: 828, top: 84  },
-    { left: 80,  top: 190 },
-  ];
-  state.collect.slice(0, 3).forEach((it, i) => {
-    const slot = SLOTS[i];
+  // 完全 DOM 渲染：每张卡内嵌 星座名 + 星语文字 + 系统日期
+  state.collect.forEach((it) => {
+    const z = ZODIACS[it.z];
     const card = document.createElement("button");
     card.type = "button";
     card.className = "cl-card";
-    card.style.left = slot.left + "px";
-    card.style.top  = slot.top  + "px";
-    card.setAttribute("aria-label", `${(ZODIACS[it.z]?.name)||""} ${it.text}`);
-    // 点卡片 → 切到对应星座的 daily 页
+    card.innerHTML = `
+      <span class="cl-zname">${z?.name || ""}</span>
+      <span class="cl-text">${it.text}</span>
+      <span class="cl-date">${it.date}</span>
+    `;
     card.addEventListener("click", () => {
       state.bound = it.z;
       state.cameFrom = "collect";
