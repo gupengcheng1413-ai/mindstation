@@ -25,7 +25,7 @@ const DAILY_DATA = {
     quote:"心怀热血自赴前路荣光",
     prose:"习惯事事要强、不愿示弱，很容易因一次考试失利、刷题瓶颈陷入 emo，还习惯独自硬撑。不必时刻逼自己耀眼夺目，允许偶尔放慢节奏、接纳短暂低落；把骨子里的倔强化作学习的底气，沉下心稳步积累、踏实深耕，你的天赋与热血，终会在坚持中绽放专属高光。",
     title:"倔强<br>逐梦人",
-    img:"assets/illustrations/lion-egg.png",
+    img:"daily-words/assets/illustrations/lion-egg.png",
     score:82,
     dims:{focus:89,effi:79,motiv:87,harv:77,mind:98},
     lucky:{ color:"绿松石蓝", item:"玛瑙", food:"蜂蜜", num:"7 / 9", dir:"正东", time:"11 点" }
@@ -34,7 +34,7 @@ const DAILY_DATA = {
     quote:"步履从容深耕自有收获",
     prose:"天生稳重自律，做事认真有韧劲对待学习愿意脚踏实地的你，一点点积累，却也容易被难题卡点、枯燥备考消磨耐心。不必焦虑前路快慢，不用强迫自己跟风追赶。守住骨子里的踏实与专注，一步一个脚印攻克学习难关。慢慢来、稳下来，所有默默付出的努力，都会在合适的时刻如期开花。",
     title:"安稳<br>守心者",
-    img:"assets/illustrations/taurus-egg.png",
+    img:"daily-words/assets/illustrations/taurus-egg.png",
     score:78,
     dims:{focus:50,effi:70,motiv:69,harv:77,mind:98},
     lucky:{ color:"克莱因蓝", item:"黑曜石", food:"冰美式", num:"8 / 3", dir:"西北", time:"12 点" }
@@ -44,7 +44,7 @@ const DAILY_DATA = {
     quote:"今日宜静心深耕慢慢生光",
     prose:"学习路上有起有伏是常态。今天试着把目光放在眼前能做好的小事上：一道题、一段笔记、一次专注。不必和谁比快慢，专属于你的节奏正在悄悄积攒力量，所有踏实付出的时间，终会汇成你独一无二的星光。",
     title:"温柔<br>追光人",
-    img:"assets/illustrations/taurus-egg.png",
+    img:"daily-words/assets/illustrations/taurus-egg.png",
     score:64,
     dims:{focus:62,effi:70,motiv:58,harv:65,mind:72},
     lucky:{ color:"晨曦粉", item:"月光石", food:"蜂蜜柠檬", num:"3 / 6", dir:"东南", time:"10 点" }
@@ -185,6 +185,10 @@ function bindEvents(){
         }else{
           setScene("unbound");
         }
+      }else if(card === "personality"){
+        toast("性格认知 · 即将上线");
+      }else if(card === "naming"){
+        toast("姓名寓意 · 即将上线");
       }
     });
   });
@@ -237,12 +241,12 @@ function bindEvents(){
     const img = $("#favBtnImg");
     if(!exists){
       state.collect.unshift({ z, text:data.quote, date:fmtDate() });
-      if(img) img.src = "assets/illustrations/fav-on.png";
+      if(img) img.src = "daily-words/assets/illustrations/fav-on.png";
       btn?.setAttribute("aria-pressed","true");
       toast("已收藏到我的收藏 ✨");
     }else{
       state.collect = state.collect.filter(x => !(x.z === z && x.text === data.quote));
-      if(img) img.src = "assets/illustrations/fav-off.png";
+      if(img) img.src = "daily-words/assets/illustrations/fav-off.png";
       btn?.setAttribute("aria-pressed","false");
       toast("已取消收藏");
     }
@@ -344,8 +348,8 @@ function runDailyEnter(){
   const bg = $("#dailyBg");
   if(bg){
     bg.src = (DAILY_TAURUS_BG.has(z)
-      ? "assets/illustrations/daily-taurus-bg.png"
-      : "assets/illustrations/daily-leo-bg.png") + "?v=6";
+      ? "daily-words/assets/illustrations/daily-taurus-bg.png"
+      : "daily-words/assets/illustrations/daily-leo-bg.png") + "?v=6";
   }
   // 给 daily 场景打 data-z，CSS 据此切换收藏按钮位置（leo:1072 / 其他:1110）
   const scene = document.querySelector(".scene-daily");

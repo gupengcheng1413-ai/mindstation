@@ -21,23 +21,23 @@
 
   <!-- ============== 1. 首页 home（整张 Figma 画布做背景，叠 4 个透明热区） ============== -->
   <section class="scene scene-home" data-scene="home">
-    <img class="home-bg" src="assets/illustrations/home-bg.png" alt="" draggable="false">
+    <img class="home-bg" src="daily-words/assets/illustrations/home-bg.png" alt="" draggable="false">
     <button type="button" class="hcard hcard-1" data-card="answer" aria-label="答案之书"></button>
     <button type="button" class="hcard hcard-2" data-card="star" aria-label="每日星语"></button>
-    <span class="hcard hcard-3" aria-hidden="true"></span>
-    <span class="hcard hcard-4" aria-hidden="true"></span>
+    <button type="button" class="hcard hcard-3" data-card="personality" aria-label="性格认知"></button>
+    <button type="button" class="hcard hcard-4" data-card="naming" aria-label="姓名寓意"></button>
   </section>
 
   <!-- ============== 2. 未绑定 unbound（整张 Figma 画布做背景，叠 2 个透明热区） ============== -->
   <section class="scene scene-unbound" data-scene="unbound" hidden>
-    <img class="unb-bg-img" src="assets/illustrations/unbound-bg.png" alt="" draggable="false">
+    <img class="unb-bg-img" src="daily-words/assets/illustrations/unbound-bg.png" alt="" draggable="false">
     <button type="button" class="hot hot-back" data-go="home" aria-label="返回"></button>
     <button type="button" class="hot hot-cta" data-go="select" aria-label="去选择"></button>
   </section>
 
   <!-- ============== 2b. 已绑定提示 reminder（按 Figma 4092:70，整图 1:1，无动效） ============== -->
   <section class="scene scene-reminder" data-scene="reminder" hidden>
-    <img class="rm-bg" src="assets/illustrations/reminder-bg.png" alt="" draggable="false">
+    <img class="rm-bg" src="daily-words/assets/illustrations/reminder-bg.png" alt="" draggable="false">
     <!-- 3 个透明热区：左上返回 / 右上"我的收藏"胶囊 (1404,15 218×60) / 中部"去查看" CTA (980,201 340×77) -->
     <button type="button" class="hot hot-back" data-go="home" aria-label="返回"></button>
     <button type="button" class="hot hot-fav" data-go="collect" aria-label="我的收藏"></button>
@@ -47,22 +47,22 @@
   <!-- ============== 3. 星座选择 select（按 Figma 3912:495 + 4228:11；整张 PNG 1:1 还原） ============== -->
   <section class="scene scene-select" data-scene="select" hidden>
     <div class="sel-scroll" id="selectTrack">
-      <img class="sel-bg" src="assets/illustrations/select-bg.png" alt="" draggable="false">
+      <img class="sel-bg" src="daily-words/assets/illustrations/select-bg.png" alt="" draggable="false">
       <!-- 遮掉 Figma 整图里画死的右上对号（避免滚动时下方跟随出现一个对号） -->
       <span class="sel-bg-mask" aria-hidden="true"></span>
       <!-- 12 张选中态 chip：每个星座各自一张（从 Figma 3912:495 切出，含 #383b42 灰底覆盖默认图标） -->
-      <img class="zhot-on" data-for="aries"       src="assets/illustrations/chips/aries.png"       alt="" hidden style="left:131px;top:154px">
-      <img class="zhot-on" data-for="leo"         src="assets/illustrations/chips/leo.png"         alt="" hidden style="left:629px;top:154px">
-      <img class="zhot-on" data-for="sagittarius" src="assets/illustrations/chips/sagittarius.png" alt="" hidden style="left:1127px;top:154px">
-      <img class="zhot-on" data-for="taurus"      src="assets/illustrations/chips/taurus.png"      alt="" hidden style="left:131px;top:322px">
-      <img class="zhot-on" data-for="virgo"       src="assets/illustrations/chips/virgo.png"       alt="" hidden style="left:629px;top:322px">
-      <img class="zhot-on" data-for="capricorn"   src="assets/illustrations/chips/capricorn.png"   alt="" hidden style="left:1127px;top:322px">
-      <img class="zhot-on" data-for="gemini"      src="assets/illustrations/chips/gemini.png"      alt="" hidden style="left:131px;top:490px">
-      <img class="zhot-on" data-for="libra"       src="assets/illustrations/chips/libra.png"       alt="" hidden style="left:629px;top:490px">
-      <img class="zhot-on" data-for="aquarius"    src="assets/illustrations/chips/aquarius.png"    alt="" hidden style="left:1127px;top:490px">
-      <img class="zhot-on" data-for="cancer"      src="assets/illustrations/chips/cancer.png"      alt="" hidden style="left:131px;top:658px">
-      <img class="zhot-on" data-for="scorpio"     src="assets/illustrations/chips/scorpio.png"     alt="" hidden style="left:629px;top:658px">
-      <img class="zhot-on" data-for="pisces"      src="assets/illustrations/chips/pisces.png"      alt="" hidden style="left:1127px;top:658px">
+      <img class="zhot-on" data-for="aries"       src="daily-words/assets/illustrations/chips/aries.png"       alt="" hidden style="left:131px;top:154px">
+      <img class="zhot-on" data-for="leo"         src="daily-words/assets/illustrations/chips/leo.png"         alt="" hidden style="left:629px;top:154px">
+      <img class="zhot-on" data-for="sagittarius" src="daily-words/assets/illustrations/chips/sagittarius.png" alt="" hidden style="left:1127px;top:154px">
+      <img class="zhot-on" data-for="taurus"      src="daily-words/assets/illustrations/chips/taurus.png"      alt="" hidden style="left:131px;top:322px">
+      <img class="zhot-on" data-for="virgo"       src="daily-words/assets/illustrations/chips/virgo.png"       alt="" hidden style="left:629px;top:322px">
+      <img class="zhot-on" data-for="capricorn"   src="daily-words/assets/illustrations/chips/capricorn.png"   alt="" hidden style="left:1127px;top:322px">
+      <img class="zhot-on" data-for="gemini"      src="daily-words/assets/illustrations/chips/gemini.png"      alt="" hidden style="left:131px;top:490px">
+      <img class="zhot-on" data-for="libra"       src="daily-words/assets/illustrations/chips/libra.png"       alt="" hidden style="left:629px;top:490px">
+      <img class="zhot-on" data-for="aquarius"    src="daily-words/assets/illustrations/chips/aquarius.png"    alt="" hidden style="left:1127px;top:490px">
+      <img class="zhot-on" data-for="cancer"      src="daily-words/assets/illustrations/chips/cancer.png"      alt="" hidden style="left:131px;top:658px">
+      <img class="zhot-on" data-for="scorpio"     src="daily-words/assets/illustrations/chips/scorpio.png"     alt="" hidden style="left:629px;top:658px">
+      <img class="zhot-on" data-for="pisces"      src="daily-words/assets/illustrations/chips/pisces.png"      alt="" hidden style="left:1127px;top:658px">
       <!-- 12 个透明热区（按卡片整体 482×90 给点击区） -->
       <button type="button" class="zhot" style="left:80px;top:138px"   data-zo="aries"      aria-label="白羊座"></button>
       <button type="button" class="zhot" style="left:578px;top:138px"  data-zo="leo"        aria-label="狮子座"></button>
@@ -82,7 +82,7 @@
         <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button type="button" class="sel-confirm" id="selConfirm" aria-label="确定" disabled>
-        <img src="assets/illustrations/check.png" alt="" draggable="false">
+        <img src="daily-words/assets/illustrations/check.png" alt="" draggable="false">
       </button>
     </header>
     <span class="sel-scroll-hint" aria-hidden="true">↓ 下滑查看更多</span>
@@ -98,7 +98,7 @@
     </header>
 
     <div class="ld-illu" aria-hidden="true">
-      <img class="ld-egg" src="assets/illustrations/egg-loading.png" alt="">
+      <img class="ld-egg" src="daily-words/assets/illustrations/egg-loading.png" alt="">
       <span class="ld-orbit ld-orbit-1"></span>
       <span class="ld-orbit ld-orbit-2"></span>
       <span class="ld-orbit ld-orbit-3"></span>
@@ -114,7 +114,7 @@
   <!-- ============== 6. 每日星语主页 daily（按 Figma 4238:150 狮子 / 4238:410 金牛，整图 1:1，无动效） ============== -->
   <section class="scene scene-daily" data-scene="daily" hidden>
     <div class="daily-scroll" id="dailyScroll">
-      <img class="daily-bg" id="dailyBg" src="assets/illustrations/daily-leo-bg.png" alt="" draggable="false">
+      <img class="daily-bg" id="dailyBg" src="daily-words/assets/illustrations/daily-leo-bg.png" alt="" draggable="false">
 
       <!-- 顶部 2 个透明热区：左上返回 → reminder / 右上"星座名"胶囊 Group 156 → select -->
       <button type="button" class="daily-hot daily-hot-back" id="dailyBack" data-go="reminder" aria-label="返回"></button>
@@ -122,7 +122,7 @@
 
       <!-- 底部一个收藏按钮（按 Figma Group 228 / Group 229 切换 src） -->
       <button type="button" class="daily-fav" id="favBtn" aria-label="收藏" aria-pressed="false">
-        <img id="favBtnImg" src="assets/illustrations/fav-off.png" alt="" draggable="false">
+        <img id="favBtnImg" src="daily-words/assets/illustrations/fav-off.png" alt="" draggable="false">
       </button>
     </div>
     <span class="scroll-hint" id="scrollHint">↓ 下滑查看星愿 Buff</span>
@@ -132,12 +132,12 @@
   <section class="scene scene-collect" data-scene="collect" hidden>
     <!-- 顶栏：Group 152 返回 (0,1 80×68) + "我的收藏"标题 (80,12) -->
     <button type="button" class="cl-back" data-go="reminder" aria-label="返回">
-      <img src="assets/illustrations/cl-back.svg" alt="" draggable="false">
+      <img src="daily-words/assets/illustrations/cl-back.svg" alt="" draggable="false">
     </button>
     <h1 class="cl-title">我的收藏</h1>
     <!-- 删除按钮：image 4 (1578,281 46×47) -->
     <button type="button" class="cl-trash" id="trashBtn" aria-label="批量删除">
-      <img src="assets/illustrations/cl-trash.png" alt="" draggable="false">
+      <img src="daily-words/assets/illustrations/cl-trash.png" alt="" draggable="false">
     </button>
 
     <!-- 卡片容器：DOM 渲染按实际 state.collect 长度展示 -->
@@ -145,7 +145,7 @@
 
     <!-- 空状态 -->
     <div class="col-empty" id="colEmpty" hidden>
-      <img src="assets/illustrations/empty-egg.png" alt="" aria-hidden="true">
+      <img src="daily-words/assets/illustrations/empty-egg.png" alt="" aria-hidden="true">
       <p>还没有收藏的内容</p>
     </div>
   </section>

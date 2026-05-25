@@ -102,7 +102,7 @@ v1/
 ├── index.html          # 单页：9 个场景共存一棵 DOM，hidden 控制显隐
 ├── styles.css          # token + 9 场景 + keyframes + reduced-motion
 ├── app.js              # 状态机 + 数字滚动 + 星空 canvas + 流星调度 + loading 假进度
-├── assets/illustrations/   # Figma 整张切出来的 PNG
+├── daily-words/assets/illustrations/   # Figma 整张切出来的 PNG
 │   ├── card-answer.png     # 首页答案之书卡
 │   ├── card-star.png       # 首页每日星语卡
 │   ├── lion-egg.png        # 狮子蛋（daily 狮子主题）
