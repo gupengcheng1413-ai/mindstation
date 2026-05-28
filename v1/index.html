@@ -25,6 +25,7 @@
     <button type="button" class="hcard hcard-1" data-card="answer" aria-label="答案之书"></button>
     <button type="button" class="hcard hcard-2" data-card="star" aria-label="每日星语"></button>
     <button type="button" class="hcard hcard-3" data-card="personality" aria-label="性格认知"></button>
+    <img class="hcard-3-cover" src="personality/assets/home-card-personality.png" alt="" draggable="false">
     <button type="button" class="hcard hcard-4" data-card="naming" aria-label="姓名寓意"></button>
   </section>
 
@@ -164,6 +165,14 @@
   <section class="scene scene-answer" data-scene="answer" hidden>
     <iframe class="ans-frame" id="ansFrame" title="答案之书" src="about:blank" frameborder="0"></iframe>
     <button type="button" class="ans-back" data-go="home" aria-label="返回首页">
+      <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </section>
+
+  <!-- ============== 10. 性格认知 personality（集成 v1/personality 子项目，1640×348 同尺寸 iframe） ============== -->
+  <section class="scene scene-personality" data-scene="personality" hidden>
+    <iframe class="per-frame" id="perFrame" title="性格认知" src="about:blank" frameborder="0"></iframe>
+    <button type="button" class="per-back" data-go="home" aria-label="返回首页">
       <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
   </section>

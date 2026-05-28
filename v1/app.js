@@ -159,6 +159,13 @@ function onSceneEnter(name){
       fr.setAttribute("src", target);
     }
   }
+  if(name === "personality"){
+    const fr = $("#perFrame");
+    const target = "personality/index.html";
+    if(fr && fr.getAttribute("src") !== target){
+      fr.setAttribute("src", target);
+    }
+  }
 }
 
 // ---------- 启动 ----------
@@ -186,7 +193,7 @@ function bindEvents(){
           setScene("unbound");
         }
       }else if(card === "personality"){
-        toast("性格认知 · 即将上线");
+        setScene("personality");
       }else if(card === "naming"){
         toast("姓名寓意 · 即将上线");
       }
@@ -521,7 +528,7 @@ function numToZh(n){
 function bootWithHash(){
   init();
   const hash = (location.hash || "").replace("#","");
-  const valid = ["home","unbound","reminder","select","loading","daily","collect","confirm","answer"];
+  const valid = ["home","unbound","reminder","select","loading","daily","collect","confirm","answer","personality"];
 
   // ?noanim=1 关闭入场动画（截图用）；?expand=1 展开为 1500 高（截图 daily 整页用）
   const params = new URLSearchParams(location.search);
