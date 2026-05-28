@@ -74,29 +74,51 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .scene-menu{
   background:linear-gradient(109.2deg,#D1E1FF 11.6%,#EDE9FF 103%);
 }
+/* 左上返回 — Figma 4350:1804 Group 152(80×68 命中区,SVG 内置箭头位) */
+.m-back{
+  position:absolute;left:0;top:1px;
+  width:80px;height:68px;
+  padding:0;background:transparent;border:0;
+  display:block;
+  z-index:20;
+  cursor:pointer;
+  transition:opacity var(--t-fast),transform var(--t-fast);
+}
+.m-back img{
+  display:block;width:80px;height:68px;
+  pointer-events:none;user-select:none;-webkit-user-drag:none;
+}
+.m-back:hover{opacity:.7}
+.m-back:active{transform:scale(.92)}
 .m-title{
   position:absolute;left:80px;top:12px;
   font-size:34px;font-weight:500;letter-spacing:1px;
   color:#3a444d;line-height:46px;
   z-index:10;
 }
-/* 右上 ? 帮助按钮 — Figma 4666:3437(44×44 圆环 + ? 居中) */
+/* 右上 ? 帮助按钮 — Figma 4666:3437 Group 298(圆环 1576/21 44×44 + 字框 1581/20 34×46) */
 .m-help{
   position:absolute;left:1576px;top:21px;
-  width:44px;height:44px;border-radius:50%;
-  border:4px solid #3f434d;
-  background:transparent;
-  padding:0;
-  display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;
+  background:transparent;border:0;padding:0;
   z-index:20;
   cursor:pointer;
 }
+.m-help::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:50%;
+  border:2px solid #3f434d;
+  pointer-events:none;
+}
 .m-help span{
-  font-family:"PingFang SC","PingFang TC","Noto Sans SC",sans-serif;
-  font-size:30px;font-weight:600;line-height:1;
+  position:absolute;left:5px;top:-1px;
+  width:34px;height:46px;
+  font-family:"PingFang TC","PingFang SC","Noto Sans SC",sans-serif;
+  font-size:34px;font-weight:600;line-height:46px;
   color:#3f434d;
+  text-align:center;
   display:block;
-  transform:translateY(-1px);
 }
 
 /* 两张大卡 + illo 合成图,卡身 725×238,illo 顶部溢出到 y=36(向上 53) */
@@ -121,6 +143,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   pointer-events:none;
   user-select:none;-webkit-user-drag:none;
 }
+/* 右卡 PNG 内 rect 顶端比左卡低 5px(Figma frame y=30 vs 36),需多偏移 5px 才能让两张卡身基线对齐 */
+.mp-card-pick .mp-card-bg{top:-59px}
 .mp-card-text{
   position:absolute;
   font-family:var(--font-cn);

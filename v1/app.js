@@ -168,6 +168,15 @@ function onSceneEnter(name){
   }
 }
 
+// ---------- 子页 iframe 回首页消息 ----------
+addEventListener("message", (e) => {
+  const t = e.data && e.data.type;
+  if(t === "personality-back" || t === "answer-back"){
+    state.cameFrom = null;
+    setScene("home");
+  }
+});
+
 // ---------- 启动 ----------
 function init(){
   bindEvents();
