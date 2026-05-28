@@ -34,34 +34,28 @@
     </div>
   </section>
 
-  <!-- ============== profile 录档(对齐 Figma 4364:2274 / 4666:3222 / 4666:3256) ============== -->
+  <!-- ============== profile 录档(对齐 Figma 4364:2274 Enter Archives_1 / 4666:3222 Enter Archives_2) ============== -->
   <section class="scene scene-profile" data-scene="profile" hidden>
-    <header class="pf-top">
-      <button type="button" class="pf-back" id="profileBack" aria-label="返回">
-        <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <h1 class="pf-title-top">性格探索</h1>
-      <button type="button" class="pf-next" id="pfNext" disabled>下一步 ›</button>
-    </header>
+    <button type="button" class="pf-back" id="profileBack" aria-label="返回">
+      <img src="assets/menu/back.svg" alt="" draggable="false">
+    </button>
+    <h1 class="pf-title-top">录入档案</h1>
+    <button type="button" class="pf-next" id="pfNext" disabled>下一步</button>
 
-    <div class="pf-panel-skew" aria-hidden="true"></div>
-    <div class="pf-panel">
-      <div class="pf-panel-title">
-        <p>先完善</p>
-        <p>测试档案哦</p>
-      </div>
-      <div class="pf-panel-form">
-        <label class="pf-row pf-row-name">
-          <span class="pf-row-label">姓名</span>
-          <input type="text" class="pf-input" id="pfName" placeholder="请输入昵称（1-6个字）" maxlength="6" autocomplete="off" spellcheck="false">
-        </label>
-        <button type="button" class="pf-row pf-row-relation" id="pfRelation">
-          <span class="pf-row-label">关系</span>
-          <span class="pf-row-value" id="pfRelationVal">未选择</span>
-          <span class="pf-row-arrow" aria-hidden="true">›</span>
-        </button>
-      </div>
+    <div class="pf-panel" aria-hidden="true"></div>
+    <h2 class="pf-panel-title">先完善档案哦～</h2>
+
+    <div class="pf-row pf-row-name" id="pfNameRow">
+      <span class="pf-row-label">姓名</span>
+      <input type="text" class="pf-input" id="pfName" placeholder="请输入昵称（1-6个字）" maxlength="6" autocomplete="off" spellcheck="false">
+      <span class="pf-cursor" aria-hidden="true"></span>
     </div>
+
+    <button type="button" class="pf-row pf-row-relation" id="pfRelation">
+      <span class="pf-row-label">关系</span>
+      <span class="pf-row-value" id="pfRelationVal">未选择</span>
+      <svg class="pf-row-arrow" viewBox="0 0 12.7073 26.0001" width="9" height="22" aria-hidden="true"><path d="M2 2L10.4593 11.6498C10.7737 12.0084 10.7911 12.5392 10.5008 12.9176L2 24" fill="none" stroke="#7d7d7d" stroke-width="4" stroke-linecap="round"/></svg>
+    </button>
 
     <!-- 关系选择弹层 -->
     <div class="profile-modal" id="profileModal" hidden>

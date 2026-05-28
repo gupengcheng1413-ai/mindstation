@@ -108,9 +108,11 @@ function toast(msg){
 // ---------- profile 渲染 ----------
 function renderProfile(){
   const nameInput = $("#pfName");
+  const nameRow   = $("#pfNameRow");
   const relVal    = $("#pfRelationVal");
   const nextBtn   = $("#pfNext");
   if(nameInput && nameInput.value !== state.profile.name) nameInput.value = state.profile.name;
+  if(nameRow) nameRow.classList.toggle("is-typed", !!state.profile.name);
   if(relVal){
     relVal.textContent = state.profile.relation || "未选择";
     relVal.classList.toggle("is-on", !!state.profile.relation);
