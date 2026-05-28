@@ -236,10 +236,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   transition:color var(--t-fast),transform var(--t-fast);
 }
 .q-prev{left:96px}
-.q-next{right:96px}
-.q-prev:hover,.q-next:hover{color:#3a444d}
+.q-next{right:96px;opacity:.35}
+.q-prev:hover{color:#3a444d}
 .q-prev:active,.q-next:active{transform:scale(.95)}
-.q-prev:disabled,.q-next:disabled{opacity:.35;cursor:not-allowed}
+.q-prev:disabled{opacity:.35;cursor:not-allowed}
+.q-next:disabled{cursor:not-allowed}
 
 .q-bar{
   position:absolute;left:0;right:0;bottom:0;height:20px;
@@ -557,28 +558,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .pm-chip-other    .pm-chip-text{left:125px;top:17px}
 
 /* ============================================================
-   3. result 人格主页 — 单屏纵向滚动 · 对齐 Figma 4654:807
+   3. result 人格主页 — 像素级对齐 Figma 4654:807(1640×1954)
    ============================================================ */
 .scene-result{
   background:linear-gradient(120.45deg,#b1a5ff 29.87%,#e4deff 89.22%);
   overflow:hidden;
 }
-
-/* 左上返回按钮:从 menu 一致黑底白边改为浅色稿适配 */
-.r-back{
-  position:absolute;left:14px;top:14px;
-  width:44px;height:44px;border-radius:50%;
-  display:grid;place-items:center;
-  color:#3c3c3c;
-  background:rgba(255,255,255,.55);
-  border:1px solid rgba(255,255,255,.7);
-  z-index:30;
-  transition:background var(--t-fast),color var(--t-fast);
-}
-.r-back:hover{background:rgba(255,255,255,.85);color:#000}
-.r-back:active{transform:scale(.92)}
-
-/* 单屏纵向 scroll 容器:1640 宽,1640×348 视窗,内容自然撑开 */
 .r-page{
   position:absolute;inset:0;
   overflow-x:hidden;overflow-y:auto;
@@ -589,363 +574,365 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .r-page-inner{
   position:relative;
   width:1640px;
-  /* 总高度 = Figma 1954,但 scale 后视窗只有 348 → 用户纵向 scroll */
   min-height:1954px;
-  padding:0;
 }
-
-/* 右下滚动提示箭头(仅在顶端时显示,提示用户可往下滑) */
 .r-scroll-tip{
-  position:absolute;right:24px;bottom:14px;
+  position:fixed;right:24px;bottom:14px;
   width:32px;height:32px;border-radius:50%;
   background:rgba(255,255,255,.7);
   color:#5a4eff;
   display:grid;place-items:center;
-  font-size:22px;line-height:0;font-weight:700;
-  z-index:25;pointer-events:none;
-  animation:scrollHint 1.6s ease-in-out infinite;
-}
-@keyframes scrollHint{
-  0%,100%{transform:translateY(0);opacity:.85}
-  50%{transform:translateY(4px);opacity:1}
+  z-index:30;
+  pointer-events:none;
+  animation:rTipBob 1.2s ease-in-out infinite;
 }
 .r-scroll-tip.is-hidden{opacity:0;transition:opacity .3s}
+.r-scroll-arrow{font-size:24px;line-height:1;font-weight:700;display:block;transform:translateY(-3px)}
+@keyframes rTipBob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 
-/* ===== 顶 banner: 你的测试结果是 ===== */
-.rp-top{
+/* ===== 顶栏 ===== */
+.rp-back{
+  position:absolute;left:0;top:1px;
+  width:80px;height:68px;
+  padding:0;background:transparent;border:0;
+  z-index:30;cursor:pointer;
+  transition:opacity var(--t-fast),transform var(--t-fast);
+}
+.rp-back img{width:80px;height:68px;display:block;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.rp-back:hover{opacity:.7}
+.rp-back:active{transform:scale(.92)}
+.rp-top-label{
   position:absolute;left:75px;top:14px;
-  font-size:32px;font-weight:500;color:#000;
-  letter-spacing:1px;line-height:46px;
+  font-family:var(--font-cn);font-size:32px;font-weight:500;
+  color:#000;line-height:46px;letter-spacing:0;
+  z-index:10;
 }
 .rp-top-self{
-  position:absolute;right:50px;top:20px;
-  font-size:36px;font-weight:700;color:#000;
+  position:absolute;left:1490px;top:20px;
+  font-family:var(--font-cn);font-size:36px;font-weight:700;
+  color:#000;line-height:46px;letter-spacing:0;
+  white-space:nowrap;
+  z-index:10;
 }
-.rp-top-self svg{margin-left:8px;vertical-align:middle}
+.rp-top-arrow{
+  position:absolute;left:1576px;top:34px;
+  width:28px;height:22px;
+  z-index:10;
+}
 
-/* ===== 顶部大标题区 (1640 全宽 banner,白底虚线) ===== */
-.rp-banner{
+/* ===== Banner 区(75-362) ===== */
+.rp-banner-bg{
   position:absolute;left:101px;top:75px;
   width:1438px;height:287px;
-  background:rgba(255,255,255,.5);
-  border-radius:24px;
-  overflow:hidden;
+  background:url('assets/result/bg-banner.svg') no-repeat;background-size:100% 100%;
+  z-index:1;
 }
-
-/* ENTP 大字 — 紫色渐变描边字体 */
+.rp-banner-stripes{
+  position:absolute;left:101px;top:75px;
+  width:1438px;height:286px;
+  background:url('assets/result/bg-banner-stripes.svg') no-repeat;background-size:100% 100%;
+  z-index:2;
+}
+.rp-banner-frame{
+  position:absolute;left:1224px;top:92px;
+  width:266px;height:179px;
+  background:url('assets/result/banner-frame.svg') no-repeat;background-size:100% 100%;
+  z-index:3;
+}
+.rp-mascot{
+  position:absolute;left:1186px;top:-37px;
+  width:259px;height:307px;
+  z-index:4;pointer-events:none;
+}
+/* type 大字 — Figma 4654:865 (129,103) 216×83 紫渐变 120px Passion One
+   16 种 type 动态生成,DOM 渲染;字体用 Passion One(已加载) */
+.rp-type-block{display:none}
 .rp-type{
   position:absolute;left:129px;top:103px;
-  font-family:"Passion One","ZCOOL XiaoWei",var(--font-display);
-  font-size:120px;font-weight:400;
-  letter-spacing:-1.2px;line-height:96px;
-  background:linear-gradient(90deg,rgba(202,11,255,.7) 0%,rgba(44,2,255,.7) 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  text-transform:lowercase;
+  width:216px;
+  font-family:"Passion One","Saira Stencil One",var(--font-cn);
+  font-size:120px;font-weight:400;line-height:96px;letter-spacing:-1.2px;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,rgba(202,11,255,.85),rgba(44,2,255,.85));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  text-align:center;
+  z-index:5;
+  margin:0;
+}
+.rp-type-deco{
+  position:absolute;left:348px;top:132px;
+  width:170px;height:54px;
+  z-index:5;pointer-events:none;
 }
 
-/* 副标题:专业脑洞制造机 */
+/* 副标题 — Figma 4654:858 (131,229) 36/46 #3c3c3c Bold 双行 */
+.rp-subtitle-block{display:none}
 .rp-subtitle{
   position:absolute;left:131px;top:229px;
-  font-size:36px;font-weight:700;color:#3c3c3c;
-  line-height:46px;letter-spacing:1px;
-  width:520px;
+  width:404px;
+  font-family:var(--font-cn);font-size:36px;font-weight:700;
+  color:#3c3c3c;line-height:46px;letter-spacing:0;
+  z-index:5;
 }
-.rp-subtitle p + p{margin-top:0}
+.rp-subtitle p{margin:0}
 
-/* 4 维度药丸卡 — 横向 4 个,每个 140 宽 295 高,白底圆角 */
-.rp-axes{
-  position:absolute;left:553px;top:57px;
-  display:flex;gap:14px;
-  height:295px;
-}
+/* 4 个轴卡(553/720/874/1014 列)— 像素级对齐 Figma 4657:1007/1021/1008/1015 */
 .rp-axis-card{
-  position:relative;
-  width:140px;height:295px;
-  background:#fff;
-  border-radius:17px;
+  position:absolute;top:57px;width:140px;height:295px;
+  background:#fff;border-radius:17px;
   box-shadow:0 4px 32px rgba(0,0,0,.08);
-  padding:12px;
+  z-index:5;
 }
-/* 卡顶颜色小圆点 */
+/* 灰圆 dot — Figma 4657:994 / 1002 / 1010 / 1017,#D9D9D9 16×16 */
 .rp-axis-dot{
-  position:absolute;left:18px;top:12px;
-  width:16px;height:16px;border-radius:50%;
-  background:#ffe066;
+  position:absolute;width:16px;height:16px;border-radius:50%;
+  background:#D9D9D9;
+  z-index:6;
 }
-/* 卡上顶角图标(简化:用 emoji-like 占位符号) */
-.rp-axis-icon{
-  position:absolute;right:14px;top:12px;
-  font-size:26px;line-height:1;
-  opacity:.55;
+/* 金色弯曲天线 — Figma 4657:998/1003/1011/1024 vector95.svg #F2A100
+   EI/JP 41×35,SN/TF 45×40。is-flip 用于 TF/JP 让箭头朝右 */
+.rp-axis-ant{
+  position:absolute;
+  z-index:6;
+  pointer-events:none;
+  user-select:none;-webkit-user-drag:none;
 }
+.rp-axis-ant.is-flip{transform:scaleX(-1)}
+/* 标题 — Figma 26/46 #000 Bold */
 .rp-axis-title{
-  position:absolute;left:18px;top:40px;
-  font-size:26px;font-weight:700;color:#000;
-  line-height:46px;
-  letter-spacing:1px;
-}
-/* 上下两端的极性标签 + 中间竖向 slider */
-.rp-axis-pole{
-  position:absolute;left:50%;
-  transform:translateX(-50%);
-  font-size:24px;font-weight:500;
-  letter-spacing:1px;
+  position:absolute;width:104px;height:46px;
+  font-family:var(--font-cn);font-size:26px;font-weight:700;
+  color:#000;line-height:46px;letter-spacing:0;
   white-space:nowrap;
-  display:flex;align-items:center;gap:6px;
+  z-index:6;
+  margin:0;
 }
-.rp-axis-pole-top{top:104px}
-.rp-axis-pole-bottom{bottom:18px}
-.rp-axis-pole.is-on{
-  /* 4 轴各色:E=红 N=蓝 F=洋红/T=金 P=青 */
-  font-weight:700;
+/* pole 标签 — 默认 24/29 rgba(0,0,0,.7) Medium;选中 is-on 切对应荧光色
+   Figma top:167 实际是 字框 top,字本身 baseline 在 ~y=190。用 line-height:24px(贴近字号)
+   减少行盒高度,使字位置与 Figma 对齐 */
+.rp-axis-pole{
+  position:absolute;
+  font-family:var(--font-cn);font-size:24px;font-weight:500;
+  line-height:24px;letter-spacing:0;
+  color:rgba(0,0,0,.7);
+  z-index:6;
+  white-space:nowrap;
+  padding-top:5px;  /* Figma 字框顶离 baseline 距离补偿 */
 }
-.rp-axis-pole-arrow{font-size:18px;line-height:0;display:inline-block;width:14px;text-align:center}
-.rp-axis-pole-top .rp-axis-pole-arrow{transform:rotate(-90deg)}
-.rp-axis-pole-bottom .rp-axis-pole-arrow{transform:rotate(90deg)}
-
-/* 4 轴各自顶部/底部 on 颜色 */
-.rp-axis-EI .rp-axis-pole.is-on{color:#ff1d65}
-.rp-axis-SN .rp-axis-pole.is-on{color:#5757ff}
-.rp-axis-TF .rp-axis-pole.is-on{color:#d18b00}
-.rp-axis-JP .rp-axis-pole.is-on{color:#09a8b3}
-
-/* 中间竖向 slider 槽 */
+/* 4 轴选中色 — Figma 4654:928(E#ff1d65)/4654:937(N#5757ff)/4654:956(T#d18b00)/4654:965(P#09a8b3) */
+[data-axis="EI"] .rp-axis-pole.is-on{color:#ff1d65}
+[data-axis="SN"] .rp-axis-pole.is-on{color:#5757ff}
+[data-axis="TF"] .rp-axis-pole.is-on{color:#d18b00}
+[data-axis="JP"] .rp-axis-pole.is-on{color:#09a8b3}
+/* pole-arrow — 默认 #4D4D4D 灰 / 选中 #FF1D65 粉,各自独立 svg
+   absolute 定位在 pole 文字右侧,与字基线对齐 */
+.rp-pole-arrow{
+  position:absolute;left:100%;top:50%;
+  margin-left:6px;margin-top:-9px;
+  width:11.6px;height:18.8px;
+  display:block;pointer-events:none;
+}
+/* 轨道 + knob — 重画立式版,用 CSS 渐变模拟 Figma axis-knob.svg 的双色效果
+   30×80 立轨,r=10:灰底 #E1E1E1 + 选中端用 #FF1D65 highlight 30×30 r=10
+   .is-top → highlight 在顶端;.is-bot → highlight 在底端 */
 .rp-axis-track{
-  position:absolute;left:50%;top:142px;bottom:60px;
-  transform:translateX(-50%);
-  width:30px;
-  border-radius:15px;
-  background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.12));
+  position:absolute;width:30px;height:80px;
+  background:#E1E1E1;border-radius:10px;
+  z-index:6;
   overflow:hidden;
 }
-.rp-axis-knob{
-  position:absolute;left:50%;
-  width:30px;height:30px;border-radius:50%;
-  background:linear-gradient(135deg,#fff,#dad2ff);
-  box-shadow:0 4px 8px rgba(70,40,200,.2);
-  transform:translateX(-50%);
-  transition:top var(--t-mid);
+.rp-axis-track::after{
+  content:"";
+  position:absolute;left:0;width:30px;height:30px;
+  border-radius:10px;
 }
-.rp-axis-knob.knob-left{top:6px}
-.rp-axis-knob.knob-right{bottom:6px;top:auto}
+.rp-axis-track.is-top::after{top:0}
+.rp-axis-track.is-bot::after{bottom:0}
+/* 4 轴选中色:EI=红 / SN=蓝 / TF=橙 / JP=青 */
+[data-axis="EI"] .rp-axis-track::after{background:#FF1D65}
+[data-axis="SN"] .rp-axis-track::after{background:#5757ff}
+[data-axis="TF"] .rp-axis-track::after{background:#F2A100}
+[data-axis="JP"] .rp-axis-track::after{background:#09a8b3}
 
-/* 蛋蛋形象 — 右上角 */
-.rp-egg-frame{
-  position:absolute;right:130px;top:-37px;
-  width:259px;height:307px;
-  display:grid;place-items:center;
-  pointer-events:none;
-}
-.rp-egg-shape{
-  width:200px;height:230px;
-  border-radius:50% 50% 48% 48%/55% 55% 45% 45%;
-  filter:drop-shadow(0 16px 30px rgba(60,30,180,.3));
-  animation:eggBob 3.6s ease-in-out infinite alternate;
-}
-
-/* 五角星 + e人 标签 */
-.rp-tag{
-  position:absolute;right:-30px;top:99px;
+/* 蛋蛋 star — Figma 4654:861 (1381,99) 195×195 五角星 + e人/i人 大字
+   星形用 PNG(已含轻阴影),字独立 DOM,字号 50/letter-spacing:0 旋 -12.79deg */
+.rp-star{
+  position:absolute;left:1381px;top:99px;
   width:195px;height:195px;
-  display:grid;place-items:center;
+  background:url('assets/result/star-egg-img.png') no-repeat center/100% 100%;
+  z-index:6;
 }
-.rp-tag-star{
-  position:absolute;inset:0;
-  background:#ffe55c;
-  clip-path:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  filter:drop-shadow(0 6px 12px rgba(220,180,40,.3));
+.rp-star img{display:none}
+.rp-star-text{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-30%) rotate(-12.79deg);
+  font-family:"ZCOOL XiaoWei","Saira Stencil One",var(--font-display);
+  font-size:50px;font-weight:400;
+  color:#80f;line-height:46px;letter-spacing:0;
+  text-transform:uppercase;
+  white-space:nowrap;
+  z-index:7;
+  /* 当 type 是 I 开头,star-egg-img.png 已含 e人字, 用 mix-blend 把 e 抹掉再画 i — 这里用 background 优先级:让 PNG 已有的字与 DOM 字一致即可 */
 }
-.rp-tag-text{
-  position:relative;z-index:2;
-  font-family:var(--font-display);
-  font-size:50px;font-weight:400;color:#80f;
-  letter-spacing:2px;
-  transform:rotate(-12.79deg);
+/* 默认 PNG 已含 e人字,DOM 字隐藏避免重叠;type=I 时显示 DOM 的 i人字并把 PNG 切换为只有星的纯星 SVG */
+.rp-star.is-i-person{
+  background:url('assets/result/star.svg') no-repeat center/100% 100%;
 }
-
-/* 重新测试 CTA */
+.rp-star.is-e-person .rp-star-text{display:none}
+/* 重新测试 CTA — Figma 4663:1026 整图(含字)1209,279 300×68 */
 .rp-retest{
   position:absolute;left:1209px;top:279px;
   width:300px;height:68px;
-  background:#9466ff;
-  border:1px solid #fff;
-  border-radius:14px;
-  color:#fff;
-  font-size:34px;font-weight:500;
-  letter-spacing:2px;
-  display:flex;align-items:center;justify-content:center;
+  background:url('assets/result/retest-img.png') no-repeat center/100% 100%;
+  border:0;padding:0;
+  /* 字隐藏,文字已烤进 PNG */
+  font-size:0;color:transparent;
   cursor:pointer;
-  transition:background var(--t-fast),transform var(--t-fast);
-  box-shadow:0 6px 16px rgba(120,80,255,.32);
+  z-index:7;
+  transition:transform var(--t-fast),filter var(--t-fast);
 }
-.rp-retest:hover{background:#a37bff;transform:translateY(-2px)}
+.rp-retest:hover{filter:brightness(1.08)}
 .rp-retest:active{transform:scale(.97)}
 
-/* ===== 通用 section panel:"性格特点 / 学习优势分析 / 校园相处锦囊" ===== */
-.rp-section{
-  position:absolute;left:101px;
-  width:1438px;
-}
-.rp-section-trait{top:362px;height:490px}
-.rp-section-study{top:853px;height:590px}
-.rp-section-social{top:1444px;height:330px}
-
-/* 标题 panel — 左侧带白底圆角条,内含标题 */
-.rp-section-titlebar{
-  position:absolute;left:22px;top:19px;
-  width:507px;height:70px;
-  background:rgba(255,255,255,.55);
-  border-radius:18px;
-  display:flex;align-items:center;
-  padding:0 32px;
-}
-.rp-section-title{
-  font-family:"ZCOOL XiaoWei",var(--font-display);
-  font-size:36px;color:#2f2f2f;
-  letter-spacing:2px;line-height:46px;
-}
-
-/* 上下虚线分隔(对应 Figma Vector 90 / 91 / 92) */
+/* divider — Figma 4654:870/871/872 全宽细线 */
 .rp-divider{
-  position:absolute;left:141px;
-  width:1370px;height:1px;
-  background-image:linear-gradient(90deg,#3c3c3c 50%,transparent 50%);
-  background-size:14px 1px;
-  background-repeat:repeat-x;
-  opacity:.45;
+  position:absolute;left:135px;width:1370px;height:2px;
+  background:rgba(0,0,0,.06);
+  border-radius:2px;
+  z-index:1;
 }
-.rp-divider-1{top:362px}
-.rp-divider-2{top:853px}
-.rp-divider-3{top:1444px}
 
-/* ===== 性格特点 — 长文 ===== */
+/* ===== 性格特点(362-852) ===== */
+.rp-trait-bg{
+  position:absolute;left:101px;top:362px;
+  width:1438px;height:490px;
+  background:url('assets/result/bg-trait.svg') no-repeat;background-size:100% 100%;
+  z-index:1;
+}
+/* tag — 直接用 Figma 整图 PNG(含文字),DOM 不再渲染 .rp-section-title */
+.rp-section-tag{
+  position:absolute;left:123px;width:507px;height:70px;
+  background-size:100% 100%;background-repeat:no-repeat;
+  z-index:3;
+  pointer-events:none;
+}
+/* 三块 tag 用 [style*="..."] 区分(JS 注入时的 top 标记) */
+.rp-section-tag[style*="381"]{background-image:url('assets/result/tag-trait-img.png')}
+.rp-section-tag[style*="872"]{background-image:url('assets/result/tag-study-img.png')}
+.rp-section-tag[style*="1675"]{background-image:url('assets/result/tag-social-img.png')}
+/* 兼容旧 selector,移除 svg fallback */
+.rp-section-title{display:none}
 .rp-trait-text{
-  position:absolute;left:30px;top:109px;
+  position:absolute;left:131px;top:471px;
   width:1371px;
-  font-size:32px;font-weight:400;
-  line-height:1.04;
-  color:rgba(0,0,0,.6);
-  text-align:justify;
-  text-indent:64px;
+  font-family:var(--font-cn);font-size:32px;font-weight:400;
+  color:rgba(0,0,0,.6);line-height:33.25px;letter-spacing:0;
+  text-indent:2em;
+  z-index:2;
+  margin:0;
+  white-space:normal;
 }
 
-/* ===== 学习优势 — 4 卡 2×2 ===== */
-.rp-study-cards{
-  position:absolute;left:34px;top:119px;
-  width:1370px;
-  display:grid;
-  grid-template-columns:680px 680px;
-  grid-gap:10px 12px;
+/* ===== 学习优势分析(853-1443) ===== */
+.rp-study-bg{
+  position:absolute;left:101px;top:853px;
+  width:1438px;height:590px;
+  background:url('assets/result/bg-study.svg') no-repeat;background-size:100% 100%;
+  z-index:1;
 }
 .rp-study-card{
+  position:absolute;width:680px;height:205px;
   background:rgba(217,217,217,.2);
-  opacity:.92;
   border-radius:20px;
-  padding:16px 28px 22px;
-  height:205px;
-}
-.rp-study-card-title{
-  font-size:36px;font-weight:500;
-  color:#000;line-height:46px;
-  letter-spacing:1px;
-}
-.rp-study-card-title .rp-study-num{
-  display:inline-block;
-  width:28px;text-align:left;
-  font-weight:700;
-  background:linear-gradient(90deg,#7B61FF,#3F8FFF);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-.rp-study-card-body{
-  margin-top:14px;
-  font-size:32px;font-weight:400;
-  line-height:1.04;
-  color:rgba(0,0,0,.6);
-}
-
-/* 高效学习方式 tags 行 */
-.rp-study-tags{
-  position:absolute;left:0;right:0;bottom:-2px;
-  display:flex;align-items:center;justify-content:center;
-  gap:0;
-  padding:0 80px;
-}
-.rp-study-tags-label{
-  font-size:34px;font-weight:700;
-  color:#000;
-  letter-spacing:1px;
-  line-height:46px;
-  white-space:nowrap;
-  margin-right:14px;
-}
-.rp-study-tags-label .rp-emoji{margin-right:4px}
-.rp-study-tags-label .rp-purple{color:#340fad}
-.rp-study-tags-list{
-  display:flex;align-items:center;
-}
-.rp-study-tag{
-  font-size:30px;font-weight:700;
-  color:#0e0e0e;
-  letter-spacing:1px;
-  padding:0 28px;
-  white-space:nowrap;
-}
-.rp-study-tag + .rp-study-tag{
-  border-left:3px solid #000;
-  line-height:33px;
-}
-
-/* ===== 校园相处锦囊 — 整个 section 是一个圆角白卡 ===== */
-.rp-social-bg{
-  position:absolute;left:0;top:32px;
-  width:1438px;height:209px;
-  background:rgba(255,255,255,.55);
-  border-radius:24px;
-  border:2px solid rgba(255,255,255,.8);
-}
-.rp-social-titlebar{
-  position:absolute;left:22px;top:0;
-  width:507px;height:70px;
-  background:#fff;
-  border-radius:18px;
-  display:flex;align-items:center;
-  padding:0 32px;
   z-index:2;
 }
-/* 4 角装饰圆点 */
+.rp-study-title{
+  position:absolute;
+  font-family:var(--font-cn);font-size:36px;font-weight:500;
+  color:#000;line-height:46px;letter-spacing:0;
+  word-break:break-all;
+  overflow-wrap:anywhere;
+  z-index:3;
+  margin:0;
+}
+.rp-study-body{
+  position:absolute;
+  font-family:var(--font-cn);font-size:32px;font-weight:400;
+  color:rgba(0,0,0,.6);line-height:1.04;letter-spacing:0;
+  z-index:3;
+  margin:0;
+}
+.rp-study-tag-label{
+  position:absolute;left:50%;
+  transform:translateX(-50%);
+  font-family:var(--font-cn);font-size:34px;font-weight:700;
+  color:#0e0e0e;line-height:46px;letter-spacing:0;
+  white-space:nowrap;
+  z-index:3;
+  margin:0;
+}
+.rp-emoji{font-weight:400}
+.rp-purple{color:#340fad}
+.rp-study-tags{
+  position:absolute;left:0;top:1500px;width:1640px;height:33px;
+  display:flex;align-items:center;justify-content:center;gap:20px;
+  z-index:3;
+}
+.rp-tag-item{
+  font-family:var(--font-cn);font-size:30px;font-weight:700;
+  color:#0e0e0e;line-height:46px;
+  white-space:nowrap;
+}
+.rp-tag-sep{
+  width:3px;height:33px;background:#000;
+  display:inline-block;
+}
+
+/* ===== 校园相处锦囊(1573-1850) ===== */
+.rp-social-bg-top{
+  position:absolute;left:101px;top:1444px;
+  width:1438px;height:165px;
+  background:url('assets/result/bg-social-top.svg') no-repeat;background-size:100% 100%;
+  transform:scaleY(-1);transform-origin:center;
+  z-index:1;
+}
+.rp-social-bg-bot{
+  position:absolute;left:101px;top:1641px;
+  width:1438px;height:209px;
+  background:url('assets/result/bg-social-bot.svg') no-repeat;background-size:100% 100%;
+  z-index:1;
+}
+.rp-social-bar{
+  position:absolute;left:135px;top:1573px;
+  width:16px;height:103px;
+  background:url('assets/result/bg-social-bot.svg') no-repeat;
+  background-size:cover;
+  z-index:2;
+}
 .rp-social-dot{
   position:absolute;width:18px;height:18px;border-radius:50%;
-  background:#9466ff;
-  z-index:2;
+  z-index:3;
 }
-.rp-social-dot-tl{left:20px;top:90px}
-.rp-social-dot-bl{left:20px;bottom:0px}
-.rp-social-dot-tr{right:20px;top:90px}
-.rp-social-dot-br{right:20px;bottom:0px}
-
-/* 左侧装饰条 */
-.rp-social-bar{
-  position:absolute;left:34px;top:95px;
-  width:16px;height:103px;
-  background:linear-gradient(180deg,#9466ff,#3F8FFF);
-  border-radius:8px;
-  z-index:2;
-}
-
-/* 一句话锦囊 */
+.rp-dot-1{left:121px;top:1568px;background:url('assets/result/dot-corner-1.svg') no-repeat center/100% 100%}
+.rp-dot-2{left:121px;top:1661px;background:url('assets/result/dot-corner-2.svg') no-repeat center/100% 100%}
+.rp-dot-3{left:1501px;top:1571px;background:url('assets/result/dot-corner-1.svg') no-repeat center/100% 100%}
+.rp-dot-4{left:1501px;top:1661px;background:url('assets/result/dot-corner-2.svg') no-repeat center/100% 100%}
 .rp-social-tip{
-  position:absolute;left:60px;right:60px;top:130px;
-  font-size:32px;font-weight:400;
-  color:rgba(0,0,0,.7);
-  line-height:1.04;
-  text-align:center;
-  letter-spacing:1px;
-  z-index:2;
+  position:absolute;left:141px;top:1765px;
+  width:1334px;
+  font-family:var(--font-cn);font-size:32px;font-weight:400;
+  color:rgba(0,0,0,.6);line-height:1.04;letter-spacing:0;
+  z-index:3;
+  margin:0;
 }
+.rp-section-tag[style*="1675"]{
+  background:url('assets/result/tag-social.svg') no-repeat;background-size:100% 100%;
+}
+.rp-section-tag[style*="872"]{
+  background:url('assets/result/tag-study.svg') no-repeat;background-size:100% 100%;
+}
+
 
 /* ============================================================
    toast

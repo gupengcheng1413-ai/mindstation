@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 276">
+<path id="Rectangle 207" d="M0 10C0 4.47715 4.47715 0 10 0H70C75.5228 0 80 4.47715 80 10V20C80 25.5228 75.5228 30 70 30H10C4.47715 30 0 25.5228 0 20V10Z" fill="var(--fill-0, #E1E1E1)"/>
+<path id="Rectangle 217" d="M0 20C0 25.5228 4.47715 30 10 30H38C39.1046 30 40 29.1046 40 28V2C40 0.89543 39.1046 0 38 0H10C4.47715 0 0 4.47715 0 10V20Z" fill="var(--fill-0, #09A8B3)"/>
+</g>
+</svg>

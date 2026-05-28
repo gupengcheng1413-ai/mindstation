@@ -218,129 +218,184 @@ function confirmExit(){
   setScene("menu");
 }
 
-// ---------- result 渲染 — 单屏纵向滚动版 ----------
+// ---------- result 渲染 — 像素级对齐 Figma 4654:807(1640×1954) ----------
 function renderResult(type){
   const data = state.personalities.personalities[type];
   const groups = state.personalities.groups;
   const inner = $("#rPageInner");
   if(!inner) return;
 
-  const codename  = data?.codename || "?";
-  const tagline   = data?.tagline  || "";
-  const subtitle  = data?.subtitle || "";
-  const groupKey  = data?.group || findGroup(type, groups);
-  const group     = groups[groupKey];
-  const groupColor = group?.color || "#7B61FF";
+  const codename  = data?.codename || "";
+  const subtitle  = data?.subtitle || data?.tagline || "";
+  // banner 副标题 Figma 134/229 双行;按中文标点拆 2 行
+  const subParts = (subtitle || "").split(/\s+|[,，]/).filter(Boolean);
+  const subL1 = subParts[0] || "";
+  const subL2 = subParts.slice(1).join("") || "";
 
-  const axisMap = [
-    { id:"EI", l:"E", r:"I", lLabel:"E外倾", rLabel:"I内倾", title:"能量来源" },
-    { id:"SN", l:"S", r:"N", lLabel:"S感觉", rLabel:"N直觉", title:"接受信息" },
-    { id:"TF", l:"T", r:"F", lLabel:"T思维", rLabel:"F情感", title:"决策方式" },
-    { id:"JP", l:"J", r:"P", lLabel:"J判断", rLabel:"P感知", title:"行事风格" }
+  // 4 个轴 — Figma 顺序:能量来源(EI) / 接受信息(SN) / 决策方式(TF) / 行事风格(JP)
+  // 每个卡按 Figma 精确坐标:卡身 / dot / 金天线 / 标题 / pole-top / pole-bot / knob track
+  const axes = [
+    { id:"EI", title:"能量来源", topLabel:"I内倾", botLabel:"E外倾",
+      cardX:565.8, dotX:582.8, antX:553, antW:40.8, antH:35.2, antFlip:false,
+      labelX:583.8, titleX:583.8,
+      poleTopX:598.8, poleTopY:167, poleBotX:594.8, poleBotY:298,
+      trackX:620.8, trackY:207 },
+    { id:"SN", title:"接受信息", topLabel:"N直觉", botLabel:"S感觉",
+      cardX:720, dotX:738, antX:782.3, antW:45.3, antH:40.6, antFlip:false,
+      labelX:738, titleX:738,
+      poleTopX:745, poleTopY:161, poleBotX:747, poleBotY:293,
+      trackX:775, trackY:202 },
+    { id:"TF", title:"决策方式", topLabel:"F情感", botLabel:"T思维",
+      cardX:874, dotX:892, antX:936.3, antW:45.3, antH:40.6, antFlip:true,
+      labelX:892, titleX:892,
+      poleTopX:901, poleTopY:161, poleBotX:901, poleBotY:294,
+      trackX:929, trackY:202 },
+    { id:"JP", title:"行事风格", topLabel:"P感知", botLabel:"J判断",
+      cardX:1026.8, dotX:1044.8, antX:1014, antW:40.8, antH:35.2, antFlip:true,
+      labelX:1044.8, titleX:1044.8,
+      poleTopX:1055, poleTopY:158, poleBotX:1057, poleBotY:291,
+      trackX:1084, trackY:199 }
   ];
 
-  const axesHTML = axisMap.map((ax, i) => {
-    const myPole = type[i];
-    const onLeft = myPole === ax.l;
-    const lOn = onLeft ? "is-on" : "";
-    const rOn = onLeft ? "" : "is-on";
-    const knobCls = onLeft ? "knob-left" : "knob-right";
+  const axesHTML = axes.map((ax, i) => {
+    const myPole = type[i];                              // E/I, S/N, T/F, J/P
+    // 注意 axes 数组里 topLabel 与 botLabel:Figma 设计稿里 EI/SN 两卡是 I/N 在上,E/S 在下;TF/JP 两卡是 F/P 在上,T/J 在下
+    // 当前 type 与 topLabel 同字母 → top 高亮(active);否则 bot 高亮
+    const topActive = myPole === ax.topLabel[0];
     return `
-      <div class="rp-axis-card rp-axis-${ax.id}">
-        <span class="rp-axis-dot"></span>
-        <span class="rp-axis-icon">✦</span>
-        <h4 class="rp-axis-title">${ax.title}</h4>
-        <div class="rp-axis-pole rp-axis-pole-top ${ax.id === "EI" || ax.id === "SN" ? rOn : (onLeft ? "is-on" : "")}">
-          ${ax.id === "EI" || ax.id === "SN" ? ax.rLabel : ax.lLabel}
-          <span class="rp-axis-pole-arrow">▸</span>
-        </div>
-        <div class="rp-axis-track">
-          <span class="rp-axis-knob ${knobCls}"></span>
-        </div>
-        <div class="rp-axis-pole rp-axis-pole-bottom ${ax.id === "EI" || ax.id === "SN" ? lOn : (onLeft ? "" : "is-on")}">
-          ${ax.id === "EI" || ax.id === "SN" ? ax.lLabel : ax.rLabel}
-          <span class="rp-axis-pole-arrow">▸</span>
-        </div>
+      <div class="rp-axis" data-axis="${ax.id}">
+        <!-- 卡身 140×295 r=17 #fff shadow -->
+        <div class="rp-axis-card" style="left:${ax.cardX}px"></div>
+        <!-- 灰圆 dot 16×16 #D9D9D9 -->
+        <span class="rp-axis-dot" style="left:${ax.dotX}px;top:69px"></span>
+        <!-- 金色天线 vector95 #F2A100,EI/JP 41×35 / SN/TF 45×40 -->
+        <img class="rp-axis-ant ${ax.antFlip?'is-flip':''}" src="assets/result/vector95.svg" alt="" draggable="false" style="left:${ax.antX}px;top:74px;width:${ax.antW}px;height:${ax.antH}px">
+        <!-- 标题 26/46 Bold #000 -->
+        <h4 class="rp-axis-title" style="left:${ax.titleX}px;top:97px">${ax.title}</h4>
+        <!-- pole top: 选中态色,带 ▸ -->
+        <span class="rp-axis-pole rp-axis-pole-top ${topActive?'is-on':''}" style="left:${ax.poleTopX}px;top:${ax.poleTopY}px">
+          ${ax.topLabel}
+          <img class="rp-pole-arrow" src="assets/result/pole-arrow${topActive?'-on':''}.svg" alt="" draggable="false">
+        </span>
+        <!-- 滑轨 + knob,由 axis-knob.svg 提供轨身,knob 透过 .is-top/.is-bot 切换上下半 -->
+        <div class="rp-axis-track ${topActive?'is-top':'is-bot'}" style="left:${ax.trackX}px;top:${ax.trackY}px"></div>
+        <!-- pole bot -->
+        <span class="rp-axis-pole rp-axis-pole-bot ${topActive?'':'is-on'}" style="left:${ax.poleBotX}px;top:${ax.poleBotY}px">
+          ${ax.botLabel}
+          <img class="rp-pole-arrow" src="assets/result/pole-arrow${topActive?'':'-on'}.svg" alt="" draggable="false">
+        </span>
       </div>
     `;
   }).join("");
 
-  const studyCardsHTML = (data?.study?.cards || []).map((c, i) => {
+
+  // study 4 卡 — Figma 各自坐标
+  const studyCards = data?.study?.cards || [];
+  const studyPos = [
+    {x:135, y:972,  numW:561, w:599},   // #1
+    {x:827, y:972,  numW:561, w:599},   // #2
+    {x:135, y:1189, numW:525, w:599},   // #3
+    {x:827, y:1189, numW:525, w:608}    // #4
+  ];
+  const studyHTML = studyCards.slice(0,4).map((c, i) => {
+    const p = studyPos[i] || studyPos[0];
     const m = (c.title || "").match(/^(\d+)\s*(.+)$/);
-    const num = m ? m[1] : (i + 1);
+    const num = m ? m[1] : (i+1);
     const rest = m ? m[2] : c.title;
     return `
-      <div class="rp-study-card">
-        <h4 class="rp-study-card-title"><span class="rp-study-num">${num}</span>${rest}</h4>
-        <p class="rp-study-card-body">${c.body || ""}</p>
-      </div>
+      <div class="rp-study-card" style="left:${p.x}px;top:${p.y}px"></div>
+      <h4 class="rp-study-title" style="left:${p.x+(i===0?59:i===1?59:77)}px;top:${p.y+(i===0?21:16)}px;width:${i<2?561:525}px">${num} ${rest}</h4>
+      <p class="rp-study-body" style="left:${p.x+40}px;top:${p.y+70}px;width:${p.w}px">${c.body || ""}</p>
     `;
   }).join("");
 
-  const tagsHTML = (data?.study?.tags || []).map(t =>
-    `<span class="rp-study-tag">${t}</span>`
-  ).join("");
-
-  const eggGrad = `radial-gradient(circle at 35% 30%,${lighten(groupColor)} 0,${groupColor} 70%)`;
+  // tags Figma 4654:904 文本带 5 项,中间用 3×33 黑色分隔线
+  const tags = data?.study?.tags || [];
 
   inner.innerHTML = `
-    <div class="rp-top">你的测试结果是:</div>
-    <div class="rp-top-self">${state.profile.name || "自己"} <svg width="28" height="22" viewBox="0 0 28 22"><path d="M2 6 L14 18 L26 6" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+    <!-- 顶栏 -->
+    <button type="button" class="rp-back" id="rpBack" aria-label="返回">
+      <img src="assets/result/back.svg" alt="" draggable="false">
+    </button>
+    <p class="rp-top-label">你的测试结果是:</p>
+    <p class="rp-top-self">${state.profile.name || "自己"}</p>
+    <span class="rp-top-arrow">
+      <svg viewBox="0 0 28 22" width="28" height="22"><path d="M2 6 L14 18 L26 6" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
 
-    <div class="rp-banner">
-      <div class="rp-type">${type.toLowerCase()}</div>
-      <div class="rp-subtitle">${subtitle ? subtitle.split(/\s+/).map(s => `<p>${s}。</p>`).join("") : `<p>${tagline}</p>`}</div>
+    <!-- ===== Banner 区 (75-362) ===== -->
+    <div class="rp-banner-bg"></div>
+    <div class="rp-banner-stripes"></div>
+    <img class="rp-mascot" src="assets/result/mascot.png" alt="" draggable="false">
+    <div class="rp-banner-frame"></div>
 
-      <div class="rp-axes">${axesHTML}</div>
+    <!-- type 大字 -->
+    <p class="rp-type">${type.toLowerCase()}</p>
+    <img class="rp-type-deco" src="assets/result/type-deco.svg" alt="" draggable="false">
 
-      <div class="rp-egg-frame">
-        <div class="rp-egg-shape" style="background:${eggGrad}"></div>
-      </div>
-      <div class="rp-tag">
-        <div class="rp-tag-star"></div>
-        <div class="rp-tag-text">${eggLabel(type)}</div>
-      </div>
-
-      <button type="button" class="rp-retest" id="rpRetest">重新测试</button>
+    <!-- 副标题 -->
+    <div class="rp-subtitle">
+      <p>${subL1}</p>
+      ${subL2 ? `<p>${subL2}。</p>` : ""}
     </div>
 
-    <div class="rp-divider rp-divider-1"></div>
-    <section class="rp-section rp-section-trait">
-      <div class="rp-section-titlebar">
-        <h3 class="rp-section-title">性格特点</h3>
-      </div>
-      <p class="rp-trait-text">${data?.personality || `${type} · ${codename} 的性格特点正在路上 ✦`}</p>
-    </section>
+    <!-- 4 轴 -->
+    ${axesHTML}
 
-    <div class="rp-divider rp-divider-2"></div>
-    <section class="rp-section rp-section-study">
-      <div class="rp-section-titlebar">
-        <h3 class="rp-section-title">学习优势分析</h3>
-      </div>
-      <div class="rp-study-cards">
-        ${studyCardsHTML || `<div class="rp-study-card"><p class="rp-study-card-body">学习卡内容待填</p></div>`}
-      </div>
-      <div class="rp-study-tags">
-        <span class="rp-study-tags-label"><span class="rp-emoji">🎓</span><span class="rp-purple">高效学习方式:</span></span>
-        <div class="rp-study-tags-list">${tagsHTML}</div>
-      </div>
-    </section>
+    <!-- 蛋蛋 star + 标签 -->
+    <div class="rp-star ${type[0]==='I'?'is-i-person':'is-e-person'}">
+      <span class="rp-star-text">${eggLabel(type)}</span>
+    </div>
 
-    <div class="rp-divider rp-divider-3"></div>
-    <section class="rp-section rp-section-social">
-      <div class="rp-social-bg"></div>
-      <span class="rp-social-dot rp-social-dot-tl"></span>
-      <span class="rp-social-dot rp-social-dot-bl"></span>
-      <span class="rp-social-dot rp-social-dot-tr"></span>
-      <span class="rp-social-dot rp-social-dot-br"></span>
-      <span class="rp-social-bar"></span>
-      <div class="rp-social-titlebar">
-        <h3 class="rp-section-title">校园相处锦囊</h3>
-      </div>
-      <p class="rp-social-tip">${data?.social?.tip || "暂无相处锦囊"}</p>
-    </section>
+    <!-- 重新测试 CTA(整图含字) -->
+    <button type="button" class="rp-retest" id="rpRetest" aria-label="重新测试"></button>
+
+    <!-- divider 1 -->
+    <span class="rp-divider" style="top:361px"></span>
+
+    <!-- ===== 性格特点 (362-852) ===== -->
+    <div class="rp-trait-bg"></div>
+    <div class="rp-section-tag" style="top:381px"></div>
+    <h3 class="rp-section-title" style="top:390px">性格特点</h3>
+    <p class="rp-trait-text">${data?.personality || (type + " · " + codename + " 的性格特点正在路上 ✦")}</p>
+
+    <!-- divider 2 -->
+    <span class="rp-divider" style="top:852px"></span>
+
+    <!-- ===== 学习优势分析 (853-1443) ===== -->
+    <div class="rp-study-bg"></div>
+    <div class="rp-section-tag" style="top:872px"></div>
+    <h3 class="rp-section-title" style="top:881px;left:153px;width:236px">学习优势分析</h3>
+    ${studyHTML}
+
+    <!-- 高效学习方式 标签行 -->
+    <p class="rp-study-tag-label" style="top:1493px">
+      <span class="rp-emoji">🎓</span><span class="rp-purple">高效学习方式:</span>
+    </p>
+    <div class="rp-study-tags">
+      ${tags.map((t,i)=>`<span class="rp-tag-item">${t}</span>${i<tags.length-1?'<span class="rp-tag-sep"></span>':''}`).join("")}
+    </div>
+
+    <!-- divider 3 -->
+    <span class="rp-divider" style="top:1446px"></span>
+
+    <!-- ===== 校园相处锦囊 (1573-1850) ===== -->
+    <div class="rp-social-bg-top"></div>
+    <div class="rp-social-bg-bot"></div>
+    <span class="rp-social-bar"></span>
+    <span class="rp-social-dot rp-dot-1"></span>
+    <span class="rp-social-dot rp-dot-2"></span>
+    <span class="rp-social-dot rp-dot-3"></span>
+    <span class="rp-social-dot rp-dot-4"></span>
+    <div class="rp-section-tag" style="top:1675px"></div>
+    <h3 class="rp-section-title" style="top:1684px;left:162px;width:311px">校园相处锦囊</h3>
+    <p class="rp-social-tip">${data?.social?.tip || "暂无相处锦囊"}</p>
   `;
 
+  $("#rpBack")?.addEventListener("click", () => {
+    if(window.parent !== window) window.parent.postMessage({ type:"personality-back" }, "*");
+    else setScene("menu");
+  });
   $("#rpRetest")?.addEventListener("click", () => {
     state.qIndex = 0;
     state.answers = [];
@@ -349,7 +404,6 @@ function renderResult(type){
 
   const page = $("#rPage");
   if(page) page.scrollTop = 0;
-
   const tip = $("#rScrollTip");
   page?.addEventListener("scroll", () => {
     tip?.classList.toggle("is-hidden", page.scrollTop > 60);
