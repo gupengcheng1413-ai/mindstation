@@ -1,0 +1,850 @@
+/* ============================================================
+   心灵驿站 · 性格认知 — 长条屏 1640×348
+   ============================================================ */
+
+:root{
+  --bg-night:#0a0d12;
+  --card-dark:#23272e;
+  --card-on:#383b42;
+  --card-on-border:#464953;
+  --text-mute:#7b8396;
+  --text-strong:#cfd6e2;
+  --text-headline:#e6ecf5;
+
+  --grad-cta:linear-gradient(90deg,#03d6a5 0%,#2391ff 100%);
+  --grad-glow:linear-gradient(247deg,#1259ff 16%,#009eb9 57%);
+
+  --c-analysts:#7B61FF;
+  --c-diplomats:#3FBF7F;
+  --c-sentinels:#3F8FFF;
+  --c-explorers:#FFB23F;
+
+  --font-cn:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --font-display:"ZCOOL XiaoWei","Noto Serif SC","Noto Sans SC",serif;
+
+  --t-fast:160ms cubic-bezier(.2,.7,.3,1);
+  --t-mid:240ms cubic-bezier(.2,.7,.3,1);
+  --t-slow:380ms cubic-bezier(.2,.7,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none !important}
+html,body{
+  height:100%;
+  font-family:var(--font-cn);
+  background:var(--bg-night);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ===== 舞台容器:自适应缩放 (与 v1 主壳一致) ===== */
+.stage{
+  width:100vw;height:100vh;
+  width:100dvw;height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  background:#000;
+  overflow:hidden;
+}
+.device{
+  position:relative;
+  width:1640px;height:348px;
+  background:var(--bg-night);
+  overflow:hidden;
+  border-radius:14px;
+  transform-origin:top left;
+  --device-scale:1;
+  transform:scale(var(--device-scale));
+  flex-shrink:0;
+  margin-right:calc(-1640px * (1 - var(--device-scale)));
+  margin-bottom:calc(-348px * (1 - var(--device-scale)));
+}
+
+.scene{position:absolute;inset:0;z-index:5}
+.scene[hidden]{display:none}
+.scene.is-entering{animation:sceneIn .42s cubic-bezier(.2,.7,.25,1) forwards}
+@keyframes sceneIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+.scene.is-leaving{animation:sceneOut .2s ease forwards}
+@keyframes sceneOut{to{opacity:0;transform:translateY(-8px)}}
+
+/* ============================================================
+   1. menu 入口 — 1:1 还原 Figma 4350:1744(整图坐标)
+   ============================================================ */
+.scene-menu{
+  background:linear-gradient(109.2deg,#D1E1FF 11.6%,#EDE9FF 103%);
+}
+.m-title{
+  position:absolute;left:80px;top:12px;
+  font-size:34px;font-weight:500;letter-spacing:1px;
+  color:#3a444d;line-height:46px;
+  z-index:10;
+}
+/* 右上 ? 帮助按钮 — Figma 4666:3437(44×44 圆环 + ? 居中) */
+.m-help{
+  position:absolute;left:1576px;top:21px;
+  width:44px;height:44px;border-radius:50%;
+  border:4px solid #3f434d;
+  background:transparent;
+  padding:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:20;
+  cursor:pointer;
+}
+.m-help span{
+  font-family:"PingFang SC","PingFang TC","Noto Sans SC",sans-serif;
+  font-size:30px;font-weight:600;line-height:1;
+  color:#3f434d;
+  display:block;
+  transform:translateY(-1px);
+}
+
+/* 两张大卡 + illo 合成图,卡身 725×238,illo 顶部溢出到 y=36(向上 53) */
+.mp-cards{
+  position:absolute;left:80px;top:36px;right:80px;
+  height:292px;
+  display:flex;gap:30px;
+}
+.mp-card{
+  position:relative;flex:1;
+  height:238px;
+  margin-top:54px;
+  border-radius:28px;
+  overflow:visible;
+  background:transparent;
+  border:0;padding:0;
+  cursor:pointer;
+}
+.mp-card-bg{
+  position:absolute;left:0;top:-54px;
+  width:100%;height:auto;
+  pointer-events:none;
+  user-select:none;-webkit-user-drag:none;
+}
+.mp-card-text{
+  position:absolute;
+  font-family:var(--font-cn);
+  font-size:36px;font-weight:500;letter-spacing:0;
+  line-height:46px;
+  z-index:2;
+  pointer-events:none;
+  white-space:nowrap;
+}
+/* 开始测试: Figma 整图 (135,150) → 卡内 (55,61) */
+.mp-card-test .mp-card-text{
+  left:55px;top:60px;
+  color:#050441;
+}
+/* 选择 MBTI: Figma 整图 (890,149) → 卡内 (55,60) */
+.mp-card-pick .mp-card-text{
+  left:55px;top:59px;
+  color:#530045;
+}
+@keyframes eggBob{0%{transform:translateY(0) rotate(-2deg)}100%{transform:translateY(-8px) rotate(2deg)}}
+@keyframes eggBob{0%{transform:translateY(0) rotate(-2deg)}100%{transform:translateY(-8px) rotate(2deg)}}
+
+/* ============================================================
+   2. quiz 测试流程 — 对齐 Figma 4364:2157 / 4666:3304
+   ============================================================ */
+.scene-quiz{
+  background:linear-gradient(109.2deg,#BCD2FF 11.6%,#E4DEFF 103%);
+}
+.q-top{
+  position:absolute;left:0;top:0;right:0;height:68px;
+  display:flex;align-items:center;
+  z-index:10;
+}
+.q-back{
+  width:80px;height:68px;flex:0 0 80px;
+  display:grid;place-items:center;
+  color:#3a444d;
+  transition:opacity var(--t-fast);
+}
+.q-back:hover{opacity:.65}
+.q-back:active{transform:scale(.92)}
+.q-num{
+  font-size:34px;font-weight:500;color:#3a444d;
+  line-height:46px;letter-spacing:1px;
+}
+.q-num b{font-weight:700}
+
+.q-stem{
+  position:absolute;left:80px;right:80px;top:58px;
+  font-size:36px;font-weight:500;
+  color:#3a444d;
+  letter-spacing:1px;
+  line-height:46px;
+  text-align:center;
+}
+
+.q-opts{
+  position:absolute;left:319px;top:128px;
+  display:flex;gap:32px;
+}
+.q-opt{
+  width:500px;height:160px;
+  background:rgba(255,255,255,.67);
+  border:4px solid transparent;
+  border-radius:28px;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 40px;
+  text-align:center;
+  transition:background var(--t-fast),border-color var(--t-fast),transform var(--t-fast);
+}
+.q-opt:hover{background:rgba(255,255,255,.85)}
+.q-opt:active{transform:scale(.99)}
+.q-opt.is-picked{
+  background:rgba(201,250,255,.67);
+  border-color:#3EBFFF;
+}
+.q-opt-text{
+  font-size:36px;font-weight:500;
+  color:#7b8396;
+  letter-spacing:1px;
+  line-height:46px;
+}
+
+.q-prev,.q-next{
+  position:absolute;top:185px;
+  font-size:34px;font-weight:500;color:#636973;
+  letter-spacing:1px;line-height:46px;
+  background:none;border:0;padding:6px 14px;
+  transition:color var(--t-fast),transform var(--t-fast);
+}
+.q-prev{left:96px}
+.q-next{right:96px}
+.q-prev:hover,.q-next:hover{color:#3a444d}
+.q-prev:active,.q-next:active{transform:scale(.95)}
+.q-prev:disabled,.q-next:disabled{opacity:.35;cursor:not-allowed}
+
+.q-bar{
+  position:absolute;left:0;right:0;bottom:0;height:20px;
+  background:rgba(255,255,255,.67);
+  overflow:hidden;
+}
+.q-bar-fill{
+  height:100%;width:0;
+  background:rgba(57,90,235,.67);
+  transition:width .35s cubic-bezier(.2,.7,.3,1);
+}
+
+/* quiz 退出确认弹层 */
+.quiz-exit{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.8);
+  z-index:50;
+  display:grid;place-items:center;
+  animation:fadeIn .2s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.qe-title{
+  position:absolute;left:50%;top:105px;
+  transform:translateX(-50%);
+  font-size:34px;font-weight:500;color:#fff;
+  letter-spacing:1px;line-height:46px;
+  text-align:center;
+  white-space:nowrap;
+}
+.qe-actions{
+  position:absolute;left:50%;top:207px;
+  transform:translateX(-50%);
+  display:flex;gap:30px;
+}
+.qe-btn{
+  width:340px;height:80px;border-radius:16px;
+  font-size:36px;font-weight:500;letter-spacing:2px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 25.4px 11px rgba(0,0,0,.09);
+  transition:transform var(--t-fast),filter var(--t-fast);
+}
+.qe-btn:hover{filter:brightness(1.08)}
+.qe-btn:active{transform:scale(.97)}
+.qe-btn-cancel{background:#3a414b;color:#cfd6e2}
+.qe-btn-confirm{background:linear-gradient(90deg,#7187FF,#9A56E9);color:#fff;text-shadow:0 4px 19.1px rgba(7,46,155,.35)}
+
+/* ============================================================
+   2.5 profile 录档 — 对齐 Figma 4364:2274 / 4666:3222 / 4666:3256
+   ============================================================ */
+.scene-profile{
+  background:linear-gradient(109.2deg,#BCD2FF 11.6%,#E4DEFF 103%);
+}
+.pf-top{
+  position:absolute;left:0;top:0;right:0;height:68px;
+  display:flex;align-items:center;
+  padding-right:30px;
+  z-index:15;
+}
+.pf-back{
+  width:80px;height:68px;flex:0 0 80px;
+  display:grid;place-items:center;
+  color:#3a444d;
+  transition:opacity var(--t-fast);
+}
+.pf-back:hover{opacity:.65}
+.pf-back:active{transform:scale(.92)}
+.pf-title-top{
+  flex:1;
+  font-size:34px;font-weight:500;letter-spacing:1px;
+  color:#3a444d;line-height:46px;
+}
+.pf-next{
+  font-size:36px;font-weight:500;letter-spacing:1px;
+  color:#7b8396;line-height:46px;
+  background:none;border:0;padding:6px 14px;
+  transition:color var(--t-fast),transform var(--t-fast);
+}
+.pf-next.is-on{color:#3a444d;font-weight:700}
+.pf-next.is-on:hover{transform:translateX(2px)}
+.pf-next:disabled{cursor:not-allowed}
+
+/* 微旋影子层 */
+.pf-panel-skew{
+  position:absolute;left:237px;top:68px;
+  width:1080.7px;height:386px;
+  background:rgba(255,255,255,.46);
+  border-radius:54px;
+  transform:rotate(-4.11deg);
+  z-index:1;
+  pointer-events:none;
+}
+/* 主白底面板 */
+.pf-panel{
+  position:absolute;left:280px;top:89px;
+  width:1080px;height:386px;
+  background:#fff;
+  border-radius:54px;
+  z-index:2;
+  box-shadow:0 18px 40px rgba(60,40,200,.08);
+}
+.pf-panel-title{
+  position:absolute;left:105px;top:84px;
+  font-family:"ZCOOL XiaoWei","Saira Stencil One",var(--font-display);
+  font-size:50px;font-weight:400;letter-spacing:3px;
+  color:#3a444d;line-height:62px;
+  transform:rotate(0.32deg);
+}
+.pf-panel-title p+p{margin-top:0}
+.pf-panel-form{
+  position:absolute;left:500px;top:48px;
+  width:518px;
+  display:flex;flex-direction:column;gap:26px;
+}
+.pf-row{
+  position:relative;
+  width:518px;height:80px;
+  background:rgba(232,232,232,.47);
+  border:0;border-radius:47px;
+  display:flex;align-items:center;
+  padding:0 28px;
+  text-align:left;
+  transition:background var(--t-fast);
+}
+.pf-row:hover{background:rgba(232,232,232,.7)}
+.pf-row-label{
+  flex:0 0 84px;
+  font-size:36px;font-weight:500;color:#3a444d;
+  letter-spacing:1px;line-height:46px;
+}
+.pf-input{
+  flex:1;
+  background:transparent;border:0;outline:none;
+  font-family:var(--font-cn);
+  font-size:30px;font-weight:500;color:#3a444d;
+  letter-spacing:1px;line-height:46px;
+  caret-color:#ff8a36;
+  padding:0;
+}
+.pf-input::placeholder{color:rgba(123,131,150,.52);font-size:30px}
+.pf-row-value{
+  flex:1;
+  font-size:36px;font-weight:500;
+  color:#7b8396;
+  letter-spacing:1px;line-height:46px;
+}
+.pf-row-value.is-on{color:#3a444d}
+.pf-row-arrow{
+  flex:0 0 30px;
+  font-size:36px;font-weight:600;color:#7b8396;
+  line-height:1;
+}
+
+/* 关系选择弹层 */
+.profile-modal{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.7);
+  z-index:50;
+  animation:fadeIn .22s ease;
+}
+.pm-top{
+  position:absolute;left:80px;right:30px;top:67px;
+  display:flex;align-items:center;
+}
+.pm-bar{
+  width:14px;height:42px;
+  background:#976eff;border-radius:34px;
+  margin-right:12px;
+}
+.pm-title{
+  flex:1;
+  font-size:34px;font-weight:400;color:#fff;
+  letter-spacing:1px;line-height:46px;
+}
+.pm-confirm{
+  font-size:36px;font-weight:500;color:#fff;
+  letter-spacing:1px;line-height:46px;
+  background:none;border:0;padding:6px 14px;
+  transition:transform var(--t-fast);
+}
+.pm-confirm:hover{transform:scale(1.05)}
+
+.pm-chips{
+  position:absolute;left:80px;top:143px;
+  display:grid;
+  grid-template-columns:repeat(4,283px);
+  gap:16px;
+}
+.pm-chip{
+  position:relative;
+  width:283px;height:80px;
+  background:rgba(35,39,46,.92);
+  border:0;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;
+  font-size:36px;font-weight:500;color:#7b8396;
+  letter-spacing:1px;line-height:46px;
+  transition:background var(--t-fast),color var(--t-fast),transform var(--t-fast);
+}
+.pm-chip:hover{background:#2c3138;color:#cfd6e2}
+.pm-chip:active{transform:scale(.97)}
+.pm-chip.is-on{background:#395AEB;color:#fff}
+.pm-chip-icon{
+  width:34px;height:34px;
+  flex:0 0 34px;
+  object-fit:contain;
+  pointer-events:none;
+  filter:invert(1) brightness(.92);
+  opacity:.85;
+  transition:filter var(--t-fast),opacity var(--t-fast);
+}
+.pm-chip:hover .pm-chip-icon{opacity:1}
+.pm-chip.is-on .pm-chip-icon{filter:none;opacity:1}
+
+/* ============================================================
+   3. result 人格主页 — 单屏纵向滚动 · 对齐 Figma 4654:807
+   ============================================================ */
+.scene-result{
+  background:linear-gradient(120.45deg,#b1a5ff 29.87%,#e4deff 89.22%);
+  overflow:hidden;
+}
+
+/* 左上返回按钮:从 menu 一致黑底白边改为浅色稿适配 */
+.r-back{
+  position:absolute;left:14px;top:14px;
+  width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  color:#3c3c3c;
+  background:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.7);
+  z-index:30;
+  transition:background var(--t-fast),color var(--t-fast);
+}
+.r-back:hover{background:rgba(255,255,255,.85);color:#000}
+.r-back:active{transform:scale(.92)}
+
+/* 单屏纵向 scroll 容器:1640 宽,1640×348 视窗,内容自然撑开 */
+.r-page{
+  position:absolute;inset:0;
+  overflow-x:hidden;overflow-y:auto;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+}
+.r-page::-webkit-scrollbar{display:none}
+.r-page-inner{
+  position:relative;
+  width:1640px;
+  /* 总高度 = Figma 1954,但 scale 后视窗只有 348 → 用户纵向 scroll */
+  min-height:1954px;
+  padding:0;
+}
+
+/* 右下滚动提示箭头(仅在顶端时显示,提示用户可往下滑) */
+.r-scroll-tip{
+  position:absolute;right:24px;bottom:14px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.7);
+  color:#5a4eff;
+  display:grid;place-items:center;
+  font-size:22px;line-height:0;font-weight:700;
+  z-index:25;pointer-events:none;
+  animation:scrollHint 1.6s ease-in-out infinite;
+}
+@keyframes scrollHint{
+  0%,100%{transform:translateY(0);opacity:.85}
+  50%{transform:translateY(4px);opacity:1}
+}
+.r-scroll-tip.is-hidden{opacity:0;transition:opacity .3s}
+
+/* ===== 顶 banner: 你的测试结果是 ===== */
+.rp-top{
+  position:absolute;left:75px;top:14px;
+  font-size:32px;font-weight:500;color:#000;
+  letter-spacing:1px;line-height:46px;
+}
+.rp-top-self{
+  position:absolute;right:50px;top:20px;
+  font-size:36px;font-weight:700;color:#000;
+}
+.rp-top-self svg{margin-left:8px;vertical-align:middle}
+
+/* ===== 顶部大标题区 (1640 全宽 banner,白底虚线) ===== */
+.rp-banner{
+  position:absolute;left:101px;top:75px;
+  width:1438px;height:287px;
+  background:rgba(255,255,255,.5);
+  border-radius:24px;
+  overflow:hidden;
+}
+
+/* ENTP 大字 — 紫色渐变描边字体 */
+.rp-type{
+  position:absolute;left:129px;top:103px;
+  font-family:"Passion One","ZCOOL XiaoWei",var(--font-display);
+  font-size:120px;font-weight:400;
+  letter-spacing:-1.2px;line-height:96px;
+  background:linear-gradient(90deg,rgba(202,11,255,.7) 0%,rgba(44,2,255,.7) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-transform:lowercase;
+}
+
+/* 副标题:专业脑洞制造机 */
+.rp-subtitle{
+  position:absolute;left:131px;top:229px;
+  font-size:36px;font-weight:700;color:#3c3c3c;
+  line-height:46px;letter-spacing:1px;
+  width:520px;
+}
+.rp-subtitle p + p{margin-top:0}
+
+/* 4 维度药丸卡 — 横向 4 个,每个 140 宽 295 高,白底圆角 */
+.rp-axes{
+  position:absolute;left:553px;top:57px;
+  display:flex;gap:14px;
+  height:295px;
+}
+.rp-axis-card{
+  position:relative;
+  width:140px;height:295px;
+  background:#fff;
+  border-radius:17px;
+  box-shadow:0 4px 32px rgba(0,0,0,.08);
+  padding:12px;
+}
+/* 卡顶颜色小圆点 */
+.rp-axis-dot{
+  position:absolute;left:18px;top:12px;
+  width:16px;height:16px;border-radius:50%;
+  background:#ffe066;
+}
+/* 卡上顶角图标(简化:用 emoji-like 占位符号) */
+.rp-axis-icon{
+  position:absolute;right:14px;top:12px;
+  font-size:26px;line-height:1;
+  opacity:.55;
+}
+.rp-axis-title{
+  position:absolute;left:18px;top:40px;
+  font-size:26px;font-weight:700;color:#000;
+  line-height:46px;
+  letter-spacing:1px;
+}
+/* 上下两端的极性标签 + 中间竖向 slider */
+.rp-axis-pole{
+  position:absolute;left:50%;
+  transform:translateX(-50%);
+  font-size:24px;font-weight:500;
+  letter-spacing:1px;
+  white-space:nowrap;
+  display:flex;align-items:center;gap:6px;
+}
+.rp-axis-pole-top{top:104px}
+.rp-axis-pole-bottom{bottom:18px}
+.rp-axis-pole.is-on{
+  /* 4 轴各色:E=红 N=蓝 F=洋红/T=金 P=青 */
+  font-weight:700;
+}
+.rp-axis-pole-arrow{font-size:18px;line-height:0;display:inline-block;width:14px;text-align:center}
+.rp-axis-pole-top .rp-axis-pole-arrow{transform:rotate(-90deg)}
+.rp-axis-pole-bottom .rp-axis-pole-arrow{transform:rotate(90deg)}
+
+/* 4 轴各自顶部/底部 on 颜色 */
+.rp-axis-EI .rp-axis-pole.is-on{color:#ff1d65}
+.rp-axis-SN .rp-axis-pole.is-on{color:#5757ff}
+.rp-axis-TF .rp-axis-pole.is-on{color:#d18b00}
+.rp-axis-JP .rp-axis-pole.is-on{color:#09a8b3}
+
+/* 中间竖向 slider 槽 */
+.rp-axis-track{
+  position:absolute;left:50%;top:142px;bottom:60px;
+  transform:translateX(-50%);
+  width:30px;
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.12));
+  overflow:hidden;
+}
+.rp-axis-knob{
+  position:absolute;left:50%;
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#fff,#dad2ff);
+  box-shadow:0 4px 8px rgba(70,40,200,.2);
+  transform:translateX(-50%);
+  transition:top var(--t-mid);
+}
+.rp-axis-knob.knob-left{top:6px}
+.rp-axis-knob.knob-right{bottom:6px;top:auto}
+
+/* 蛋蛋形象 — 右上角 */
+.rp-egg-frame{
+  position:absolute;right:130px;top:-37px;
+  width:259px;height:307px;
+  display:grid;place-items:center;
+  pointer-events:none;
+}
+.rp-egg-shape{
+  width:200px;height:230px;
+  border-radius:50% 50% 48% 48%/55% 55% 45% 45%;
+  filter:drop-shadow(0 16px 30px rgba(60,30,180,.3));
+  animation:eggBob 3.6s ease-in-out infinite alternate;
+}
+
+/* 五角星 + e人 标签 */
+.rp-tag{
+  position:absolute;right:-30px;top:99px;
+  width:195px;height:195px;
+  display:grid;place-items:center;
+}
+.rp-tag-star{
+  position:absolute;inset:0;
+  background:#ffe55c;
+  clip-path:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  filter:drop-shadow(0 6px 12px rgba(220,180,40,.3));
+}
+.rp-tag-text{
+  position:relative;z-index:2;
+  font-family:var(--font-display);
+  font-size:50px;font-weight:400;color:#80f;
+  letter-spacing:2px;
+  transform:rotate(-12.79deg);
+}
+
+/* 重新测试 CTA */
+.rp-retest{
+  position:absolute;left:1209px;top:279px;
+  width:300px;height:68px;
+  background:#9466ff;
+  border:1px solid #fff;
+  border-radius:14px;
+  color:#fff;
+  font-size:34px;font-weight:500;
+  letter-spacing:2px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:background var(--t-fast),transform var(--t-fast);
+  box-shadow:0 6px 16px rgba(120,80,255,.32);
+}
+.rp-retest:hover{background:#a37bff;transform:translateY(-2px)}
+.rp-retest:active{transform:scale(.97)}
+
+/* ===== 通用 section panel:"性格特点 / 学习优势分析 / 校园相处锦囊" ===== */
+.rp-section{
+  position:absolute;left:101px;
+  width:1438px;
+}
+.rp-section-trait{top:362px;height:490px}
+.rp-section-study{top:853px;height:590px}
+.rp-section-social{top:1444px;height:330px}
+
+/* 标题 panel — 左侧带白底圆角条,内含标题 */
+.rp-section-titlebar{
+  position:absolute;left:22px;top:19px;
+  width:507px;height:70px;
+  background:rgba(255,255,255,.55);
+  border-radius:18px;
+  display:flex;align-items:center;
+  padding:0 32px;
+}
+.rp-section-title{
+  font-family:"ZCOOL XiaoWei",var(--font-display);
+  font-size:36px;color:#2f2f2f;
+  letter-spacing:2px;line-height:46px;
+}
+
+/* 上下虚线分隔(对应 Figma Vector 90 / 91 / 92) */
+.rp-divider{
+  position:absolute;left:141px;
+  width:1370px;height:1px;
+  background-image:linear-gradient(90deg,#3c3c3c 50%,transparent 50%);
+  background-size:14px 1px;
+  background-repeat:repeat-x;
+  opacity:.45;
+}
+.rp-divider-1{top:362px}
+.rp-divider-2{top:853px}
+.rp-divider-3{top:1444px}
+
+/* ===== 性格特点 — 长文 ===== */
+.rp-trait-text{
+  position:absolute;left:30px;top:109px;
+  width:1371px;
+  font-size:32px;font-weight:400;
+  line-height:1.04;
+  color:rgba(0,0,0,.6);
+  text-align:justify;
+  text-indent:64px;
+}
+
+/* ===== 学习优势 — 4 卡 2×2 ===== */
+.rp-study-cards{
+  position:absolute;left:34px;top:119px;
+  width:1370px;
+  display:grid;
+  grid-template-columns:680px 680px;
+  grid-gap:10px 12px;
+}
+.rp-study-card{
+  background:rgba(217,217,217,.2);
+  opacity:.92;
+  border-radius:20px;
+  padding:16px 28px 22px;
+  height:205px;
+}
+.rp-study-card-title{
+  font-size:36px;font-weight:500;
+  color:#000;line-height:46px;
+  letter-spacing:1px;
+}
+.rp-study-card-title .rp-study-num{
+  display:inline-block;
+  width:28px;text-align:left;
+  font-weight:700;
+  background:linear-gradient(90deg,#7B61FF,#3F8FFF);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.rp-study-card-body{
+  margin-top:14px;
+  font-size:32px;font-weight:400;
+  line-height:1.04;
+  color:rgba(0,0,0,.6);
+}
+
+/* 高效学习方式 tags 行 */
+.rp-study-tags{
+  position:absolute;left:0;right:0;bottom:-2px;
+  display:flex;align-items:center;justify-content:center;
+  gap:0;
+  padding:0 80px;
+}
+.rp-study-tags-label{
+  font-size:34px;font-weight:700;
+  color:#000;
+  letter-spacing:1px;
+  line-height:46px;
+  white-space:nowrap;
+  margin-right:14px;
+}
+.rp-study-tags-label .rp-emoji{margin-right:4px}
+.rp-study-tags-label .rp-purple{color:#340fad}
+.rp-study-tags-list{
+  display:flex;align-items:center;
+}
+.rp-study-tag{
+  font-size:30px;font-weight:700;
+  color:#0e0e0e;
+  letter-spacing:1px;
+  padding:0 28px;
+  white-space:nowrap;
+}
+.rp-study-tag + .rp-study-tag{
+  border-left:3px solid #000;
+  line-height:33px;
+}
+
+/* ===== 校园相处锦囊 — 整个 section 是一个圆角白卡 ===== */
+.rp-social-bg{
+  position:absolute;left:0;top:32px;
+  width:1438px;height:209px;
+  background:rgba(255,255,255,.55);
+  border-radius:24px;
+  border:2px solid rgba(255,255,255,.8);
+}
+.rp-social-titlebar{
+  position:absolute;left:22px;top:0;
+  width:507px;height:70px;
+  background:#fff;
+  border-radius:18px;
+  display:flex;align-items:center;
+  padding:0 32px;
+  z-index:2;
+}
+/* 4 角装饰圆点 */
+.rp-social-dot{
+  position:absolute;width:18px;height:18px;border-radius:50%;
+  background:#9466ff;
+  z-index:2;
+}
+.rp-social-dot-tl{left:20px;top:90px}
+.rp-social-dot-bl{left:20px;bottom:0px}
+.rp-social-dot-tr{right:20px;top:90px}
+.rp-social-dot-br{right:20px;bottom:0px}
+
+/* 左侧装饰条 */
+.rp-social-bar{
+  position:absolute;left:34px;top:95px;
+  width:16px;height:103px;
+  background:linear-gradient(180deg,#9466ff,#3F8FFF);
+  border-radius:8px;
+  z-index:2;
+}
+
+/* 一句话锦囊 */
+.rp-social-tip{
+  position:absolute;left:60px;right:60px;top:130px;
+  font-size:32px;font-weight:400;
+  color:rgba(0,0,0,.7);
+  line-height:1.04;
+  text-align:center;
+  letter-spacing:1px;
+  z-index:2;
+}
+
+/* ============================================================
+   toast
+   ============================================================ */
+.toast{
+  position:absolute;left:50%;top:24px;
+  transform:translate(-50%,12px);
+  background:rgba(20,24,32,.92);
+  color:#fff;font-size:22px;letter-spacing:1px;
+  padding:14px 28px;
+  border-radius:24px;
+  opacity:0;pointer-events:none;
+  z-index:1000;
+  transition:opacity .3s,transform .3s;
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+.toast.is-on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+
+/* ============================================================
+   reduced-motion
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}

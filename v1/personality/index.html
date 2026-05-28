@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#d1e1ff">
+<title>心灵驿站 · 性格认知</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+XiaoWei&family=Saira+Stencil+One&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-state="menu">
+<div class="stage">
+<div class="device" id="device">
+
+  <!-- ============== menu 入口页(对齐 Figma 4350:1744) ============== -->
+  <section class="scene scene-menu" data-scene="menu">
+    <h1 class="m-title">性格探索</h1>
+    <button type="button" class="m-help" id="menuHelp" aria-label="帮助"><span>？</span></button>
+
+    <div class="mp-cards">
+      <button type="button" class="mp-card mp-card-test" id="ctaStart">
+        <img class="mp-card-bg" src="assets/menu/card-test-with-illo.png" alt="" draggable="false">
+        <span class="mp-card-text">开始测试</span>
+      </button>
+      <button type="button" class="mp-card mp-card-pick" id="ctaPick">
+        <img class="mp-card-bg" src="assets/menu/card-pick-with-illo.png" alt="" draggable="false">
+        <span class="mp-card-text">选择 MBTI</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============== profile 录档(对齐 Figma 4364:2274 / 4666:3222 / 4666:3256) ============== -->
+  <section class="scene scene-profile" data-scene="profile" hidden>
+    <header class="pf-top">
+      <button type="button" class="pf-back" id="profileBack" aria-label="返回">
+        <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 class="pf-title-top">性格探索</h1>
+      <button type="button" class="pf-next" id="pfNext" disabled>下一步 ›</button>
+    </header>
+
+    <div class="pf-panel-skew" aria-hidden="true"></div>
+    <div class="pf-panel">
+      <div class="pf-panel-title">
+        <p>先完善</p>
+        <p>测试档案哦</p>
+      </div>
+      <div class="pf-panel-form">
+        <label class="pf-row pf-row-name">
+          <span class="pf-row-label">姓名</span>
+          <input type="text" class="pf-input" id="pfName" placeholder="请输入昵称（1-6个字）" maxlength="6" autocomplete="off" spellcheck="false">
+        </label>
+        <button type="button" class="pf-row pf-row-relation" id="pfRelation">
+          <span class="pf-row-label">关系</span>
+          <span class="pf-row-value" id="pfRelationVal">未选择</span>
+          <span class="pf-row-arrow" aria-hidden="true">›</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 关系选择弹层 -->
+    <div class="profile-modal" id="profileModal" hidden>
+      <header class="pm-top">
+        <span class="pm-bar" aria-hidden="true"></span>
+        <h2 class="pm-title">选择关系标签</h2>
+        <button type="button" class="pm-confirm" id="pmConfirm">确定</button>
+      </header>
+      <div class="pm-chips" id="pmChips">
+        <button type="button" class="pm-chip" data-rel="自己"><img class="pm-chip-icon" src="assets/rel-self.svg" alt="">自己</button>
+        <button type="button" class="pm-chip" data-rel="好友"><img class="pm-chip-icon" src="assets/rel-friend.svg" alt="">好友</button>
+        <button type="button" class="pm-chip" data-rel="同学"><img class="pm-chip-icon" src="assets/rel-classmate.svg" alt="">同学</button>
+        <button type="button" class="pm-chip" data-rel="家人"><img class="pm-chip-icon" src="assets/rel-family.svg" alt="">家人</button>
+        <button type="button" class="pm-chip" data-rel="老师"><img class="pm-chip-icon" src="assets/rel-teacher.svg" alt="">老师</button>
+        <button type="button" class="pm-chip" data-rel="其他"><img class="pm-chip-icon" src="assets/rel-other.svg" alt="">其他</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== quiz 测试流程(对齐 Figma 4364:2157 / 4666:3304) ============== -->
+  <section class="scene scene-quiz" data-scene="quiz" hidden>
+    <header class="q-top">
+      <button type="button" class="q-back" id="quizBack" aria-label="返回">
+        <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="q-num"><b id="qIdx">1</b><span id="qTotal">/28</span></span>
+    </header>
+
+    <h2 class="q-stem" id="qStem">…</h2>
+
+    <div class="q-opts">
+      <button type="button" class="q-opt q-opt-a" id="qOptA">
+        <span class="q-opt-text" id="qOptATxt">…</span>
+      </button>
+      <button type="button" class="q-opt q-opt-b" id="qOptB">
+        <span class="q-opt-text" id="qOptBTxt">…</span>
+      </button>
+    </div>
+
+    <button type="button" class="q-prev" id="qPrev">‹ 上一题</button>
+    <button type="button" class="q-next" id="qNext">下一题 ›</button>
+
+    <div class="q-bar"><div class="q-bar-fill" id="qBarFill"></div></div>
+
+    <!-- 退出确认弹层 -->
+    <div class="quiz-exit" id="quizExit" hidden>
+      <p class="qe-title">退出后测试进度将被清空<br>确定要退出测试吗？</p>
+      <div class="qe-actions">
+        <button type="button" class="qe-btn qe-btn-cancel" id="qeCancel">确定退出</button>
+        <button type="button" class="qe-btn qe-btn-confirm" id="qeConfirm">继续测试</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== result 人格主页(单屏纵向滚动 · 对齐 Figma 4654:807) ============== -->
+  <section class="scene scene-result" data-scene="result" hidden>
+    <button type="button" class="r-back" id="resultBack" aria-label="返回">
+      <svg viewBox="0 0 12 22" width="10" height="18"><path d="M11 1 L1 11 L11 21" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <div class="r-page" id="rPage">
+      <div class="r-page-inner" id="rPageInner">
+        <!-- 由 JS 注入完整长版内容(1640 宽 × ~1900 高,纵向滚动) -->
+      </div>
+    </div>
+
+    <div class="r-scroll-tip" id="rScrollTip" aria-hidden="true">
+      <span class="r-scroll-arrow">⌄</span>
+    </div>
+  </section>
+
+  <!-- toast -->
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+</div><!-- /device -->
+</div><!-- /stage -->
+
+<script src="script.js"></script>
+</body>
+</html>
