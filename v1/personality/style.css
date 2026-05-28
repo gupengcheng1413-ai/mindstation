@@ -441,66 +441,120 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   display:block;
 }
 
-/* 关系选择弹层 */
+/* 关系选择弹层 — 像素级对齐 Figma 4531:541 modal_guanxi_2(默认) / 4365:2324 modal_guanxi_1(选中态参考)
+   遮罩 1640×348 rgba(0,0,0,.7) + 暗色弹层 1640×316 r=40 仅顶部圆角 #18181C(y=39 起) */
 .profile-modal{
   position:absolute;inset:0;
-  background:rgba(0,0,0,.7);
   z-index:50;
   animation:fadeIn .22s ease;
 }
-.pm-top{
-  position:absolute;left:80px;right:30px;top:67px;
-  display:flex;align-items:center;
+.pm-mask{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.7);
 }
+.pm-sheet{
+  position:absolute;left:0;top:39px;
+  width:1640px;height:316px;
+  background:#18181C;
+  border-radius:40px 40px 0 0;
+}
+/* 紫色提示 bar — Figma 4531:585 (80,69) 14×42 r=34 #976eff */
 .pm-bar{
+  position:absolute;left:80px;top:69px;
   width:14px;height:42px;
   background:#976eff;border-radius:34px;
-  margin-right:12px;
+  z-index:2;
 }
+/* 顶栏标题 — Figma 4531:584 "选择关系标签" (106,67) 34/46 #636973 Regular */
 .pm-title{
-  flex:1;
-  font-size:34px;font-weight:400;color:#fff;
-  letter-spacing:1px;line-height:46px;
+  position:absolute;left:106px;top:67px;
+  font-family:var(--font-cn);
+  font-size:34px;font-weight:400;
+  color:#636973;line-height:46px;letter-spacing:0;
+  white-space:nowrap;
+  z-index:2;
 }
+/* 顶栏右"确定" — Figma 4531:629 (1487,67) 72×46 36/46 #636973 Medium
+   未选 chip:灰态 #636973 不可点;有 pending 选中后变白 #fff Medium 可点 */
 .pm-confirm{
-  font-size:36px;font-weight:500;color:#fff;
-  letter-spacing:1px;line-height:46px;
-  background:none;border:0;padding:6px 14px;
-  transition:transform var(--t-fast);
+  position:absolute;left:1487px;top:67px;
+  width:72px;height:46px;
+  font-family:var(--font-cn);
+  font-size:36px;font-weight:500;
+  color:#636973;line-height:46px;letter-spacing:0;
+  background:none;border:0;padding:0;
+  text-align:left;
+  z-index:2;
+  cursor:not-allowed;
+  transition:color var(--t-fast),transform var(--t-fast);
 }
-.pm-confirm:hover{transform:scale(1.05)}
+.pm-confirm.is-on{color:#fff;cursor:pointer}
+.pm-confirm.is-on:hover{transform:scale(1.04)}
+.pm-confirm.is-on:active{transform:scale(.96)}
 
-.pm-chips{
-  position:absolute;left:80px;top:143px;
-  display:grid;
-  grid-template-columns:repeat(4,283px);
-  gap:16px;
-}
+/* chip 容器只是逻辑分组,所有 chip 自身绝对定位到 Figma 坐标。
+   不能用 inset:0,否则容器全屏覆盖了"确定"按钮的命中区。 */
+.pm-chips{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:2}
+.pm-chips .pm-chip{pointer-events:auto}
+/* 单 chip 公共样式 — Figma Rectangle 158 283×80 r=14 #23272e(默认) / #3a414b(选中) */
 .pm-chip{
-  position:relative;
+  position:absolute;
   width:283px;height:80px;
-  background:rgba(35,39,46,.92);
+  background:#23272e;
   border:0;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  gap:14px;
-  font-size:36px;font-weight:500;color:#7b8396;
-  letter-spacing:1px;line-height:46px;
-  transition:background var(--t-fast),color var(--t-fast),transform var(--t-fast);
+  padding:0;
+  cursor:pointer;
+  transition:background var(--t-fast),transform var(--t-fast);
 }
-.pm-chip:hover{background:#2c3138;color:#cfd6e2}
-.pm-chip:active{transform:scale(.97)}
-.pm-chip.is-on{background:#395AEB;color:#fff}
+.pm-chip:hover{background:#2c3138}
+.pm-chip:active{transform:scale(.98)}
+.pm-chip.is-on{background:#3a414b}
+
+/* 6 个 chip 各自坐标 */
+.pm-chip-self     {left:80px;  top:143px}
+.pm-chip-friend   {left:379px; top:143px}
+.pm-chip-classmate{left:678px; top:143px}
+.pm-chip-family   {left:977px; top:143px}
+.pm-chip-teacher  {left:1276px;top:142px}
+.pm-chip-other    {left:80px;  top:239px}
+
+/* chip 内 icon — off/on 两张 SVG 互切。默认 #7b8396 灰图,选中切 Figma 自带荧光色版本 */
 .pm-chip-icon{
-  width:34px;height:34px;
-  flex:0 0 34px;
-  object-fit:contain;
+  position:absolute;
   pointer-events:none;
-  filter:invert(1) brightness(.92);
-  opacity:.85;
-  transition:filter var(--t-fast),opacity var(--t-fast);
+  user-select:none;-webkit-user-drag:none;
+  transition:opacity var(--t-fast);
 }
-.pm-chip:hover .pm-chip-icon{opacity:1}
-.pm-chip.is-on .pm-chip-icon{filter:none;opacity:1}
+.pm-chip-icon-on{opacity:0}
+.pm-chip.is-on .pm-chip-icon-off{opacity:0}
+.pm-chip.is-on .pm-chip-icon-on{opacity:1}
+
+/* 6 个 chip 各自的图标尺寸/位置:对 off 与 on 同时生效 */
+.pm-chip-self      .pm-chip-icon{left:82px; top:23px;width:34px;height:34px}
+.pm-chip-friend    .pm-chip-icon{left:83px; top:23px;width:34px;height:34px}
+.pm-chip-classmate .pm-chip-icon{left:80px; top:22px;width:39px;height:39px}
+.pm-chip-family    .pm-chip-icon{left:77px; top:17px;width:45px;height:45px}
+.pm-chip-teacher   .pm-chip-icon{left:81px; top:22px;width:37px;height:37px}
+.pm-chip-other     .pm-chip-icon{left:86px; top:26px;width:28px;height:28px}
+
+/* chip 内文字 — Figma 36/46 #7b8396 Medium,选中切 #fff
+   每个 chip 文字位置不同 */
+.pm-chip-text{
+  position:absolute;
+  font-family:var(--font-cn);
+  font-size:36px;font-weight:500;
+  color:#7b8396;line-height:46px;letter-spacing:0;
+  pointer-events:none;
+  transition:color var(--t-fast);
+}
+.pm-chip.is-on .pm-chip-text{color:#fff}
+
+.pm-chip-self     .pm-chip-text{left:128px;top:17px}
+.pm-chip-friend   .pm-chip-text{left:128px;top:17px}
+.pm-chip-classmate.pm-chip-text, .pm-chip-classmate .pm-chip-text{left:131px;top:17px}
+.pm-chip-family   .pm-chip-text{left:134px;top:18px}
+.pm-chip-teacher  .pm-chip-text{left:130px;top:17px}
+.pm-chip-other    .pm-chip-text{left:125px;top:17px}
 
 /* ============================================================
    3. result 人格主页 — 单屏纵向滚动 · 对齐 Figma 4654:807

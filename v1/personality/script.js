@@ -17,6 +17,7 @@ const state = {
   answers: [],
   currentType: null,
   relationModalOpen: false,
+  pendingRelation: "",
   exitModalOpen: false
 };
 
@@ -122,22 +123,31 @@ function renderProfile(){
     nextBtn.disabled = !ready;
     nextBtn.classList.toggle("is-on", ready);
   }
-  // 关系弹层 chip 高亮
+  // 弹层 chip 按 pendingRelation 高亮(进弹层后所有切换都靠 pending)
   $$(".pm-chip").forEach(chip => {
-    chip.classList.toggle("is-on", chip.dataset.rel === state.profile.relation);
+    chip.classList.toggle("is-on", chip.dataset.rel === state.pendingRelation);
   });
+  // 确定按钮:有 pending 就高亮可点击,无则灰态
+  const confirmBtn = $("#pmConfirm");
+  if(confirmBtn) confirmBtn.classList.toggle("is-on", !!state.pendingRelation);
 }
 
 function openRelationModal(){
   state.relationModalOpen = true;
+  state.pendingRelation = state.profile.relation || "";
   const m = $("#profileModal");
   if(m) m.hidden = false;
   renderProfile();
 }
-function closeRelationModal(){
+function closeRelationModal(commit){
+  if(commit){
+    state.profile.relation = state.pendingRelation || state.profile.relation;
+  }
   state.relationModalOpen = false;
+  state.pendingRelation = "";
   const m = $("#profileModal");
   if(m) m.hidden = true;
+  renderProfile();
 }
 
 // ---------- quiz 渲染 ----------
@@ -401,11 +411,13 @@ function bindEvents(){
   $("#pmChips")?.addEventListener("click", (e) => {
     const chip = e.target.closest(".pm-chip");
     if(!chip) return;
-    state.profile.relation = chip.dataset.rel;
+    state.pendingRelation = chip.dataset.rel;
     renderProfile();
-    closeRelationModal();
   });
-  $("#pmConfirm")?.addEventListener("click", () => closeRelationModal());
+  $("#pmConfirm")?.addEventListener("click", () => {
+    if(!state.pendingRelation) return;
+    closeRelationModal(true);
+  });
 
   // quiz
   $("#quizBack")?.addEventListener("click", () => {

@@ -57,20 +57,44 @@
       <svg class="pf-row-arrow" viewBox="0 0 12.7073 26.0001" width="9" height="22" aria-hidden="true"><path d="M2 2L10.4593 11.6498C10.7737 12.0084 10.7911 12.5392 10.5008 12.9176L2 24" fill="none" stroke="#7d7d7d" stroke-width="4" stroke-linecap="round"/></svg>
     </button>
 
-    <!-- 关系选择弹层 -->
+    <!-- 关系选择弹层 — Figma 4531:541 modal_guanxi_2(默认未选态) / 4365:2324 modal_guanxi_1(已选态示意) -->
     <div class="profile-modal" id="profileModal" hidden>
-      <header class="pm-top">
-        <span class="pm-bar" aria-hidden="true"></span>
-        <h2 class="pm-title">选择关系标签</h2>
-        <button type="button" class="pm-confirm" id="pmConfirm">确定</button>
-      </header>
+      <div class="pm-mask"></div>
+      <div class="pm-sheet"></div>
+      <span class="pm-bar" aria-hidden="true"></span>
+      <h2 class="pm-title">选择关系标签</h2>
+      <button type="button" class="pm-confirm" id="pmConfirm">确定</button>
       <div class="pm-chips" id="pmChips">
-        <button type="button" class="pm-chip" data-rel="自己"><img class="pm-chip-icon" src="assets/rel-self.svg" alt="">自己</button>
-        <button type="button" class="pm-chip" data-rel="好友"><img class="pm-chip-icon" src="assets/rel-friend.svg" alt="">好友</button>
-        <button type="button" class="pm-chip" data-rel="同学"><img class="pm-chip-icon" src="assets/rel-classmate.svg" alt="">同学</button>
-        <button type="button" class="pm-chip" data-rel="家人"><img class="pm-chip-icon" src="assets/rel-family.svg" alt="">家人</button>
-        <button type="button" class="pm-chip" data-rel="老师"><img class="pm-chip-icon" src="assets/rel-teacher.svg" alt="">老师</button>
-        <button type="button" class="pm-chip" data-rel="其他"><img class="pm-chip-icon" src="assets/rel-other.svg" alt="">其他</button>
+        <button type="button" class="pm-chip pm-chip-self" data-rel="自己">
+          <img class="pm-chip-icon pm-chip-icon-off" src="assets/rel-self.svg" alt="">
+          <img class="pm-chip-icon pm-chip-icon-on"  src="assets/rel-self-on.svg" alt="">
+          <span class="pm-chip-text">自己</span>
+        </button>
+        <button type="button" class="pm-chip pm-chip-friend" data-rel="好友">
+          <img class="pm-chip-icon pm-chip-icon-off" src="assets/rel-friend.svg" alt="">
+          <img class="pm-chip-icon pm-chip-icon-on"  src="assets/rel-friend-on.svg" alt="">
+          <span class="pm-chip-text">好友</span>
+        </button>
+        <button type="button" class="pm-chip pm-chip-classmate" data-rel="同学">
+          <img class="pm-chip-icon pm-chip-icon-off" src="assets/rel-classmate.svg" alt="">
+          <img class="pm-chip-icon pm-chip-icon-on"  src="assets/rel-classmate-on.svg" alt="">
+          <span class="pm-chip-text">同学</span>
+        </button>
+        <button type="button" class="pm-chip pm-chip-family" data-rel="家人">
+          <img class="pm-chip-icon pm-chip-icon-off" src="assets/rel-family.svg" alt="">
+          <img class="pm-chip-icon pm-chip-icon-on"  src="assets/rel-family-on.svg" alt="">
+          <span class="pm-chip-text">家人</span>
+        </button>
+        <button type="button" class="pm-chip pm-chip-teacher" data-rel="老师">
+          <img class="pm-chip-icon pm-chip-icon-off" src="assets/rel-teacher.svg" alt="">
+          <img class="pm-chip-icon pm-chip-icon-on"  src="assets/rel-teacher-on.svg" alt="">
+          <span class="pm-chip-text">老师</span>
+        </button>
+        <button type="button" class="pm-chip pm-chip-other" data-rel="其他">
+          <img class="pm-chip-icon pm-chip-icon-off" src="assets/rel-other.svg" alt="">
+          <img class="pm-chip-icon pm-chip-icon-on"  src="assets/rel-other-on.svg" alt="">
+          <span class="pm-chip-text">其他</span>
+        </button>
       </div>
     </div>
   </section>
