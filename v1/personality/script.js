@@ -238,8 +238,8 @@ function renderResult(type){
     { id:"EI", title:"能量来源", topLabel:"I内倾", botLabel:"E外倾",
       cardX:565.8, dotX:582.8, antX:553, antW:40.8, antH:35.2, antFlip:false,
       labelX:583.8, titleX:583.8,
-      poleTopX:598.8, poleTopY:167, poleBotX:594.8, poleBotY:298,
-      trackX:620.8, trackY:207 },
+      poleTopX:598.8, poleTopY:161, poleBotX:594.8, poleBotY:293,
+      trackX:620.8, trackY:202 },
     { id:"SN", title:"接受信息", topLabel:"N直觉", botLabel:"S感觉",
       cardX:720, dotX:738, antX:782.3, antW:45.3, antH:40.6, antFlip:false,
       labelX:738, titleX:738,
@@ -266,23 +266,19 @@ function renderResult(type){
       <div class="rp-axis" data-axis="${ax.id}">
         <!-- 卡身 140×295 r=17 #fff shadow -->
         <div class="rp-axis-card" style="left:${ax.cardX}px"></div>
-        <!-- 灰圆 dot 16×16 #D9D9D9 -->
-        <span class="rp-axis-dot" style="left:${ax.dotX}px;top:69px"></span>
-        <!-- 金色天线 vector95 #F2A100,EI/JP 41×35 / SN/TF 45×40 -->
-        <img class="rp-axis-ant ${ax.antFlip?'is-flip':''}" src="assets/result/vector95.svg" alt="" draggable="false" style="left:${ax.antX}px;top:74px;width:${ax.antW}px;height:${ax.antH}px">
         <!-- 标题 26/46 Bold #000 -->
         <h4 class="rp-axis-title" style="left:${ax.titleX}px;top:97px">${ax.title}</h4>
-        <!-- pole top: 选中态色,带 ▸ -->
+        <!-- pole top: 选中态色,带 ▸(箭头由 CSS mask 渲染,跟随 currentColor) -->
         <span class="rp-axis-pole rp-axis-pole-top ${topActive?'is-on':''}" style="left:${ax.poleTopX}px;top:${ax.poleTopY}px">
           ${ax.topLabel}
-          <img class="rp-pole-arrow" src="assets/result/pole-arrow${topActive?'-on':''}.svg" alt="" draggable="false">
+          <span class="rp-pole-arrow"></span>
         </span>
         <!-- 滑轨 + knob,由 axis-knob.svg 提供轨身,knob 透过 .is-top/.is-bot 切换上下半 -->
         <div class="rp-axis-track ${topActive?'is-top':'is-bot'}" style="left:${ax.trackX}px;top:${ax.trackY}px"></div>
         <!-- pole bot -->
         <span class="rp-axis-pole rp-axis-pole-bot ${topActive?'':'is-on'}" style="left:${ax.poleBotX}px;top:${ax.poleBotY}px">
           ${ax.botLabel}
-          <img class="rp-pole-arrow" src="assets/result/pole-arrow${topActive?'':'-on'}.svg" alt="" draggable="false">
+          <span class="rp-pole-arrow"></span>
         </span>
       </div>
     `;

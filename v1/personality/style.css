@@ -684,21 +684,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   box-shadow:0 4px 32px rgba(0,0,0,.08);
   z-index:5;
 }
-/* 灰圆 dot — Figma 4657:994 / 1002 / 1010 / 1017,#D9D9D9 16×16 */
-.rp-axis-dot{
-  position:absolute;width:16px;height:16px;border-radius:50%;
-  background:#D9D9D9;
-  z-index:6;
-}
-/* 金色弯曲天线 — Figma 4657:998/1003/1011/1024 vector95.svg #F2A100
-   EI/JP 41×35,SN/TF 45×40。is-flip 用于 TF/JP 让箭头朝右 */
-.rp-axis-ant{
-  position:absolute;
-  z-index:6;
-  pointer-events:none;
-  user-select:none;-webkit-user-drag:none;
-}
-.rp-axis-ant.is-flip{transform:scaleX(-1)}
 /* 标题 — Figma 26/46 #000 Bold */
 .rp-axis-title{
   position:absolute;width:104px;height:46px;
@@ -708,9 +693,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   z-index:6;
   margin:0;
 }
-/* pole 标签 — 默认 24/29 rgba(0,0,0,.7) Medium;选中 is-on 切对应荧光色
-   Figma top:167 实际是 字框 top,字本身 baseline 在 ~y=190。用 line-height:24px(贴近字号)
-   减少行盒高度,使字位置与 Figma 对齐 */
+/* pole 标签 — 默认 24/24 rgba(0,0,0,.7) Medium;选中 is-on 切对应荧光色
+   文字 + 箭头用 inline-flex 自动居中对齐 */
 .rp-axis-pole{
   position:absolute;
   font-family:var(--font-cn);font-size:24px;font-weight:500;
@@ -718,21 +702,25 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   color:rgba(0,0,0,.7);
   z-index:6;
   white-space:nowrap;
-  padding-top:5px;  /* Figma 字框顶离 baseline 距离补偿 */
+  display:inline-flex;align-items:center;gap:6px;
 }
-/* 4 轴选中色 — Figma 4654:928(E#ff1d65)/4654:937(N#5757ff)/4654:956(T#d18b00)/4654:965(P#09a8b3) */
-[data-axis="EI"] .rp-axis-pole.is-on{color:#ff1d65}
-[data-axis="SN"] .rp-axis-pole.is-on{color:#5757ff}
-[data-axis="TF"] .rp-axis-pole.is-on{color:#d18b00}
-[data-axis="JP"] .rp-axis-pole.is-on{color:#09a8b3}
-/* pole-arrow — 默认 #4D4D4D 灰 / 选中 #FF1D65 粉,各自独立 svg
-   absolute 定位在 pole 文字右侧,与字基线对齐 */
+/* 4 轴选中色 — 对齐天线 vector95 颜色 (EI=#F95589 / SN=#5757FF / TF=#F2A100 / JP=#09A8B3) */
+[data-axis="EI"] .rp-axis-pole.is-on{color:#F95589}
+[data-axis="SN"] .rp-axis-pole.is-on{color:#5757FF}
+[data-axis="TF"] .rp-axis-pole.is-on{color:#F2A100}
+[data-axis="JP"] .rp-axis-pole.is-on{color:#09A8B3}
+/* pole-arrow — 默认 #4D4D4D 灰 / 选中按各轴主色;用 mask 染色,共享 1 张 SVG
+   inline-block 做 flex item,自动与文字基线垂直居中 */
 .rp-pole-arrow{
-  position:absolute;left:100%;top:50%;
-  margin-left:6px;margin-top:-9px;
+  flex:0 0 11.6px;
   width:11.6px;height:18.8px;
-  display:block;pointer-events:none;
+  display:inline-block;pointer-events:none;
+  background:#4D4D4D;
+  -webkit-mask:url('assets/result/pole-arrow.svg') no-repeat center/100% 100%;
+          mask:url('assets/result/pole-arrow.svg') no-repeat center/100% 100%;
 }
+/* 选中态:跟随轴主色 */
+.rp-axis-pole.is-on .rp-pole-arrow{background:currentColor}
 /* 轨道 + knob — 重画立式版,用 CSS 渐变模拟 Figma axis-knob.svg 的双色效果
    30×80 立轨,r=10:灰底 #E1E1E1 + 选中端用 #FF1D65 highlight 30×30 r=10
    .is-top → highlight 在顶端;.is-bot → highlight 在底端 */
@@ -749,11 +737,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .rp-axis-track.is-top::after{top:0}
 .rp-axis-track.is-bot::after{bottom:0}
-/* 4 轴选中色:EI=红 / SN=蓝 / TF=橙 / JP=青 */
-[data-axis="EI"] .rp-axis-track::after{background:#FF1D65}
-[data-axis="SN"] .rp-axis-track::after{background:#5757ff}
+/* 4 轴选中色:EI=红 #F95589 / SN=蓝 #5757FF / TF=橙 #F2A100 / JP=青 #09A8B3 */
+[data-axis="EI"] .rp-axis-track::after{background:#F95589}
+[data-axis="SN"] .rp-axis-track::after{background:#5757FF}
 [data-axis="TF"] .rp-axis-track::after{background:#F2A100}
-[data-axis="JP"] .rp-axis-track::after{background:#09a8b3}
+[data-axis="JP"] .rp-axis-track::after{background:#09A8B3}
 
 /* 蛋蛋 star — Figma 4654:861 (1381,99) 195×195 五角星 + e人/i人 大字
    星形用 PNG(已含轻阴影),字独立 DOM,字号 50/letter-spacing:0 旋 -12.79deg */
@@ -810,19 +798,30 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:url('assets/result/bg-trait.svg') no-repeat;background-size:100% 100%;
   z-index:1;
 }
-/* tag — 直接用 Figma 整图 PNG(含文字),DOM 不再渲染 .rp-section-title */
+/* 板块标签 — Figma 4654:841/844/902 矩形渐变(左半圆 r=35 + 右直角)
+   trait #FFAEED 粉 / study #77FFA9 绿 / social #FFED4C 黄,fade to white-transparent */
 .rp-section-tag{
   position:absolute;left:123px;width:507px;height:70px;
   background-size:100% 100%;background-repeat:no-repeat;
-  z-index:3;
+  z-index:2;
   pointer-events:none;
 }
-/* 三块 tag 用 [style*="..."] 区分(JS 注入时的 top 标记) */
-.rp-section-tag[style*="381"]{background-image:url('assets/result/tag-trait-img.png')}
-.rp-section-tag[style*="872"]{background-image:url('assets/result/tag-study-img.png')}
-.rp-section-tag[style*="1675"]{background-image:url('assets/result/tag-social-img.png')}
-/* 兼容旧 selector,移除 svg fallback */
-.rp-section-title{display:none}
+.rp-section-tag[style*="381"]{background-image:url('assets/result/tag-trait.svg')}
+.rp-section-tag[style*="872"]{background-image:url('assets/result/tag-study.svg')}
+.rp-section-tag[style*="1675"]{background-image:url('assets/result/tag-social.svg')}
+
+/* 板块标题文字 — Figma 4654:843/845/903 字魂144号 36/46 #2f2f2f
+   位置: 性格特点 (157,390) / 学习优势分析 (153,881) / 校园相处锦囊 (162,1684) */
+.rp-section-title{
+  position:absolute;
+  font-family:"ZCOOL XiaoWei","ZCOOL QingKe HuangYou",var(--font-display);
+  font-size:36px;font-weight:400;
+  color:#2f2f2f;line-height:46px;letter-spacing:0;
+  white-space:nowrap;
+  z-index:3;
+  margin:0;
+  display:block !important;
+}
 .rp-trait-text{
   position:absolute;left:131px;top:471px;
   width:1371px;
@@ -863,11 +862,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   z-index:3;
   margin:0;
 }
+/* 🎓高效学习方式标签 — Figma 4654:859 (148,1493) 273×46
+   Bold 34/46 Noto Sans SC, 自身 273 宽内 text-center, emoji 默认色, 文字 #340fad */
 .rp-study-tag-label{
-  position:absolute;left:50%;
-  transform:translateX(-50%);
+  position:absolute;left:148px;
+  width:273px;
   font-family:var(--font-cn);font-size:34px;font-weight:700;
   color:#0e0e0e;line-height:46px;letter-spacing:0;
+  text-align:center;
   white-space:nowrap;
   z-index:3;
   margin:0;
@@ -925,12 +927,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   color:rgba(0,0,0,.6);line-height:1.04;letter-spacing:0;
   z-index:3;
   margin:0;
-}
-.rp-section-tag[style*="1675"]{
-  background:url('assets/result/tag-social.svg') no-repeat;background-size:100% 100%;
-}
-.rp-section-tag[style*="872"]{
-  background:url('assets/result/tag-study.svg') no-repeat;background-size:100% 100%;
 }
 
 
