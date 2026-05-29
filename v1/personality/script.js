@@ -20,7 +20,11 @@ const state = {
   pendingRelation: "",
   exitModalOpen: false,
   // quiz 进入来源:"profile"=正常流程, "result"=result 页"重新测试"进来
-  quizFrom: "profile"
+  quizFrom: "profile",
+  // profile 完成后落点:"quiz"=开始测试 / "pick"=选择 MBTI
+  profileFor: "quiz",
+  // pick 选中的人格
+  pickedType: null
 };
 
 // ---------- 自适应缩放 ----------
@@ -74,6 +78,7 @@ function setScene(name){
 function onSceneEnter(name){
   if(name === "profile") renderProfile();
   if(name === "quiz")    renderQuestion();
+  if(name === "pick")    renderPick();
   if(name === "result")  renderResult(state.currentType);
 }
 
@@ -503,6 +508,74 @@ function closePoleDetail(){
   if(modal) modal.hidden = true;
 }
 
+function closePoleDetail(){
+  const modal = $("#poleDetailModal");
+  if(modal) modal.hidden = true;
+}
+
+// ---------- pick 选择 MBTI 渲染 — 像素级对齐 Figma 4377:3245(默认)/4377:3041(选中) ----------
+// 4 行 × 4 列, 每卡 358×90 r=14, x=80/454/828/1202, y=88/194/300/406
+// 行配色: 0=紫(NT) / 1=绿(NF) / 2=蓝(SJ) / 3=橙(SP)
+const PICK_GRID = [
+  [
+    { type:"INTJ", cn:"建筑师" },
+    { type:"INTP", cn:"逻辑学家" },
+    { type:"ENTJ", cn:"指挥官" },
+    { type:"ENTP", cn:"辩论家" }
+  ],
+  [
+    { type:"INFJ", cn:"提倡者" },
+    { type:"INFP", cn:"调停者" },
+    { type:"ENFJ", cn:"主人公" },
+    { type:"ENFP", cn:"活动家" }
+  ],
+  [
+    { type:"ISTJ", cn:"物流师" },
+    { type:"ISFJ", cn:"守卫者" },
+    { type:"ESTJ", cn:"总经理" },
+    { type:"ESFJ", cn:"执政官" }
+  ],
+  [
+    { type:"ISTP", cn:"鉴赏家" },
+    { type:"ISFP", cn:"探险家" },
+    { type:"ESTP", cn:"企业家" },
+    { type:"ESFP", cn:"表演者" }
+  ]
+];
+
+function renderPick(){
+  const grid = $("#pickGrid");
+  if(!grid) return;
+  const COLS_X = [80, 454, 828, 1202];
+  const ROWS_Y = [88, 194, 300, 406];
+  let html = "";
+  PICK_GRID.forEach((row, rIdx) => {
+    row.forEach((item, cIdx) => {
+      const x = COLS_X[cIdx];
+      const y = ROWS_Y[rIdx];
+      const isOn = state.pickedType === item.type;
+      html += `
+        <button type="button" class="pp-card${isOn?' is-on':''}" data-type="${item.type}" data-row="${rIdx}" style="left:${x}px;top:${y}px">
+          <span class="pp-card-code">${item.type}</span>
+          <span class="pp-card-cn">${item.cn}</span>
+        </button>
+      `;
+    });
+  });
+  grid.innerHTML = html;
+  const cf = $("#pickConfirm");
+  if(cf) cf.classList.toggle("is-on", !!state.pickedType);
+  const page = $("#pickPage");
+  if(page) page.scrollTop = 0;
+  const tip = $("#pickScrollTip");
+  if(tip) tip.classList.remove("is-hidden");
+}
+
+function pickType(type){
+  state.pickedType = type;
+  renderPick();
+}
+
 function eggLabel(type){
   const e = type[0];
   const map = { E:"e人", I:"i人" };
@@ -533,8 +606,14 @@ function bindEvents(){
     else history.length > 1 ? history.back() : null;
   });
   $("#menuHelp")?.addEventListener("click", () => toast("帮助说明 — 即将上线"));
-  $("#ctaStart")?.addEventListener("click", () => setScene("profile"));
-  $("#ctaPick")?.addEventListener("click", () => toast("「直接选 MBTI」 — 即将上线"));
+  $("#ctaStart")?.addEventListener("click", () => {
+    state.profileFor = "quiz";
+    setScene("profile");
+  });
+  $("#ctaPick")?.addEventListener("click", () => {
+    state.profileFor = "pick";
+    setScene("profile");
+  });
 
   // profile
   $("#profileBack")?.addEventListener("click", () => setScene("menu"));
@@ -549,10 +628,15 @@ function bindEvents(){
   $("#pfRelation")?.addEventListener("click", () => openRelationModal());
   $("#pfNext")?.addEventListener("click", () => {
     if(!state.profile.name || !state.profile.relation) return;
-    state.qIndex = 0;
-    state.answers = [];
-    state.quizFrom = "profile";
-    setScene("quiz");
+    if(state.profileFor === "pick"){
+      state.pickedType = null;
+      setScene("pick");
+    } else {
+      state.qIndex = 0;
+      state.answers = [];
+      state.quizFrom = "profile";
+      setScene("quiz");
+    }
   });
 
   // 关系弹层
@@ -571,6 +655,25 @@ function bindEvents(){
   $("#pdConfirm")?.addEventListener("click", () => closePoleDetail());
   // 点 mask 也关闭
   document.querySelector("#poleDetailModal .pd-mask")?.addEventListener("click", () => closePoleDetail());
+
+  // pick 选择 MBTI
+  $("#pickBack")?.addEventListener("click", () => setScene("profile"));
+  $("#pickGrid")?.addEventListener("click", (e) => {
+    const card = e.target.closest(".pp-card");
+    if(!card) return;
+    pickType(card.dataset.type);
+  });
+  $("#pickConfirm")?.addEventListener("click", () => {
+    if(!state.pickedType) return;
+    state.currentType = state.pickedType;
+    setScene("result");
+  });
+  // pick 滚动提示淡出
+  const pickPage = document.getElementById("pickPage");
+  pickPage?.addEventListener("scroll", () => {
+    const tip = document.getElementById("pickScrollTip");
+    tip?.classList.toggle("is-hidden", pickPage.scrollTop > 30);
+  }, { passive:true });
 
   // quiz
   $("#quizBack")?.addEventListener("click", () => {
@@ -603,10 +706,15 @@ function bindEvents(){
       }
       if(e.key === "Escape") setScene("menu");
       if(e.key === "Enter" && state.profile.name && state.profile.relation){
-        state.qIndex = 0;
-        state.answers = [];
-        state.quizFrom = "profile";
-        setScene("quiz");
+        if(state.profileFor === "pick"){
+          state.pickedType = null;
+          setScene("pick");
+        } else {
+          state.qIndex = 0;
+          state.answers = [];
+          state.quizFrom = "profile";
+          setScene("quiz");
+        }
       }
       return;
     }
@@ -634,6 +742,13 @@ function bindEvents(){
       if(e.key === "Home") page.scrollTo({ top:0,   behavior:"smooth" });
       if(e.key === "End")  page.scrollTo({ top:9999,behavior:"smooth" });
     }
+    if(state.scene === "pick"){
+      if(e.key === "Escape") setScene("profile");
+      if(e.key === "Enter" && state.pickedType){
+        state.currentType = state.pickedType;
+        setScene("result");
+      }
+    }
   });
 }
 
@@ -645,15 +760,31 @@ async function boot(){
 
   const hash = (location.hash || "").replace("#","").split("?")[0];
   const params = new URLSearchParams(location.hash.split("?")[1] || "");
+  // hash 直入场景: 跳过 menu 离场动画, 直接 hidden 切换到目标
+  const directEnter = (target, prep) => {
+    document.querySelectorAll(".scene").forEach(s => { s.hidden = (s.dataset.scene !== target); });
+    state.scene = target;
+    document.body.dataset.state = target;
+    if(prep) prep();
+    onSceneEnter(target);
+  };
   if(hash === "profile"){
-    setScene("profile");
+    directEnter("profile");
+  }else if(hash === "pick"){
+    directEnter("pick", () => {
+      state.profile.name = state.profile.name || "测试";
+      state.profile.relation = state.profile.relation || "自己";
+      state.profileFor = "pick";
+    });
   }else if(hash === "quiz"){
-    state.profile.name = state.profile.name || "测试";
-    state.profile.relation = state.profile.relation || "自己";
-    setScene("quiz");
+    directEnter("quiz", () => {
+      state.profile.name = state.profile.name || "测试";
+      state.profile.relation = state.profile.relation || "自己";
+    });
   }else if(hash === "result"){
-    state.currentType = (params.get("type") || "INTP").toUpperCase();
-    setScene("result");
+    directEnter("result", () => {
+      state.currentType = (params.get("type") || "INTP").toUpperCase();
+    });
   }else{
     onSceneEnter("menu");
   }

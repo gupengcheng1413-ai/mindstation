@@ -156,6 +156,25 @@
     </div>
   </section>
 
+  <!-- ============== pick 选择 MBTI(对齐 Figma 4377:3245 默认 / 4377:3041 选中态) ============== -->
+  <section class="scene scene-pick" data-scene="pick" hidden>
+    <div class="pp-page" id="pickPage">
+      <div class="pp-page-inner">
+        <button type="button" class="pp-back" id="pickBack" aria-label="返回">
+          <img src="assets/menu/back.svg" alt="" draggable="false">
+        </button>
+        <h1 class="pp-title">选择人格类型</h1>
+        <button type="button" class="pp-confirm-btn" id="pickConfirm" aria-label="确定">
+          <img src="assets/pick/confirm.png" alt="" draggable="false">
+        </button>
+        <div class="pp-grid" id="pickGrid"></div>
+      </div>
+    </div>
+    <div class="pp-scroll-tip" id="pickScrollTip" aria-hidden="true">
+      <span class="pp-scroll-arrow">⌄</span>
+    </div>
+  </section>
+
   <!-- toast -->
   <div class="toast" id="toast" aria-live="polite"></div>
 
