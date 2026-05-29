@@ -753,14 +753,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .rp-star img{display:none}
 .rp-star-text{display:none}
-/* 重新测试 CTA — Figma 4663:1026 整图(含字)1209,279 300×68 */
+/* 重新测试 CTA — Figma 4663:1026 (1209,279) 300×68 r=14 #9466ff border #fff
+   纯 CSS 渲染:紫色背景 + 白色文字 + 白边框 */
 .rp-retest{
   position:absolute;left:1209px;top:279px;
   width:300px;height:68px;
-  background:url('assets/result/retest-img.png') no-repeat center/100% 100%;
-  border:0;padding:0;
-  /* 字隐藏,文字已烤进 PNG */
-  font-size:0;color:transparent;
+  background:#9466ff;
+  border:1px solid #fff;border-radius:14px;
+  padding:0;
+  font-family:var(--font-cn);font-size:34px;font-weight:500;
+  color:#fff;letter-spacing:0;line-height:46px;
   cursor:pointer;
   z-index:7;
   transition:transform var(--t-fast),filter var(--t-fast);

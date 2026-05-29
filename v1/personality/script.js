@@ -18,7 +18,9 @@ const state = {
   currentType: null,
   relationModalOpen: false,
   pendingRelation: "",
-  exitModalOpen: false
+  exitModalOpen: false,
+  // quiz 进入来源:"profile"=正常流程, "result"=result 页"重新测试"进来
+  quizFrom: "profile"
 };
 
 // ---------- 自适应缩放 ----------
@@ -215,7 +217,12 @@ function confirmExit(){
   closeExitModal();
   state.qIndex = 0;
   state.answers = [];
-  setScene("menu");
+  // 来源是 result 时回 result, 否则回 menu
+  if(state.quizFrom === "result"){
+    setScene("result");
+  } else {
+    setScene("menu");
+  }
 }
 
 // ---------- result 渲染 — 像素级对齐 Figma 4654:807(1640×1954) ----------
@@ -344,8 +351,8 @@ function renderResult(type){
       <span class="rp-star-text">${eggLabel(type)}</span>
     </div>
 
-    <!-- 重新测试 CTA(整图含字) -->
-    <button type="button" class="rp-retest" id="rpRetest" aria-label="重新测试"></button>
+    <!-- 重新测试 CTA — Figma 4663:1026/1027 -->
+    <button type="button" class="rp-retest" id="rpRetest">重新测试</button>
 
     <!-- divider 1 -->
     <span class="rp-divider" style="top:361px"></span>
@@ -394,9 +401,11 @@ function renderResult(type){
     else setScene("menu");
   });
   $("#rpRetest")?.addEventListener("click", () => {
+    // 直接进入答题页(profile 已填,不需要重填)
     state.qIndex = 0;
     state.answers = [];
-    setScene("profile");
+    state.quizFrom = "result";
+    setScene("quiz");
   });
 
   // 8 个 pole 标签点击 → 弹出对应解读
@@ -542,6 +551,7 @@ function bindEvents(){
     if(!state.profile.name || !state.profile.relation) return;
     state.qIndex = 0;
     state.answers = [];
+    state.quizFrom = "profile";
     setScene("quiz");
   });
 
@@ -564,8 +574,13 @@ function bindEvents(){
 
   // quiz
   $("#quizBack")?.addEventListener("click", () => {
-    if(state.qIndex > 0 || state.answers.some(Boolean)) openExitModal();
-    else setScene("menu");
+    // 从 result 进入(重新测试)时, 任意时刻返回都弹"reconfirm-test"
+    // 从 profile 进入时, 已答题或非首题才弹
+    if(state.quizFrom === "result" || state.qIndex > 0 || state.answers.some(Boolean)){
+      openExitModal();
+    } else {
+      setScene("menu");
+    }
   });
   $("#qOptA")?.addEventListener("click", () => pickOption("a"));
   $("#qOptB")?.addEventListener("click", () => pickOption("b"));
@@ -590,6 +605,7 @@ function bindEvents(){
       if(e.key === "Enter" && state.profile.name && state.profile.relation){
         state.qIndex = 0;
         state.answers = [];
+        state.quizFrom = "profile";
         setScene("quiz");
       }
       return;
