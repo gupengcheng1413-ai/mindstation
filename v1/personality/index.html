@@ -175,6 +175,29 @@
     </div>
   </section>
 
+  <!-- ============== archive 档案切换 / 删除档案(对齐 Figma 4381:3733 切换 / 4741:463 删除 / 4741:519 删除确认) ============== -->
+  <section class="scene scene-archive" data-scene="archive" hidden>
+    <button type="button" class="ar-back" id="archiveBack" aria-label="返回">
+      <img src="assets/menu/back.svg" alt="" draggable="false">
+    </button>
+    <h1 class="ar-title" id="archiveTitle">档案</h1>
+    <button type="button" class="ar-confirm-btn" id="archiveConfirm" aria-label="确定">
+      <img src="assets/pick/confirm.png" alt="" draggable="false">
+    </button>
+    <div class="ar-list" id="archiveList"></div>
+    <button type="button" class="ar-trash" id="archiveTrash" aria-label="删除">
+      <img src="assets/archive/trash.png" alt="" draggable="false">
+    </button>
+
+    <!-- 删除确认弹层 — Figma 4741:519 rgba(0,0,0,0.8) 全屏遮罩 -->
+    <div class="ar-del-confirm" id="archiveDelConfirm" hidden>
+      <div class="adc-mask"></div>
+      <p class="adc-title" id="adcTitle">确定删除两条档案吗？</p>
+      <button type="button" class="adc-btn adc-btn-cancel" id="adcCancel">取消</button>
+      <button type="button" class="adc-btn adc-btn-ok" id="adcOk">确定</button>
+    </div>
+  </section>
+
   <!-- toast -->
   <div class="toast" id="toast" aria-live="polite"></div>
 

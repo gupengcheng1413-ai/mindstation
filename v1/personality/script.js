@@ -24,7 +24,17 @@ const state = {
   // profile 完成后落点:"quiz"=开始测试 / "pick"=选择 MBTI
   profileFor: "quiz",
   // pick 选中的人格
-  pickedType: null
+  pickedType: null,
+  // 档案库 (轻量本地态, 后端化前先 demo 数据)
+  archives: [],
+  // 当前生效档案 id
+  currentArchiveId: null,
+  // archive 模式: "switch"=默认切换 / "delete"=删除模式
+  archiveMode: "switch",
+  // 删除模式下选中的档案 id 集合
+  archiveDelIds: [],
+  // archive 选中(等待"确定"提交)的目标档案 id
+  archivePendingId: null
 };
 
 // ---------- 自适应缩放 ----------
@@ -79,6 +89,7 @@ function onSceneEnter(name){
   if(name === "profile") renderProfile();
   if(name === "quiz")    renderQuestion();
   if(name === "pick")    renderPick();
+  if(name === "archive") renderArchive();
   if(name === "result")  renderResult(state.currentType);
 }
 
@@ -164,6 +175,7 @@ function renderQuestion(){
   if(!q){
     const { type } = score(state.answers, state.questions);
     state.currentType = type;
+    upsertCurrentArchive();
     return setScene("result");
   }
   $("#qIdx").textContent = state.qIndex + 1;
@@ -326,10 +338,12 @@ function renderResult(type){
       <img src="assets/result/back.svg" alt="" draggable="false">
     </button>
     <p class="rp-top-label">你的测试结果是:</p>
-    <p class="rp-top-self">${state.profile.name || "自己"}</p>
-    <span class="rp-top-arrow">
-      <svg viewBox="0 0 28 22" width="28" height="22"><path d="M2 6 L14 18 L26 6" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </span>
+    <button type="button" class="rp-top-switch" id="rpTopSwitch" aria-label="切换档案">
+      <span class="rp-top-self">${state.profile.name || "自己"}</span>
+      <span class="rp-top-arrow">
+        <svg viewBox="0 0 28 22" width="28" height="22"><path d="M2 6 L14 18 L26 6" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </button>
 
     <!-- ===== Banner 区 (75-362) ===== -->
     <div class="rp-banner-bg"></div>
@@ -412,6 +426,7 @@ function renderResult(type){
     state.quizFrom = "result";
     setScene("quiz");
   });
+  $("#rpTopSwitch")?.addEventListener("click", () => openArchive());
 
   // 8 个 pole 标签点击 → 弹出对应解读
   inner.querySelectorAll(".rp-axis-pole").forEach(pole => {
@@ -576,6 +591,176 @@ function pickType(type){
   renderPick();
 }
 
+// ---------- archive 档案切换 / 删除 — Figma 4381:3733 / 4741:463 / 4741:519 ----------
+// 卡布局: 3 张 482×90, x=80/579/1078, y=90, gap=17px
+
+function ensureArchiveSeed(){
+  if(state.archives.length === 0){
+    const id = "ar-" + Date.now();
+    state.archives.push({
+      id,
+      name: state.profile.name || "我",
+      relation: state.profile.relation || "自己",
+      type: state.currentType || "ENTP"
+    });
+    state.currentArchiveId = id;
+  }
+}
+
+// 完成测试 / 选 MBTI 后, 把当前 profile + type 写入档案库
+// 若已有同名+同关系记录则更新, 否则新增, 并设为当前生效档案
+function upsertCurrentArchive(){
+  if(!state.profile.name || !state.profile.relation || !state.currentType) return;
+  // 当前生效档案存在 → 更新它(覆盖型, 视为重新测试同一档案)
+  let target = state.currentArchiveId
+    ? state.archives.find(a => a.id === state.currentArchiveId)
+    : null;
+  // 当前没有生效档案 → 找匹配项
+  if(!target){
+    target = state.archives.find(a =>
+      a.name === state.profile.name && a.relation === state.profile.relation
+    );
+  }
+  if(target){
+    target.name = state.profile.name;
+    target.relation = state.profile.relation;
+    target.type = state.currentType;
+    state.currentArchiveId = target.id;
+  } else {
+    const id = "ar-" + Date.now();
+    state.archives.push({
+      id,
+      name: state.profile.name,
+      relation: state.profile.relation,
+      type: state.currentType
+    });
+    state.currentArchiveId = id;
+  }
+}
+
+function renderArchive(){
+  ensureArchiveSeed();
+  const list = $("#archiveList");
+  const scene = document.querySelector('.scene-archive');
+  if(!list || !scene) return;
+  scene.dataset.mode = state.archiveMode;
+  $("#archiveTitle").textContent = state.archiveMode === "delete" ? "删除档案" : "档案";
+  const cf = $("#archiveConfirm");
+  if(cf) cf.style.display = state.archiveMode === "delete" ? "none" : "block";
+
+  const COLS_X = [80, 579, 1078];
+  const items = state.archives.slice(0, 3);
+  const showAdd = state.archiveMode === "switch" && items.length < 3;
+  let html = "";
+  items.forEach((ar, i) => {
+    const x = COLS_X[i];
+    const isCurrent = state.archiveMode === "switch" && (state.archivePendingId || state.currentArchiveId) === ar.id;
+    const isChecked = state.archiveMode === "delete" && state.archiveDelIds.includes(ar.id);
+    html += `
+      <button type="button" class="ar-card${isCurrent?' is-current':''}${isChecked?' is-checked':''}" data-id="${ar.id}" style="left:${x}px">
+        <span class="ar-current-tick"><img src="assets/archive/check-purple.png" alt=""></span>
+        <span class="ar-check">
+          <span class="ar-check-box"></span>
+          <span class="ar-check-tick"><img src="assets/archive/check-on.png" alt=""></span>
+        </span>
+        <span class="ar-card-name">${ar.name}</span>
+        <span class="ar-card-rel">${ar.relation}</span>
+        <span class="ar-card-type">${(ar.type || "").toLowerCase()}</span>
+      </button>
+    `;
+  });
+  if(showAdd){
+    const x = COLS_X[items.length];
+    html += `
+      <button type="button" class="ar-card ar-card-add" data-add="1" style="left:${x}px">
+        <span class="ar-add-plus"><img src="assets/archive/plus.png" alt=""></span>
+        <span class="ar-card-name">新增档案</span>
+      </button>
+    `;
+  }
+  list.innerHTML = html;
+}
+
+function openArchive(){
+  state.archiveMode = "switch";
+  state.archiveDelIds = [];
+  state.archivePendingId = state.currentArchiveId;
+  setScene("archive");
+}
+
+function archiveSwitchTo(id){
+  state.archivePendingId = id;
+  renderArchive();
+}
+
+function archiveCommitSwitch(){
+  if(state.archivePendingId && state.archivePendingId !== state.currentArchiveId){
+    state.currentArchiveId = state.archivePendingId;
+    const ar = state.archives.find(a => a.id === state.currentArchiveId);
+    if(ar){
+      state.profile.name = ar.name;
+      state.profile.relation = ar.relation;
+      state.currentType = ar.type;
+    }
+  }
+  toast("已切换档案");
+  setScene("result");
+}
+
+function enterDeleteMode(){
+  state.archiveMode = "delete";
+  state.archiveDelIds = [];
+  renderArchive();
+}
+
+function toggleDeleteCheck(id){
+  const i = state.archiveDelIds.indexOf(id);
+  if(i >= 0) state.archiveDelIds.splice(i, 1);
+  else state.archiveDelIds.push(id);
+  renderArchive();
+}
+
+function openDeleteConfirm(){
+  if(state.archiveDelIds.length === 0){
+    toast("请选择要删除的档案");
+    return;
+  }
+  const map = ["零","一","两","三","四","五","六","七","八","九","十"];
+  const n = state.archiveDelIds.length;
+  $("#adcTitle").textContent = `确定删除${map[n] || n}条档案吗？`;
+  const m = $("#archiveDelConfirm");
+  if(m) m.hidden = false;
+}
+
+function closeDeleteConfirm(){
+  const m = $("#archiveDelConfirm");
+  if(m) m.hidden = true;
+}
+
+function commitDelete(){
+  const remaining = state.archives.filter(a => !state.archiveDelIds.includes(a.id));
+  if(state.archiveDelIds.includes(state.currentArchiveId)){
+    state.currentArchiveId = remaining[0]?.id || null;
+    if(state.currentArchiveId){
+      const ar = remaining[0];
+      state.profile.name = ar.name;
+      state.profile.relation = ar.relation;
+      state.currentType = ar.type;
+    }
+  }
+  state.archives = remaining;
+  state.archiveDelIds = [];
+  closeDeleteConfirm();
+  if(state.archives.length === 0){
+    toast("已删除全部档案");
+    setScene("menu");
+    return;
+  }
+  state.archiveMode = "switch";
+  renderArchive();
+  toast("已删除档案");
+}
+
 function eggLabel(type){
   const e = type[0];
   const map = { E:"e人", I:"i人" };
@@ -666,6 +851,7 @@ function bindEvents(){
   $("#pickConfirm")?.addEventListener("click", () => {
     if(!state.pickedType) return;
     state.currentType = state.pickedType;
+    upsertCurrentArchive();
     setScene("result");
   });
   // pick 滚动提示淡出
@@ -674,6 +860,50 @@ function bindEvents(){
     const tip = document.getElementById("pickScrollTip");
     tip?.classList.toggle("is-hidden", pickPage.scrollTop > 30);
   }, { passive:true });
+
+  // archive 档案切换 / 删除
+  $("#archiveBack")?.addEventListener("click", () => {
+    if(state.archiveMode === "delete"){
+      // 删除模式下返回 = 退出删除模式回到切换模式
+      state.archiveMode = "switch";
+      state.archiveDelIds = [];
+      renderArchive();
+    } else {
+      setScene("result");
+    }
+  });
+  $("#archiveList")?.addEventListener("click", (e) => {
+    const card = e.target.closest(".ar-card");
+    if(!card) return;
+    if(card.dataset.add){
+      // 新增档案: 走 profile 重新录档(profileFor=archive 录完回 quiz 然后 archive)
+      // 这里简化为走完整 profile→quiz→result 流程, result 后会自动追加新档案
+      state.profileFor = "quiz";
+      state.profile.name = "";
+      state.profile.relation = "";
+      setScene("profile");
+      return;
+    }
+    const id = card.dataset.id;
+    if(!id) return;
+    if(state.archiveMode === "delete"){
+      toggleDeleteCheck(id);
+    } else {
+      archiveSwitchTo(id);
+    }
+  });
+  $("#archiveConfirm")?.addEventListener("click", () => archiveCommitSwitch());
+  $("#archiveTrash")?.addEventListener("click", () => {
+    if(state.archiveMode === "switch"){
+      enterDeleteMode();
+    } else {
+      // 删除模式下 → 弹确认
+      openDeleteConfirm();
+    }
+  });
+  $("#adcCancel")?.addEventListener("click", () => closeDeleteConfirm());
+  $("#adcOk")?.addEventListener("click", () => commitDelete());
+  document.querySelector("#archiveDelConfirm .adc-mask")?.addEventListener("click", () => closeDeleteConfirm());
 
   // quiz
   $("#quizBack")?.addEventListener("click", () => {
@@ -784,6 +1014,23 @@ async function boot(){
   }else if(hash === "result"){
     directEnter("result", () => {
       state.currentType = (params.get("type") || "INTP").toUpperCase();
+    });
+  }else if(hash === "archive"){
+    directEnter("archive", () => {
+      // 注 demo 数据看看 3 张卡布局
+      state.profile.name = state.profile.name || "Vivian";
+      state.profile.relation = state.profile.relation || "自己";
+      state.currentType = state.currentType || "ENTP";
+      if(state.archives.length === 0){
+        state.archives = [
+          { id:"ar-1", name:"Vivian", relation:"自己", type:"ENTP" },
+          { id:"ar-2", name:"jwj",    relation:"朋友", type:"INFP" },
+          { id:"ar-3", name:"水一",   relation:"家人", type:"ENFP" }
+        ];
+        state.currentArchiveId = "ar-1";
+      }
+      state.archiveMode = (params.get("mode") || "switch");
+      state.archivePendingId = state.currentArchiveId;
     });
   }else{
     onSceneEnter("menu");
