@@ -658,10 +658,10 @@ function renderArchive(){
     const isChecked = state.archiveMode === "delete" && state.archiveDelIds.includes(ar.id);
     html += `
       <button type="button" class="ar-card${isCurrent?' is-current':''}${isChecked?' is-checked':''}" data-id="${ar.id}" style="left:${x}px">
-        <span class="ar-current-tick"><img src="assets/archive/check-purple.png" alt=""></span>
+        <span class="ar-current-tick"><img src="assets/archive/check-purple.svg" alt=""></span>
         <span class="ar-check">
           <span class="ar-check-box"></span>
-          <span class="ar-check-tick"><img src="assets/archive/check-on.png" alt=""></span>
+          <span class="ar-check-tick"><img src="assets/archive/check-on.svg" alt=""></span>
         </span>
         <span class="ar-card-name">${ar.name}</span>
         <span class="ar-card-rel">${ar.relation}</span>
@@ -673,8 +673,8 @@ function renderArchive(){
     const x = COLS_X[items.length];
     html += `
       <button type="button" class="ar-card ar-card-add" data-add="1" style="left:${x}px">
-        <span class="ar-add-plus"><img src="assets/archive/plus.png" alt=""></span>
-        <span class="ar-card-name">新增档案</span>
+        <span class="ar-add-plus"><img src="assets/archive/plus.svg" alt=""></span>
+        <span class="ar-card-name">新建档案</span>
       </button>
     `;
   }
