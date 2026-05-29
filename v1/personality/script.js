@@ -661,7 +661,7 @@ function renderArchive(){
         <span class="ar-current-tick"><img src="assets/archive/check-purple.svg" alt=""></span>
         <span class="ar-check">
           <span class="ar-check-box"></span>
-          <span class="ar-check-tick"><img src="assets/archive/check-on.svg" alt=""></span>
+          <span class="ar-check-tick"><img src="assets/archive/check-on.png" alt=""></span>
         </span>
         <span class="ar-card-name">${ar.name}</span>
         <span class="ar-card-rel">${ar.relation}</span>
