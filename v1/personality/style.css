@@ -743,8 +743,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 [data-axis="TF"] .rp-axis-track::after{background:#F2A100}
 [data-axis="JP"] .rp-axis-track::after{background:#09A8B3}
 
-/* 蛋蛋 star — Figma 4654:861 (1381,99) 195×195 五角星 + e人/i人 大字
-   星形用 PNG(已含轻阴影),字独立 DOM,字号 50/letter-spacing:0 旋 -12.79deg */
+/* 蛋蛋 star — Figma 4654:861 Group 266 (1381,99) 195×195
+   直接用 Figma get_screenshot 整图(含五角星 + e人字 + banner 紫色底色) */
 .rp-star{
   position:absolute;left:1381px;top:99px;
   width:195px;height:195px;
@@ -752,22 +752,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   z-index:6;
 }
 .rp-star img{display:none}
-.rp-star-text{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-30%) rotate(-12.79deg);
-  font-family:"ZCOOL XiaoWei","Saira Stencil One",var(--font-display);
-  font-size:50px;font-weight:400;
-  color:#80f;line-height:46px;letter-spacing:0;
-  text-transform:uppercase;
-  white-space:nowrap;
-  z-index:7;
-  /* 当 type 是 I 开头,star-egg-img.png 已含 e人字, 用 mix-blend 把 e 抹掉再画 i — 这里用 background 优先级:让 PNG 已有的字与 DOM 字一致即可 */
-}
-/* 默认 PNG 已含 e人字,DOM 字隐藏避免重叠;type=I 时显示 DOM 的 i人字并把 PNG 切换为只有星的纯星 SVG */
-.rp-star.is-i-person{
-  background:url('assets/result/star.svg') no-repeat center/100% 100%;
-}
-.rp-star.is-e-person .rp-star-text{display:none}
+.rp-star-text{display:none}
 /* 重新测试 CTA — Figma 4663:1026 整图(含字)1209,279 300×68 */
 .rp-retest{
   position:absolute;left:1209px;top:279px;
@@ -810,12 +795,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rp-section-tag[style*="872"]{background-image:url('assets/result/tag-study.svg')}
 .rp-section-tag[style*="1675"]{background-image:url('assets/result/tag-social.svg')}
 
-/* 板块标题文字 — Figma 4654:843/845/903 字魂144号 36/46 #2f2f2f
+/* 板块标题文字 — Figma 4654:843/845/903 36/46 #2f2f2f
    位置: 性格特点 (157,390) / 学习优势分析 (153,881) / 校园相处锦囊 (162,1684) */
 .rp-section-title{
   position:absolute;
-  font-family:"ZCOOL XiaoWei","ZCOOL QingKe HuangYou",var(--font-display);
-  font-size:36px;font-weight:400;
+  font-family:var(--font-cn);
+  font-size:36px;font-weight:500;
   color:#2f2f2f;line-height:46px;letter-spacing:0;
   white-space:nowrap;
   z-index:3;
@@ -958,3 +943,68 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     transition-duration:.001ms !important;
   }
 }
+
+/* ============================================================
+   轴 pole 解读弹层 — Figma Detail Page-i/e/n/s/t/f/j/p
+   ============================================================ */
+.pd-modal{
+  position:absolute;inset:0;
+  z-index:60;
+  animation:fadeIn .22s ease;
+}
+/* Figma Rectangle 237 — 整屏 1640×347 rgba(0,0,0,.9) 黑底,文字直接浮其上 */
+.pd-mask{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.9);
+}
+.pd-sheet{
+  position:absolute;left:0;top:1px;
+  width:1640px;height:347px;
+  background:transparent;
+}
+/* X 内倾 — Figma (140,71) 36/48 白色 Bold */
+.pd-letter{
+  position:absolute;left:140px;top:71px;
+  height:48px;
+  font-family:var(--font-cn);font-size:36px;font-weight:700;
+  color:#fff;line-height:48px;letter-spacing:0;
+  white-space:nowrap;
+  margin:0;
+}
+/* (Introvert) — 紧跟字母右侧, Figma (258,72) 36/48 #B7B7FF 浅紫 */
+.pd-en{
+  position:absolute;left:258px;top:72px;
+  height:48px;
+  font-family:var(--font-cn);font-size:36px;font-weight:400;
+  color:#B7B7FF;line-height:48px;letter-spacing:0;
+  white-space:nowrap;
+}
+/* 副标题 — Figma (138,136) 36/40 白色 Medium */
+.pd-sub{
+  position:absolute;left:138px;top:136px;
+  width:1300px;
+  font-family:var(--font-cn);font-size:32px;font-weight:500;
+  color:#fff;line-height:40px;letter-spacing:0;
+  margin:0;
+}
+/* 描述 — Figma (140,182) 974×105 28/35 灰白色 三行 */
+.pd-desc{
+  position:absolute;left:140px;top:182px;
+  width:1040px;
+  font-family:var(--font-cn);font-size:28px;font-weight:400;
+  color:rgba(255,255,255,.78);line-height:35px;letter-spacing:0;
+  white-space:pre-line;
+  margin:0;
+}
+/* 我知道了 CTA — Figma (1200,188) 340×80 r=14 #9466ff border #fff */
+.pd-confirm{
+  position:absolute;left:1200px;top:188px;
+  width:340px;height:80px;
+  background:#9466ff;border:1px solid #fff;border-radius:14px;
+  font-family:var(--font-cn);font-size:36px;font-weight:500;
+  color:#fff;letter-spacing:0;line-height:48px;
+  cursor:pointer;
+  transition:transform var(--t-fast),filter var(--t-fast);
+}
+.pd-confirm:hover{filter:brightness(1.08)}
+.pd-confirm:active{transform:scale(.97)}

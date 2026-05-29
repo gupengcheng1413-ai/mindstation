@@ -269,14 +269,14 @@ function renderResult(type){
         <!-- 标题 26/46 Bold #000 -->
         <h4 class="rp-axis-title" style="left:${ax.titleX}px;top:97px">${ax.title}</h4>
         <!-- pole top: 选中态色,带 ▸(箭头由 CSS mask 渲染,跟随 currentColor) -->
-        <span class="rp-axis-pole rp-axis-pole-top ${topActive?'is-on':''}" style="left:${ax.poleTopX}px;top:${ax.poleTopY}px">
+        <span class="rp-axis-pole rp-axis-pole-top ${topActive?'is-on':''}" data-pole="${ax.topLabel[0]}" style="left:${ax.poleTopX}px;top:${ax.poleTopY}px">
           ${ax.topLabel}
           <span class="rp-pole-arrow"></span>
         </span>
         <!-- 滑轨 + knob,由 axis-knob.svg 提供轨身,knob 透过 .is-top/.is-bot 切换上下半 -->
         <div class="rp-axis-track ${topActive?'is-top':'is-bot'}" style="left:${ax.trackX}px;top:${ax.trackY}px"></div>
         <!-- pole bot -->
-        <span class="rp-axis-pole rp-axis-pole-bot ${topActive?'':'is-on'}" style="left:${ax.poleBotX}px;top:${ax.poleBotY}px">
+        <span class="rp-axis-pole rp-axis-pole-bot ${topActive?'':'is-on'}" data-pole="${ax.botLabel[0]}" style="left:${ax.poleBotX}px;top:${ax.poleBotY}px">
           ${ax.botLabel}
           <span class="rp-pole-arrow"></span>
         </span>
@@ -339,7 +339,8 @@ function renderResult(type){
     ${axesHTML}
 
     <!-- 蛋蛋 star + 标签 -->
-    <div class="rp-star ${type[0]==='I'?'is-i-person':'is-e-person'}">
+    <div class="rp-star">
+      <img src="assets/result/star.svg" alt="" draggable="false">
       <span class="rp-star-text">${eggLabel(type)}</span>
     </div>
 
@@ -352,7 +353,7 @@ function renderResult(type){
     <!-- ===== 性格特点 (362-852) ===== -->
     <div class="rp-trait-bg"></div>
     <div class="rp-section-tag" style="top:381px"></div>
-    <h3 class="rp-section-title" style="top:390px">性格特点</h3>
+    <h3 class="rp-section-title" style="top:390px;left:157px;width:197px">性格特点</h3>
     <p class="rp-trait-text">${data?.personality || (type + " · " + codename + " 的性格特点正在路上 ✦")}</p>
 
     <!-- divider 2 -->
@@ -398,12 +399,99 @@ function renderResult(type){
     setScene("profile");
   });
 
+  // 8 个 pole 标签点击 → 弹出对应解读
+  inner.querySelectorAll(".rp-axis-pole").forEach(pole => {
+    pole.style.cursor = "pointer";
+    pole.addEventListener("click", () => {
+      const letter = pole.dataset.pole;
+      if(letter) openPoleDetail(letter);
+    });
+  });
+
   const page = $("#rPage");
   if(page) page.scrollTop = 0;
   const tip = $("#rScrollTip");
   page?.addEventListener("scroll", () => {
     tip?.classList.toggle("is-hidden", page.scrollTop > 60);
   }, { passive:true });
+
+  // ----- trait 段高度自适应 -----
+  // Figma 设计稿 trait 段是 (101,362) 1438×490, 文字 (131,471) 1371×360
+  // 文案越长 → trait-bg 更高 → 下方 study/social 段整体下移
+  // 设计稿基准:文字底缘 y=831(471+360),trait-bg 底 y=852,留 21px padding
+  requestAnimationFrame(() => {
+    const traitText = inner.querySelector(".rp-trait-text");
+    if(!traitText) return;
+    const textBottom = traitText.offsetTop + traitText.offsetHeight;
+    // 期望 trait-bg 底缘 = textBottom + 21px(底部 padding), 不小于 Figma 设计高度 852
+    const baseTop = 362;
+    const desiredBottom = Math.max(852, textBottom + 21);
+    const newHeight = desiredBottom - baseTop;
+    const shift = desiredBottom - 852;  // 后面所有元素需要下移的距离
+
+    if(shift > 0){
+      const traitBg = inner.querySelector(".rp-trait-bg");
+      if(traitBg) traitBg.style.height = `${newHeight}px`;
+
+      // 把所有 top >= 852 的元素都下移 shift 像素
+      inner.querySelectorAll("[style*='top:']").forEach(el => {
+        const m = el.style.top.match(/^(\d+(?:\.\d+)?)px$/);
+        if(!m) return;
+        const orig = parseFloat(m[1]);
+        if(orig >= 852){
+          el.style.top = `${orig + shift}px`;
+        }
+      });
+
+      // r-page-inner 总高也要长
+      const rpi = $("#rPageInner");
+      if(rpi) rpi.style.minHeight = `${1954 + shift}px`;
+    }
+  });
+}
+
+// ---------- 8 个轴 pole 解读弹层 — 像素级对齐 Figma Detail Page-i/e/n/s/t/f/j/p ----------
+const POLE_DETAIL = {
+  I: { letter:"I", cn:"内倾", en:"Introvert",
+       sub:"能量来源:向内而生,靠独处或深度对话充电。",
+       desc:"偏爱小而密的高质量社交,反感无效寒暄;\n沟通中更擅长倾听,习惯沉淀思绪再回应,对私人空间有清晰边界。\n朋友不多,但每段关系都足够深刻真诚。" },
+  E: { letter:"E", cn:"外倾", en:"Extravert",
+       sub:"能量来源:向外汲取,在社交与互动中充电。",
+       desc:"偏爱多元开放的社交场景,享受即时交流;\n乐于主动表达,在互动中梳理思路,对外部反馈更敏感。\n朋友圈广,擅长快速建立联结,在热闹中获得活力。" },
+  N: { letter:"N", cn:"直觉", en:"Intuition",
+       sub:"接受信息:从抽象关联与灵感中捕捉信息,着眼未来可能。",
+       desc:"关注趋势与可能性,偏好探索未知,重视创意与想象;\n擅长发现事物间的隐性联系,喜欢畅想未来,追求创新突破的方向。\n偏爱跳出框架思考,享受脑洞与灵感碰撞的过程。" },
+  S: { letter:"S", cn:"感觉", en:"Sensing",
+       sub:"接受信息:从具体事实与经验中获取信息,聚焦当下现实。",
+       desc:"关注细节与实际,偏好可验证的信息,重视亲身经历;\n习惯基于已有经验做判断,擅长处理具体事务,追求落地可行的方案。\n相信看得见、摸得着的事实,做事踏实稳健。" },
+  T: { letter:"T", cn:"思考", en:"Thinking",
+       sub:"决策方式:以逻辑为标尺,基于客观分析做决策",
+       desc:"重视公平与原则,习惯理性拆解问题,追求公正高效的结果;\n擅长用逻辑梳理思路,优先考虑利弊对错,而非情绪感受。\n信奉规则与道理,决策时更看重客观事实而非人情。" },
+  F: { letter:"F", cn:"情感", en:"Feeling",
+       sub:"决策方式:以价值为导向,基于共情与感受做决策。",
+       desc:"重视人际和谐,习惯换位思考,优先考虑他人的情绪与需求;\n擅长感知他人的情绪变化,追求温暖包容的氛围,看重关系中的真诚联结。\n信奉善意与共情,决策时更看重对人的影响。" },
+  J: { letter:"J", cn:"判断", en:"Judging",
+       sub:"行事风格:偏好有序可控,用计划与结构应对生活。",
+       desc:"喜欢提前规划安排,做事有始有终,讨厌临时变动与混乱;\n习惯明确目标与截止时间,享受完成任务的踏实感,追求稳定可预期的节奏。\n信奉条理与规划,把一切安排妥当才安心。" },
+  P: { letter:"P", cn:"感知", en:"Perceiving",
+       sub:"行事风格:偏好灵活开放,用随性与适应应对生活。",
+       desc:"喜欢随遇而安的节奏,做事灵活多变,讨厌被固定计划束缚;\n习惯保持多种选择,享受即兴带来的惊喜,擅长快速适应变化。\n信奉随性与弹性,更愿意拥抱未知与不确定性。" }
+};
+
+function openPoleDetail(letter){
+  const data = POLE_DETAIL[letter];
+  if(!data) return;
+  const modal = $("#poleDetailModal");
+  if(!modal) return;
+  modal.querySelector(".pd-letter").textContent = `${data.letter} ${data.cn}`;
+  modal.querySelector(".pd-en").textContent = `（${data.en}）`;
+  modal.querySelector(".pd-sub").textContent = data.sub;
+  modal.querySelector(".pd-desc").textContent = data.desc;
+  modal.hidden = false;
+}
+function closePoleDetail(){
+  const modal = $("#poleDetailModal");
+  if(modal) modal.hidden = true;
 }
 
 function eggLabel(type){
@@ -468,6 +556,11 @@ function bindEvents(){
     if(!state.pendingRelation) return;
     closeRelationModal(true);
   });
+
+  // pole 解读弹层确定按钮
+  $("#pdConfirm")?.addEventListener("click", () => closePoleDetail());
+  // 点 mask 也关闭
+  document.querySelector("#poleDetailModal .pd-mask")?.addEventListener("click", () => closePoleDetail());
 
   // quiz
   $("#quizBack")?.addEventListener("click", () => {
