@@ -269,10 +269,10 @@ function renderResult(type){
 
   const codename  = data?.codename || "";
   const subtitle  = data?.subtitle || data?.tagline || "";
-  // banner 副标题 Figma 134/229 双行;按中文标点拆 2 行
+  // banner 副标题 Figma 134/229;分句间空格改为逗号
   const subParts = (subtitle || "").split(/\s+|[,，]/).filter(Boolean);
-  const subL1 = subParts[0] || "";
-  const subL2 = subParts.slice(1).join("") || "";
+  const subL1 = subParts.join("，") || "";
+  const subL2 = "";
 
   // 4 个轴 — Figma 顺序:能量来源(EI) / 接受信息(SN) / 决策方式(TF) / 行事风格(JP)
   // 每个卡按 Figma 精确坐标:卡身 / dot / 金天线 / 标题 / pole-top / pole-bot / knob track
@@ -380,8 +380,9 @@ function renderResult(type){
     <p class="rp-type">${type.toLowerCase()}</p>
     <!-- codename 下方装饰花纹 — Figma Group 264, 每群组一张配色 (348/151.6 170×34.4) -->
     <img class="rp-type-deco" src="assets/result/deco/deco-${groupKey || "analysts"}.svg" alt="" draggable="false">
-    <!-- codename(非正式名)— Figma 4672:3801 type 大字右侧 347/128 黑字, 字号随字数 -->
-    <p class="rp-codename" style="font-size:${(codename||"").length>=4?48:54}px">${codename}</p>
+    <!-- codename(非正式名)— Figma 切图 PNG(浪漫体字形), 失败回退文字 -->
+    <img class="rp-codename-img" src="assets/result/codename/cn_${type.toLowerCase()}.png" alt="${codename}" draggable="false"
+         onerror="this.onerror=null;this.outerHTML='<p class=\\'rp-codename\\' style=\\'font-size:${(codename||"").length>=4?48:54}px\\'>${codename}</p>'">
 
     <!-- 副标题 -->
     <div class="rp-subtitle">
