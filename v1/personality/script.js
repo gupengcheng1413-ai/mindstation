@@ -127,6 +127,17 @@ function toast(msg){
 }
 
 // ---------- profile 渲染 ----------
+// 仅刷新姓名行 typed 态 + "下一步"启用态, 不回写 input.value(供中文合成输入安全调用)
+function refreshProfileNext(){
+  const nameRow = $("#pfNameRow");
+  const nextBtn = $("#pfNext");
+  if(nameRow) nameRow.classList.toggle("is-typed", !!state.profile.name);
+  const ready = !!state.profile.name && !!state.profile.relation;
+  if(nextBtn){
+    nextBtn.disabled = !ready;
+    nextBtn.classList.toggle("is-on", ready);
+  }
+}
 function renderProfile(){
   const nameInput = $("#pfName");
   const nameRow   = $("#pfNameRow");
@@ -339,7 +350,7 @@ function renderResult(type){
     <button type="button" class="rp-back" id="rpBack" aria-label="返回">
       <img src="assets/result/back.svg" alt="" draggable="false">
     </button>
-    <p class="rp-top-label">你的测试结果是:</p>
+    <p class="rp-top-label">你的MBTI是:${typeCN(type)}</p>
     <button type="button" class="rp-top-switch" id="rpTopSwitch" aria-label="切换档案">
       <span class="rp-top-self">${state.profile.name || "自己"}</span>
       <span class="rp-top-arrow">
@@ -559,6 +570,16 @@ const PICK_GRID = [
     { type:"ESFP", cn:"表演者" }
   ]
 ];
+
+// type → 正式中文译名(建筑师 / 辩论家 / 企业家 …), 取自 PICK_GRID
+function typeCN(type){
+  const t = (type || "").toUpperCase();
+  for(const row of PICK_GRID){
+    const hit = row.find(c => c.type === t);
+    if(hit) return hit.cn;
+  }
+  return "";
+}
 
 function renderPick(){
   const grid = $("#pickGrid");
@@ -834,14 +855,25 @@ function bindEvents(){
 
   // profile
   $("#profileBack")?.addEventListener("click", () => setScene("menu"));
-  $("#pfName")?.addEventListener("input", (e) => {
-    let v = e.target.value;
-    // 限制 1-6 字(中英文 + 数字),maxlength 已限 6
-    if(v.length > 6) v = v.slice(0,6);
-    state.profile.name = v;
-    e.target.value = v;
-    renderProfile();
-  });
+  const pfNameEl = $("#pfName");
+  if(pfNameEl){
+    let composing = false;
+    const commit = (el) => {
+      // 取前 6 个 Unicode 码点(中文按字计, 不按 UTF-16 长度), 避免截断代理对
+      let v = Array.from(el.value).slice(0, 6).join("");
+      if(el.value !== v) el.value = v;
+      state.profile.name = v;
+      // 仅刷新"下一步"启用态, 不回写 input.value(避免打断输入法合成 / 移动光标)
+      refreshProfileNext();
+    };
+    pfNameEl.addEventListener("compositionstart", () => { composing = true; });
+    pfNameEl.addEventListener("compositionend", (e) => { composing = false; commit(e.target); });
+    pfNameEl.addEventListener("input", (e) => {
+      // 中文合成中(拼音未上屏)→ 不处理, 让输入法自由组字
+      if(composing) return;
+      commit(e.target);
+    });
+  }
   $("#pfRelation")?.addEventListener("click", () => openRelationModal());
   $("#pfNext")?.addEventListener("click", () => {
     if(!state.profile.name || !state.profile.relation) return;
