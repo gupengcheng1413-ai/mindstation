@@ -891,7 +891,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   position:absolute;left:131px;top:471px;
   width:1371px;
   font-family:var(--font-cn);font-size:32px;font-weight:400;
-  color:rgba(0,0,0,.6);line-height:33.25px;letter-spacing:0;
+  color:rgba(0,0,0,.6);line-height:41.6px;letter-spacing:0;
   text-indent:2em;
   z-index:2;
   margin:0;
@@ -923,7 +923,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rp-study-body{
   position:absolute;
   font-family:var(--font-cn);font-size:32px;font-weight:400;
-  color:rgba(0,0,0,.6);line-height:1.04;letter-spacing:0;
+  color:rgba(0,0,0,.6);line-height:41.6px;letter-spacing:0;
   z-index:3;
   margin:0;
 }
@@ -942,8 +942,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rp-emoji{font-weight:400}
 .rp-purple{color:var(--rg-accent)}
 .rp-study-tags{
-  position:absolute;left:0;top:1500px;width:1640px;height:33px;
-  display:flex;align-items:center;justify-content:center;gap:20px;
+  position:absolute;left:440px;top:1500px;width:1100px;height:33px;
+  display:flex;align-items:center;justify-content:flex-start;gap:20px;
   z-index:3;
 }
 .rp-tag-item{
