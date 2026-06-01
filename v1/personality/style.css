@@ -1201,10 +1201,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* 删除模式下顶栏右上的"确定"按钮变灰禁用(切换/确认按需 toggle) */
 .scene-archive[data-mode="delete"] .ar-confirm-btn{display:none}
 
-/* 列表容器 — 3 卡 482×90 横向, x=80/579/1078 */
+/* 列表容器 — 卡 482×90 纵向单列居中, x=579, y 递增, 可纵向滚动 */
 .ar-list{
   position:absolute;left:0;top:0;
   width:1640px;height:348px;
+  pointer-events:none;
+  overflow-x:hidden;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.ar-list::-webkit-scrollbar{display:none}
+.ar-list-spacer{
+  position:absolute;left:0;width:1px;height:1px;
   pointer-events:none;
 }
 .ar-list > .ar-card{pointer-events:auto}
@@ -1219,7 +1227,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   padding:0;
   cursor:pointer;
   transition:background var(--t-fast),border-color var(--t-fast),transform var(--t-fast);
-  top:90px;
 }
 .ar-card:hover{filter:brightness(1.08)}
 .ar-card:active{transform:scale(.99)}
@@ -1270,17 +1277,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .ar-card.is-current .ar-card-name{color:#fff}
 .ar-card.is-current .ar-card-type{color:#fff}
 
-/* 当前生效卡左侧紫钩 — Figma 4531:648 (110,118) 34×34 */
-.ar-current-tick{
-  position:absolute;left:27px;top:25px;
-  width:34px;height:34px;
-  pointer-events:none;
-  display:none;
-}
-.ar-current-tick img{width:34px;height:34px;display:block}
-.ar-card.is-current .ar-current-tick{display:block}
-/* 紫钩出现时, 把字往右挪给位置 */
-.ar-card.is-current .ar-card-name{left:74px}
+/* 当前生效卡: 用卡身高亮(深底+边框+白字)表达选中, 不再叠加左侧图标 */
 
 /* 新增档案卡 — 第三张, 居中 +号 45×45 + 文字"新增档案" */
 .ar-card-add{cursor:pointer}
@@ -1295,7 +1292,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* 删除模式: 卡身全部 #23272e 灰、左侧 46×46 复选框 */
 .scene-archive[data-mode="delete"] .ar-card{cursor:pointer}
 .scene-archive[data-mode="delete"] .ar-card.is-current{background:#23272e;border-color:transparent}
-.scene-archive[data-mode="delete"] .ar-current-tick{display:none}
 .scene-archive[data-mode="delete"] .ar-card.is-current .ar-card-name{color:#7b8396;left:90px}
 .scene-archive[data-mode="delete"] .ar-card.is-current .ar-card-type{color:#7b8396}
 .scene-archive[data-mode="delete"] .ar-card-add{display:none}

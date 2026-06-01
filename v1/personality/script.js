@@ -34,7 +34,9 @@ const state = {
   // 删除模式下选中的档案 id 集合
   archiveDelIds: [],
   // archive 选中(等待"确定"提交)的目标档案 id
-  archivePendingId: null
+  archivePendingId: null,
+  // 从"新建档案"入口进入 → 完成后强制追加新档案, 不覆盖原档案
+  forceNewArchive: false
 };
 
 // ---------- 自适应缩放 ----------
@@ -611,6 +613,31 @@ function ensureArchiveSeed(){
 // 若已有同名+同关系记录则更新, 否则新增, 并设为当前生效档案
 function upsertCurrentArchive(){
   if(!state.profile.name || !state.profile.relation || !state.currentType) return;
+  // 关系=自己 → 全局唯一: 若已存在"自己"档案则覆盖它(即便从"新建档案"入口进入)
+  if(state.profile.relation === "自己"){
+    const selfAr = state.archives.find(a => a.relation === "自己");
+    if(selfAr){
+      selfAr.name = state.profile.name;
+      selfAr.type = state.currentType;
+      state.currentArchiveId = selfAr.id;
+      state.forceNewArchive = false;
+      return;
+    }
+    // 没有"自己"档案 → 落到下方正常新增逻辑
+  }
+  // 强制新建(从"新建档案"入口进入)→ 跳过所有匹配, 直接追加, 保留原档案
+  if(state.forceNewArchive){
+    const id = "ar-" + Date.now();
+    state.archives.push({
+      id,
+      name: state.profile.name,
+      relation: state.profile.relation,
+      type: state.currentType
+    });
+    state.currentArchiveId = id;
+    state.forceNewArchive = false;
+    return;
+  }
   // 当前生效档案存在 → 更新它(覆盖型, 视为重新测试同一档案)
   let target = state.currentArchiveId
     ? state.archives.find(a => a.id === state.currentArchiveId)
@@ -648,17 +675,17 @@ function renderArchive(){
   const cf = $("#archiveConfirm");
   if(cf) cf.style.display = state.archiveMode === "delete" ? "none" : "block";
 
-  const COLS_X = [80, 579, 1078];
-  const items = state.archives.slice(0, 3);
-  const showAdd = state.archiveMode === "switch" && items.length < 3;
+  const COLS_X = [80, 579, 1077], ROW_Y0 = 90, ROW_GAP = 104;
+  const cellPos = (idx) => ({ x: COLS_X[idx % 3], y: ROW_Y0 + Math.floor(idx / 3) * ROW_GAP });
+  const items = state.archives;
+  const showAdd = state.archiveMode === "switch";
   let html = "";
   items.forEach((ar, i) => {
-    const x = COLS_X[i];
+    const { x, y } = cellPos(i);
     const isCurrent = state.archiveMode === "switch" && (state.archivePendingId || state.currentArchiveId) === ar.id;
     const isChecked = state.archiveMode === "delete" && state.archiveDelIds.includes(ar.id);
     html += `
-      <button type="button" class="ar-card${isCurrent?' is-current':''}${isChecked?' is-checked':''}" data-id="${ar.id}" style="left:${x}px">
-        <span class="ar-current-tick"><img src="assets/archive/check-purple.svg" alt=""></span>
+      <button type="button" class="ar-card${isCurrent?' is-current':''}${isChecked?' is-checked':''}" data-id="${ar.id}" style="left:${x}px;top:${y}px">
         <span class="ar-check">
           <span class="ar-check-box"></span>
           <span class="ar-check-tick"><img src="assets/archive/check-on.png" alt=""></span>
@@ -670,14 +697,19 @@ function renderArchive(){
     `;
   });
   if(showAdd){
-    const x = COLS_X[items.length];
+    const { x, y } = cellPos(items.length);
     html += `
-      <button type="button" class="ar-card ar-card-add" data-add="1" style="left:${x}px">
+      <button type="button" class="ar-card ar-card-add" data-add="1" style="left:${x}px;top:${y}px">
         <span class="ar-add-plus"><img src="assets/archive/plus.svg" alt=""></span>
         <span class="ar-card-name">新建档案</span>
       </button>
     `;
   }
+  // 3 列网格向下扩展 → spacer 撑开 scrollHeight, 列表可纵向滚动
+  const count = items.length + (showAdd ? 1 : 0);
+  const rows = Math.ceil(count / 3);
+  const fullH = ROW_Y0 + rows * ROW_GAP + ROW_Y0;
+  html += `<span class="ar-list-spacer" style="top:${Math.max(348, fullH) - 1}px"></span>`;
   list.innerHTML = html;
 }
 
@@ -876,12 +908,13 @@ function bindEvents(){
     const card = e.target.closest(".ar-card");
     if(!card) return;
     if(card.dataset.add){
-      // 新增档案: 走 profile 重新录档(profileFor=archive 录完回 quiz 然后 archive)
-      // 这里简化为走完整 profile→quiz→result 流程, result 后会自动追加新档案
-      state.profileFor = "quiz";
+      // 新建档案: 回到功能主页 menu(zhuye-mbti), 由用户再选"开始测试"/"选择MBTI"
+      // 清空当前 profile + 解除生效档案绑定, 让后续流程追加为新档案, 原档案保留
       state.profile.name = "";
       state.profile.relation = "";
-      setScene("profile");
+      state.currentArchiveId = null;
+      state.forceNewArchive = true;
+      setScene("menu");
       return;
     }
     const id = card.dataset.id;
