@@ -351,12 +351,19 @@ function renderResult(type){
       <img src="assets/result/back.svg" alt="" draggable="false">
     </button>
     <p class="rp-top-label">你的MBTI是:${typeCN(type)}</p>
-    <button type="button" class="rp-top-switch" id="rpTopSwitch" aria-label="切换档案">
-      <span class="rp-top-self">${state.profile.name || "自己"}</span>
-      <span class="rp-top-arrow">
-        <svg viewBox="0 0 28 22" width="28" height="22"><path d="M2 6 L14 18 L26 6" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-    </button>
+    <div class="rp-top-chips">
+      <button type="button" class="rp-top-switch" id="rpTopSwitch" aria-label="切换档案">
+        <span class="rp-top-self">${state.profile.name || "自己"}</span>
+        <span class="rp-top-arrow">
+          <img class="rp-arrow-up" src="assets/result/switch-arrow.svg" alt="" draggable="false">
+          <img class="rp-arrow-dn" src="assets/result/switch-arrow.svg" alt="" draggable="false">
+        </span>
+      </button>
+      <button type="button" class="rp-top-new" id="rpTopNew">
+        <span class="rp-top-new-text">新建档案</span>
+        <span class="rp-top-new-plus"><img src="assets/result/new-plus.svg" alt="" draggable="false"></span>
+      </button>
+    </div>
 
     <!-- ===== Banner 区 (75-362) ===== -->
     <div class="rp-banner-bg"></div>
@@ -440,6 +447,7 @@ function renderResult(type){
     setScene("quiz");
   });
   $("#rpTopSwitch")?.addEventListener("click", () => openArchive());
+  $("#rpTopNew")?.addEventListener("click", () => startNewArchive());
 
   // 8 个 pole 标签点击 → 弹出对应解读
   inner.querySelectorAll(".rp-axis-pole").forEach(pole => {
@@ -741,6 +749,15 @@ function openArchive(){
   setScene("archive");
 }
 
+// 新建档案: 回功能主页 menu, 清空 profile + 解绑生效档案, 后续流程追加为新档案, 原档案保留
+function startNewArchive(){
+  state.profile.name = "";
+  state.profile.relation = "";
+  state.currentArchiveId = null;
+  state.forceNewArchive = true;
+  setScene("menu");
+}
+
 function archiveSwitchTo(id){
   state.archivePendingId = id;
   renderArchive();
@@ -940,13 +957,7 @@ function bindEvents(){
     const card = e.target.closest(".ar-card");
     if(!card) return;
     if(card.dataset.add){
-      // 新建档案: 回到功能主页 menu(zhuye-mbti), 由用户再选"开始测试"/"选择MBTI"
-      // 清空当前 profile + 解除生效档案绑定, 让后续流程追加为新档案, 原档案保留
-      state.profile.name = "";
-      state.profile.relation = "";
-      state.currentArchiveId = null;
-      state.forceNewArchive = true;
-      setScene("menu");
+      startNewArchive();
       return;
     }
     const id = card.dataset.id;
