@@ -63,7 +63,7 @@
       "type": "ENTP",
       "group": "analysts",
       "egg": "assets/eggs/entp.svg",
-      "codename": "辩手哥",
+      "codename": "骨折眉",
       "tagline": "我反对你不是讨厌你,只是另一种思考方式更有趣。",
       "subtitle": "专业脑洞制造机 辩论场上从无败兴时刻",
       "axes": {
@@ -193,7 +193,7 @@
       "type": "INTJ",
       "group": "analysts",
       "egg": "assets/eggs/intj.svg",
-      "codename": "棋盘姐",
+      "codename": "紫老头",
       "tagline": "落子之前,我已经看到第十步的棋。",
       "subtitle": "战略大师 把每一步都纳入长期蓝图",
       "axes": {
@@ -258,7 +258,7 @@
       "type": "ENTJ",
       "group": "analysts",
       "egg": "assets/eggs/entj.svg",
-      "codename": "队长哥",
+      "codename": "大姐头",
       "tagline": "我不是在指挥,我只是在让事情发生。",
       "subtitle": "天生的指挥官 推进一切的发动机",
       "axes": {
@@ -323,7 +323,7 @@
       "type": "INFJ",
       "group": "diplomats",
       "egg": "assets/eggs/infj.svg",
-      "codename": "灯塔姐",
+      "codename": "绿老头",
       "tagline": "在喧闹里安静地照路,我懂你没说出口的那部分。",
       "subtitle": "沉默的洞察者 替别人想到他自己没想到的",
       "axes": {
@@ -388,7 +388,7 @@
       "type": "INFP",
       "group": "diplomats",
       "egg": "assets/eggs/infp.svg",
-      "codename": "诗人姐",
+      "codename": "小蝴蝶",
       "tagline": "心里住着一座小宇宙,我用沉默守护它。",
       "subtitle": "理想主义梦想家 一颗温柔倔强的心",
       "axes": {
@@ -453,7 +453,7 @@
       "type": "ENFJ",
       "group": "diplomats",
       "egg": "assets/eggs/enfj.svg",
-      "codename": "班主任哥",
+      "codename": "宝剑哥",
       "tagline": "我让所有人都站好,然后悄悄递水。",
       "subtitle": "天生的协调者 把所有人的节奏调到一起",
       "axes": {
@@ -518,7 +518,7 @@
       "type": "ENFP",
       "group": "diplomats",
       "egg": "assets/eggs/enfp.svg",
-      "codename": "烟花哥",
+      "codename": "快乐小狗",
       "tagline": "我不知道下一秒在哪里发光,但一定会发。",
       "subtitle": "校园里的灵感发动机 永远在路上",
       "axes": {
@@ -583,7 +583,7 @@
       "type": "ISTJ",
       "group": "sentinels",
       "egg": "assets/eggs/istj.svg",
-      "codename": "档案管哥",
+      "codename": "蓝老头",
       "tagline": "把承诺归档、把日子排序,我让一切有迹可循。",
       "subtitle": "稳重的执行者 答应的事一定做到",
       "axes": {
@@ -648,7 +648,7 @@
       "type": "ISFJ",
       "group": "sentinels",
       "egg": "assets/eggs/isfj.svg",
-      "codename": "暖水壶姐",
+      "codename": "小护士",
       "tagline": "你忙你的,我把热水续上。",
       "subtitle": "默默的守护者 总是在你需要时出现",
       "axes": {
@@ -713,7 +713,7 @@
       "type": "ESTJ",
       "group": "sentinels",
       "egg": "assets/eggs/estj.svg",
-      "codename": "教导主任哥",
+      "codename": "尺子姐",
       "tagline": "规矩立好了,接下来就剩执行的事。",
       "subtitle": "天生的管理者 把秩序变成生产力",
       "axes": {
@@ -778,7 +778,7 @@
       "type": "ESFJ",
       "group": "sentinels",
       "egg": "assets/eggs/esfj.svg",
-      "codename": "团支书姐",
+      "codename": "蛋糕哥",
       "tagline": "氛围我来管,你只管开心。",
       "subtitle": "校园里的连接器 让所有人都被照顾到",
       "axes": {
@@ -843,7 +843,7 @@
       "type": "ISTP",
       "group": "explorers",
       "egg": "assets/eggs/istp.svg",
-      "codename": "扳手哥",
+      "codename": "电钻哥",
       "tagline": "话不多,但坏掉的东西到我手里都会修好。",
       "subtitle": "动手型问题解决者 实战派",
       "axes": {
@@ -908,7 +908,7 @@
       "type": "ISFP",
       "group": "explorers",
       "egg": "assets/eggs/isfp.svg",
-      "codename": "画手姐",
+      "codename": "小画家",
       "tagline": "我用色彩说话,语言对我来说太慢了。",
       "subtitle": "感性的创作者 把世界画进自己的画布",
       "axes": {
@@ -973,7 +973,7 @@
       "type": "ESTP",
       "group": "explorers",
       "egg": "assets/eggs/estp.svg",
-      "codename": "破风哥",
+      "codename": "墨镜哥",
       "tagline": "想多了反而慢,先冲再说。",
       "subtitle": "行动派冲刺手 临场反应一流",
       "axes": {
@@ -1038,7 +1038,7 @@
       "type": "ESFP",
       "group": "explorers",
       "egg": "assets/eggs/esfp.svg",
-      "codename": "聚光灯姐",
+      "codename": "锤子姐",
       "tagline": "气氛是我点的火,快乐这件事得有人带头。",
       "subtitle": "校园里的活力源泉 自带 BGM",
       "axes": {

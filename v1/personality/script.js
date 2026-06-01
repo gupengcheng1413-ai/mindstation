@@ -262,6 +262,11 @@ function renderResult(type){
   const inner = $("#rPageInner");
   if(!inner) return;
 
+  // 按人格群组给 result 场景打主题色标记(analysts紫/diplomats绿/sentinels蓝/explorers黄)
+  const groupKey = findGroup((type || "").toUpperCase(), groups);
+  const resultScene = $('.scene[data-scene="result"]');
+  if(resultScene) resultScene.dataset.group = groupKey || "analysts";
+
   const codename  = data?.codename || "";
   const subtitle  = data?.subtitle || data?.tagline || "";
   // banner 副标题 Figma 134/229 双行;按中文标点拆 2 行
@@ -373,7 +378,10 @@ function renderResult(type){
 
     <!-- type 大字 -->
     <p class="rp-type">${type.toLowerCase()}</p>
-    <img class="rp-type-deco" src="assets/result/type-deco.svg" alt="" draggable="false">
+    <!-- codename 下方装饰花纹 — Figma Group 264, 每群组一张配色 (348/151.6 170×34.4) -->
+    <img class="rp-type-deco" src="assets/result/deco/deco-${groupKey || "analysts"}.svg" alt="" draggable="false">
+    <!-- codename(非正式名)— Figma 4672:3801 type 大字右侧 347/128 黑字, 字号随字数 -->
+    <p class="rp-codename" style="font-size:${(codename||"").length>=4?48:54}px">${codename}</p>
 
     <!-- 副标题 -->
     <div class="rp-subtitle">

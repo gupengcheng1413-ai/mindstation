@@ -2,6 +2,13 @@
    心灵驿站 · 性格认知 — 长条屏 1640×348
    ============================================================ */
 
+/* codename 装饰字体 — 站酷快乐体(免费, 近似设计稿付费「字魂144号-浪漫体」) */
+@font-face{
+  font-family:"ZCOOL KuaiLe";
+  font-style:normal;font-weight:400;font-display:swap;
+  src:url("assets/fonts/ZCOOLKuaiLe-Regular.ttf") format("truetype");
+}
+
 :root{
   --bg-night:#0a0d12;
   --card-dark:#23272e;
@@ -560,9 +567,55 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ============================================================
    3. result 人格主页 — 像素级对齐 Figma 4654:807(1640×1954)
    ============================================================ */
+/* ---- 4 群组主题色 token ----
+   紫 analysts(4654:807) / 绿 diplomats(4666:3553) / 蓝 sentinels(4672:3744) / 黄 explorers(4672:4119)
+   type 字渐变 + 重新测试按钮 = Figma 精确取色; 主背景渐变紫绿蓝精确, 黄为推导值 */
 .scene-result{
-  background:linear-gradient(120.45deg,#b1a5ff 29.87%,#e4deff 89.22%);
+  /* 默认 = analysts 紫 */
+  --rg-bg:linear-gradient(120.45deg,#b1a5ff 29.87%,#e4deff 89.22%);
+  --rg-type-a:rgba(202,11,255,.85);
+  --rg-type-b:rgba(44,2,255,.85);
+  --rg-btn:#9466ff;
+  --rg-accent:#340fad;
+  --rg-tip:#5a4eff;
+  --rg-banner:url('assets/result/banner/bg-analysts.svg');
+  --rg-stripes:url('assets/result/banner/stripes-analysts.svg');
+  --rg-frame:url('assets/result/badge/frame-analysts.svg');
+  --rg-star:url('assets/result/badge/star-analysts.svg');
+  --rg-star-text:#8800ff;
+
+  background:var(--rg-bg);
   overflow:hidden;
+}
+.scene-result[data-group="diplomats"]{
+  --rg-bg:linear-gradient(120.45deg,#6fe293 29.87%,#aaf6f6 89.22%);
+  --rg-type-a:#00d20e;--rg-type-b:#00ace0;
+  --rg-btn:#00a987;--rg-accent:#0e6f37;--rg-tip:#0e9c5a;
+  --rg-banner:url('assets/result/banner/bg-diplomats.svg');
+  --rg-stripes:url('assets/result/banner/stripes-diplomats.svg');
+  --rg-frame:url('assets/result/badge/frame-diplomats.svg');
+  --rg-star:url('assets/result/badge/star-diplomats.svg');
+  --rg-star-text:#007e35;
+}
+.scene-result[data-group="sentinels"]{
+  --rg-bg:linear-gradient(120.45deg,#a4c0ff 29.87%,#aae7f6 89.22%);
+  --rg-type-a:#005eff;--rg-type-b:#0095ff;
+  --rg-btn:#0089e5;--rg-accent:#0a3aad;--rg-tip:#2e6fff;
+  --rg-banner:url('assets/result/banner/bg-sentinels.svg');
+  --rg-stripes:url('assets/result/banner/stripes-sentinels.svg');
+  --rg-frame:url('assets/result/badge/frame-sentinels.svg');
+  --rg-star:url('assets/result/badge/star-sentinels.svg');
+  --rg-star-text:#1a54e6;
+}
+.scene-result[data-group="explorers"]{
+  --rg-bg:linear-gradient(120.45deg,#ffd27a 29.87%,#fff0c8 89.22%);
+  --rg-type-a:#ff9d00;--rg-type-b:#ff6a00;
+  --rg-btn:#fd8e07;--rg-accent:#a05a00;--rg-tip:#e08a00;
+  --rg-banner:url('assets/result/banner/bg-explorers.svg');
+  --rg-stripes:url('assets/result/banner/stripes-explorers.svg');
+  --rg-frame:url('assets/result/badge/frame-explorers.svg');
+  --rg-star:url('assets/result/badge/star-explorers.svg');
+  --rg-star-text:#ff7b00;
 }
 .r-page{
   position:absolute;inset:0;
@@ -580,7 +633,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   position:fixed;right:24px;bottom:14px;
   width:32px;height:32px;border-radius:50%;
   background:rgba(255,255,255,.7);
-  color:#5a4eff;
+  color:var(--rg-tip);
   display:grid;place-items:center;
   z-index:30;
   pointer-events:none;
@@ -618,19 +671,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rp-banner-bg{
   position:absolute;left:101px;top:75px;
   width:1438px;height:287px;
-  background:url('assets/result/bg-banner.svg') no-repeat;background-size:100% 100%;
+  background:var(--rg-banner,url('assets/result/banner/bg-analysts.svg')) no-repeat;background-size:100% 100%;
   z-index:1;
 }
 .rp-banner-stripes{
   position:absolute;left:101px;top:75px;
   width:1438px;height:286px;
-  background:url('assets/result/bg-banner-stripes.svg') no-repeat;background-size:100% 100%;
+  background:var(--rg-stripes,url('assets/result/banner/stripes-analysts.svg')) no-repeat;background-size:100% 100%;
   z-index:2;
 }
 .rp-banner-frame{
   position:absolute;left:1224px;top:92px;
   width:266px;height:179px;
-  background:url('assets/result/banner-frame.svg') no-repeat;background-size:100% 100%;
+  background:var(--rg-frame,url('assets/result/badge/frame-analysts.svg')) no-repeat;background-size:100% 100%;
   z-index:3;
 }
 .rp-mascot{
@@ -647,7 +700,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   font-family:"Passion One","Saira Stencil One",var(--font-cn);
   font-size:120px;font-weight:400;line-height:96px;letter-spacing:-1.2px;
   text-transform:uppercase;
-  background:linear-gradient(90deg,rgba(202,11,255,.85),rgba(44,2,255,.85));
+  background:linear-gradient(90deg,var(--rg-type-a),var(--rg-type-b));
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;color:transparent;
   text-align:center;
@@ -655,9 +708,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   margin:0;
 }
 .rp-type-deco{
-  position:absolute;left:348px;top:132px;
-  width:170px;height:54px;
+  position:absolute;left:347px;top:150px;
+  width:172px;height:44px;
   z-index:5;pointer-events:none;
+}
+/* codename 非正式名 — Figma 4672:3801 type 右侧 347/128 黑字, 字号随字数(JS inline)
+   设计稿为付费「字魂144号-浪漫体」, 用免费近似「ZCOOL KuaiLe 站酷快乐体」替代 */
+.rp-codename{
+  position:absolute;left:347px;top:118px;
+  font-family:"ZCOOL KuaiLe",var(--font-cn);
+  font-weight:400;line-height:54px;letter-spacing:0;
+  color:#000;white-space:nowrap;
+  z-index:6;margin:0;pointer-events:none;
 }
 
 /* 副标题 — Figma 4654:858 (131,229) 36/46 #3c3c3c Bold 双行 */
@@ -738,21 +800,33 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 [data-axis="JP"] .rp-axis-track::after{background:#09A8B3}
 
 /* 蛋蛋 star — Figma 4654:861 Group 266 (1381,99) 195×195
-   直接用 Figma get_screenshot 整图(含五角星 + e人字 + banner 紫色底色) */
+   五角星矢量(按群组配色)+ DOM e人/i人 文字, 替代旧截图整图 */
 .rp-star{
   position:absolute;left:1381px;top:99px;
   width:195px;height:195px;
-  background:url('assets/result/star-egg-img.png') no-repeat center/100% 100%;
   z-index:6;
 }
+.rp-star::before{
+  content:"";position:absolute;
+  inset:11.45% 12.21% 3.25% 9.13%;
+  background:var(--rg-star,url('assets/result/badge/star-analysts.svg')) no-repeat center/100% 100%;
+}
 .rp-star img{display:none}
-.rp-star-text{display:none}
+.rp-star-text{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(-12.79deg);
+  font-family:"Noto Sans SC",var(--font-cn);
+  font-size:50px;line-height:46px;font-weight:900;
+  color:var(--rg-star-text,#80f);
+  text-transform:uppercase;white-space:nowrap;
+  display:block;z-index:1;pointer-events:none;
+}
 /* 重新测试 CTA — Figma 4663:1026 (1209,279) 300×68 r=14 #9466ff border #fff
    纯 CSS 渲染:紫色背景 + 白色文字 + 白边框 */
 .rp-retest{
   position:absolute;left:1209px;top:279px;
   width:300px;height:68px;
-  background:#9466ff;
+  background:var(--rg-btn);
   border:1px solid #fff;border-radius:14px;
   padding:0;
   font-family:var(--font-cn);font-size:34px;font-weight:500;
@@ -856,7 +930,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   margin:0;
 }
 .rp-emoji{font-weight:400}
-.rp-purple{color:#340fad}
+.rp-purple{color:var(--rg-accent)}
 .rp-study-tags{
   position:absolute;left:0;top:1500px;width:1640px;height:33px;
   display:flex;align-items:center;justify-content:center;gap:20px;
