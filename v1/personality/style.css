@@ -686,9 +686,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:var(--rg-frame,url('assets/result/badge/frame-analysts.svg')) no-repeat;background-size:100% 100%;
   z-index:3;
 }
+/* IP 形象 — 16 型各一张透明 PNG(底部透明已裁, 图底边=真实脚底)
+   水平居中 banner 右上(1322), 脚底踩在「重新测试」按钮(top:279)上方 1px, 等比 95% */
 .rp-mascot{
-  position:absolute;left:1186px;top:-37px;
-  width:259px;height:307px;
+  position:absolute;left:1322px;top:278px;
+  transform-origin:bottom center;
+  transform:translate(-50%,-100%) scale(.95);
+  max-width:266px;max-height:250px;
   z-index:4;pointer-events:none;
 }
 /* type 大字 — Figma 4654:865 (129,103) 216×83 紫渐变 120px Passion One

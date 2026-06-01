@@ -373,8 +373,8 @@ function renderResult(type){
     <!-- ===== Banner 区 (75-362) ===== -->
     <div class="rp-banner-bg"></div>
     <div class="rp-banner-stripes"></div>
-    <img class="rp-mascot" src="assets/result/mascot.png" alt="" draggable="false">
     <div class="rp-banner-frame"></div>
+    <img class="rp-mascot" src="assets/result/ip/ip_${type.toLowerCase()}.png" alt="" draggable="false">
 
     <!-- type 大字 -->
     <p class="rp-type">${type.toLowerCase()}</p>
