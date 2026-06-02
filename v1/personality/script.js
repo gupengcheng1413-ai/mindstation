@@ -435,6 +435,8 @@ function renderResult(type){
     <div class="rp-social-bg-top"></div>
     <div class="rp-social-bg-bot"></div>
     <span class="rp-social-bar"></span>
+    <span class="rp-social-bar-line"></span>
+    <span class="rp-social-bar-right"></span>
     <span class="rp-social-dot rp-dot-1"></span>
     <span class="rp-social-dot rp-dot-2"></span>
     <span class="rp-social-dot rp-dot-3"></span>

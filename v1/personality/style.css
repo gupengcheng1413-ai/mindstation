@@ -970,12 +970,27 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:url('assets/result/bg-social-bot.svg') no-repeat;background-size:100% 100%;
   z-index:1;
 }
+/* 跑道环连接(study↔social 之间)— Rectangle228 左钩 / Group275 右钩, #333 描边弧线
+   两钩各自镜像翻转, 上下对准圆孔列(左 x130 / 右 x1510) */
 .rp-social-bar{
-  position:absolute;left:135px;top:1573px;
+  position:absolute;left:122px;top:1573px;
   width:16px;height:103px;
-  background:url('assets/result/bg-social-bot.svg') no-repeat;
-  background-size:cover;
-  z-index:2;
+  background:url('assets/result/connector/bar-left.svg') no-repeat center/100% 100%;
+  transform:scaleX(-1);
+  z-index:4;
+}
+.rp-social-bar-right{
+  position:absolute;left:1498px;top:1573px;
+  width:24px;height:103px;
+  background:url('assets/result/connector/bar-right.svg') no-repeat center/100% 100%;
+  transform:scaleX(-1);
+  z-index:4;
+}
+.rp-social-bar-line{
+  position:absolute;left:142px;top:1609px;
+  width:8px;height:32px;
+  background:url('assets/result/connector/bar-left-line.svg') no-repeat center/100% 100%;
+  z-index:5;
 }
 .rp-social-dot{
   position:absolute;width:18px;height:18px;border-radius:50%;
