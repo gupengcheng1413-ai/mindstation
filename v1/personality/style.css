@@ -583,6 +583,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   --rg-frame:url('assets/result/badge/frame-analysts.svg');
   --rg-star:url('assets/result/badge/star-analysts.svg');
   --rg-star-text:#8800ff;
+  --rg-dash:#C8AFFF;
 
   background:var(--rg-bg);
   overflow:hidden;
@@ -596,6 +597,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   --rg-frame:url('assets/result/badge/frame-diplomats.svg');
   --rg-star:url('assets/result/badge/star-diplomats.svg');
   --rg-star-text:#007e35;
+  --rg-dash:#4FE06E;
 }
 .scene-result[data-group="sentinels"]{
   --rg-bg:linear-gradient(120.45deg,#a4c0ff 29.87%,#aae7f6 89.22%);
@@ -606,6 +608,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   --rg-frame:url('assets/result/badge/frame-sentinels.svg');
   --rg-star:url('assets/result/badge/star-sentinels.svg');
   --rg-star-text:#1a54e6;
+  --rg-dash:#9DCEFF;
 }
 .scene-result[data-group="explorers"]{
   --rg-bg:linear-gradient(120.45deg,#ffd27a 29.87%,#fff0c8 89.22%);
@@ -616,6 +619,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   --rg-frame:url('assets/result/badge/frame-explorers.svg');
   --rg-star:url('assets/result/badge/star-explorers.svg');
   --rg-star-text:#ff7b00;
+  --rg-dash:#F8CE27;
 }
 .r-page{
   position:absolute;inset:0;
@@ -849,12 +853,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rp-retest:active{transform:scale(.97)}
 
 /* divider — Figma 4654:870/871/872 全宽细线 */
+/* 模块分隔虚线 — Figma Vector 90/91/92, dasharray 12/12, 跟随群组主题色, 置于最顶层 */
 .rp-divider{
-  position:absolute;left:135px;width:1370px;height:2px;
-  background:rgba(0,0,0,.06);
-  border-radius:2px;
-  z-index:1;
+  position:absolute;left:135px;width:1370px;height:1.01px;
+  background:repeating-linear-gradient(90deg,
+    var(--rg-dash,#C8AFFF) 0 12px, transparent 12px 24px);
+  z-index:20;
 }
+.rp-divider-v90{height:2.02px}
 
 /* ===== 性格特点(362-852) ===== */
 .rp-trait-bg{

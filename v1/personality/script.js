@@ -403,7 +403,7 @@ function renderResult(type){
     <button type="button" class="rp-retest" id="rpRetest">重新测试</button>
 
     <!-- divider 1 -->
-    <span class="rp-divider" style="top:361px"></span>
+    <span class="rp-divider rp-divider-v90" style="top:361px"></span>
 
     <!-- ===== 性格特点 (362-852) ===== -->
     <div class="rp-trait-bg"></div>
@@ -429,7 +429,7 @@ function renderResult(type){
     </div>
 
     <!-- divider 3 -->
-    <span class="rp-divider" style="top:1446px"></span>
+    <span class="rp-divider" style="top:1443px"></span>
 
     <!-- ===== 校园相处锦囊 (1573-1850) ===== -->
     <div class="rp-social-bg-top"></div>
