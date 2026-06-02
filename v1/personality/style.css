@@ -291,11 +291,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   transition:color var(--t-fast),transform var(--t-fast);
 }
 .q-prev{left:96px}
-.q-next{right:96px;opacity:.35}
+.q-next{right:96px}
 .q-prev:hover{color:#3a444d}
+.q-next:hover:not(:disabled){color:#3a444d}
 .q-prev:active,.q-next:active{transform:scale(.95)}
 .q-prev:disabled{opacity:.35;cursor:not-allowed}
-.q-next:disabled{cursor:not-allowed}
+.q-next:disabled{opacity:.35;cursor:not-allowed}
 
 .q-bar{
   position:absolute;left:0;right:0;bottom:0;height:20px;

@@ -212,7 +212,6 @@ function pickOption(opt){
   state.answers[state.qIndex] = opt;
   $("#qOptA").classList.toggle("is-picked", opt === "a");
   $("#qOptB").classList.toggle("is-picked", opt === "b");
-  $("#qNext").disabled = false;
   setTimeout(() => {
     state.qIndex++;
     $("#qBarFill").style.width = `${(state.qIndex / state.questions.questions.length) * 100}%`;
