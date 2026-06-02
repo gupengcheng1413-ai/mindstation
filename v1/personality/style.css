@@ -86,6 +86,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .scene-knowledge{
   background:linear-gradient(109.2deg,#D1E1FF 11.6%,#EDE9FF 103%);
 }
+.kn-page{
+  position:absolute;inset:0;
+  overflow-x:hidden;overflow-y:auto;
+  scroll-behavior:smooth;scrollbar-width:none;
+}
+.kn-page::-webkit-scrollbar{display:none}
 .kn-back{
   position:absolute;left:0;top:1px;width:80px;height:68px;
   padding:0;background:transparent;border:0;display:block;z-index:20;cursor:pointer;
@@ -99,10 +105,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   font-size:34px;font-weight:500;letter-spacing:1px;color:#3a444d;line-height:46px;z-index:10;
 }
 .kn-card{
-  position:absolute;left:83px;top:90px;width:1475px;height:764px;
+  position:relative;margin:90px 0 0 83px;width:1475px;min-height:764px;
   background:rgba(255,255,255,.61);border-radius:35px;
-  box-sizing:border-box;padding:40px 43px;
+  box-sizing:border-box;padding:40px 43px 56px;
 }
+.kn-page::after{content:"";display:block;height:40px}
 .kn-p{
   margin:0;font-family:var(--font-cn);font-size:32px;font-weight:500;
   color:rgba(0,0,0,.6);line-height:1.46;
