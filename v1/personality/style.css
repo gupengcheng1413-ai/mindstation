@@ -930,9 +930,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   z-index:2;
   pointer-events:none;
 }
-.rp-section-tag[style*="381"]{background-image:url('assets/result/tag-trait.svg')}
-.rp-section-tag[style*="872"]{background-image:url('assets/result/tag-study.svg')}
-.rp-section-tag[style*="1675"]{background-image:url('assets/result/tag-social.svg')}
+.rp-section-tag.rp-tag-trait{background-image:url('assets/result/tag-trait.svg')}
+.rp-section-tag.rp-tag-study{background-image:url('assets/result/tag-study.svg')}
+.rp-section-tag.rp-tag-social{background-image:url('assets/result/tag-social.svg')}
 
 /* 板块标题文字 — Figma 4654:843/845/903 36/46 #2f2f2f
    位置: 性格特点 (157,390) / 学习优势分析 (153,881) / 校园相处锦囊 (162,1684) */
@@ -959,7 +959,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ===== 学习优势分析(853-1443) ===== */
 .rp-study-bg{
-  position:absolute;left:101px;top:853px;
+  position:absolute;left:101px;
   width:1438px;height:590px;
   background:url('assets/result/bg-study.svg') no-repeat;background-size:100% 100%;
   z-index:1;
@@ -1017,14 +1017,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ===== 校园相处锦囊(1573-1850) ===== */
 .rp-social-bg-top{
-  position:absolute;left:101px;top:1444px;
+  position:absolute;left:101px;
   width:1438px;height:165px;
   background:url('assets/result/bg-social-top.svg') no-repeat;background-size:100% 100%;
   transform:scaleY(-1);transform-origin:center;
   z-index:1;
 }
 .rp-social-bg-bot{
-  position:absolute;left:101px;top:1641px;
+  position:absolute;left:101px;
   width:1438px;height:209px;
   background:url('assets/result/bg-social-bot.svg') no-repeat;background-size:100% 100%;
   z-index:1;
@@ -1032,21 +1032,21 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* 跑道环连接(study↔social 之间)— Rectangle228 左钩 / Group275 右钩, #333 描边弧线
    两钩各自镜像翻转, 上下对准圆孔列(左 x130 / 右 x1510) */
 .rp-social-bar{
-  position:absolute;left:122px;top:1573px;
+  position:absolute;left:122px;
   width:16px;height:103px;
   background:url('assets/result/connector/bar-left.svg') no-repeat center/100% 100%;
   transform:scaleX(-1);
   z-index:4;
 }
 .rp-social-bar-right{
-  position:absolute;left:1498px;top:1573px;
+  position:absolute;left:1498px;
   width:24px;height:103px;
   background:url('assets/result/connector/bar-right.svg') no-repeat center/100% 100%;
   transform:scaleX(-1);
   z-index:4;
 }
 .rp-social-bar-line{
-  position:absolute;left:142px;top:1609px;
+  position:absolute;left:142px;
   width:8px;height:32px;
   background:url('assets/result/connector/bar-left-line.svg') no-repeat center/100% 100%;
   z-index:5;

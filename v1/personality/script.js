@@ -413,7 +413,7 @@ function renderResult(type){
 
     <!-- ===== 性格特点 (362-852) ===== -->
     <div class="rp-trait-bg"></div>
-    <div class="rp-section-tag" style="top:381px"></div>
+    <div class="rp-section-tag rp-tag-trait" style="top:381px"></div>
     <h3 class="rp-section-title" style="top:390px;left:157px;width:197px">性格特点</h3>
     <p class="rp-trait-text">${data?.personality || (type + " · " + codename + " 的性格特点正在路上 ✦")}</p>
 
@@ -421,8 +421,8 @@ function renderResult(type){
     <span class="rp-divider" style="top:852px"></span>
 
     <!-- ===== 学习优势分析 (853-1443) ===== -->
-    <div class="rp-study-bg"></div>
-    <div class="rp-section-tag" style="top:872px"></div>
+    <div class="rp-study-bg" style="top:853px"></div>
+    <div class="rp-section-tag rp-tag-study" style="top:872px"></div>
     <h3 class="rp-section-title" style="top:881px;left:153px;width:236px">学习优势分析</h3>
     ${studyHTML}
 
@@ -438,16 +438,16 @@ function renderResult(type){
     <span class="rp-divider" style="top:1443px"></span>
 
     <!-- ===== 校园相处锦囊 (1573-1850) ===== -->
-    <div class="rp-social-bg-top"></div>
-    <div class="rp-social-bg-bot"></div>
-    <span class="rp-social-bar"></span>
-    <span class="rp-social-bar-line"></span>
-    <span class="rp-social-bar-right"></span>
+    <div class="rp-social-bg-top" style="top:1444px"></div>
+    <div class="rp-social-bg-bot" style="top:1641px"></div>
+    <span class="rp-social-bar" style="top:1573px"></span>
+    <span class="rp-social-bar-line" style="top:1609px"></span>
+    <span class="rp-social-bar-right" style="top:1573px"></span>
     <span class="rp-social-dot rp-dot-1"></span>
     <span class="rp-social-dot rp-dot-2"></span>
     <span class="rp-social-dot rp-dot-3"></span>
     <span class="rp-social-dot rp-dot-4"></span>
-    <div class="rp-section-tag" style="top:1675px"></div>
+    <div class="rp-section-tag rp-tag-social" style="top:1675px"></div>
     <h3 class="rp-section-title" style="top:1684px;left:162px;width:311px">校园相处锦囊</h3>
     <p class="rp-social-tip">${data?.social?.tip || "暂无相处锦囊"}</p>
   `;
@@ -483,34 +483,31 @@ function renderResult(type){
   }, { passive:true });
 
   // ----- trait 段高度自适应 -----
-  // Figma 设计稿 trait 段是 (101,362) 1438×490, 文字 (131,471) 1371×360
-  // 文案越长 → trait-bg 更高 → 下方 study/social 段整体下移
-  // 设计稿基准:文字底缘 y=831(471+360),trait-bg 底 y=852,留 21px padding
+  // 背景底缘始终贴合文字底缘(留 21px padding), 文案长则整段变高、短则变矮;
+  // 后续 study/social 段随 shift(可正可负)联动平移, 消除固定 852 高造成的多余空白。
   requestAnimationFrame(() => {
     const traitText = inner.querySelector(".rp-trait-text");
     if(!traitText) return;
     const textBottom = traitText.offsetTop + traitText.offsetHeight;
-    // 期望 trait-bg 底缘 = textBottom + 21px(底部 padding), 不小于 Figma 设计高度 852
     const baseTop = 362;
-    const desiredBottom = Math.max(852, textBottom + 21);
+    const MIN_BOTTOM = 471 + 80;                       // 极短文案下限, 防压坏标题区
+    const desiredBottom = Math.max(MIN_BOTTOM, textBottom + 40);  // 文本底缘留 40px 空白
     const newHeight = desiredBottom - baseTop;
-    const shift = desiredBottom - 852;  // 后面所有元素需要下移的距离
+    const shift = Math.round(desiredBottom - 852);     // 相对设计基线的位移(可正可负)
 
-    if(shift > 0){
+    if(shift !== 0){
       const traitBg = inner.querySelector(".rp-trait-bg");
       if(traitBg) traitBg.style.height = `${newHeight}px`;
 
-      // 把所有 top >= 852 的元素都下移 shift 像素
-      inner.querySelectorAll("[style*='top:']").forEach(el => {
-        const m = el.style.top.match(/^(\d+(?:\.\d+)?)px$/);
-        if(!m) return;
-        const orig = parseFloat(m[1]);
-        if(orig >= 852){
-          el.style.top = `${orig + shift}px`;
+      // 遍历 inner 的直接子元素, 按 computed top 平移 (覆盖 CSS 写死 top 与 inline top 两种)
+      // top >= 852 即 trait 段之后的所有元素, 整体随 shift 平移, 段内布局保持一致。
+      Array.from(inner.children).forEach(el => {
+        const ct = parseFloat(getComputedStyle(el).top);
+        if(!isNaN(ct) && ct >= 852){
+          el.style.top = `${Math.round(ct + shift)}px`;
         }
       });
 
-      // r-page-inner 总高也要长
       const rpi = $("#rPageInner");
       if(rpi) rpi.style.minHeight = `${1954 + shift}px`;
     }
