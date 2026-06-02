@@ -1398,21 +1398,28 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    1640*0.1756=287.98 → 卡内 207.98
    1640*0.2707=443.95 → 卡内 363.95
    即三段文字大致 x=92/208/364, 卡总宽 482 */
-.ar-card-name{
-  position:absolute;left:30px;top:22px;
+.ar-card-main{
+  position:absolute;left:30px;top:22px;right:190px;
   height:46px;
-  min-width:60px;
+  display:flex;align-items:baseline;gap:10px;
+  overflow:hidden;
+}
+.ar-card-name{
+  flex:0 1 auto;min-width:0;
+  height:46px;
   font-family:var(--font-cn);font-size:32px;font-weight:500;
   color:#7b8396;line-height:46px;letter-spacing:0;
-  text-align:left;padding:0 6px;
+  text-align:left;
   text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   pointer-events:none;
 }
 .ar-card-rel{
-  position:absolute;left:140px;top:22px;
+  flex:0 0 auto;
   height:46px;
   font-family:var(--font-cn);font-size:32px;font-weight:400;
   color:#7b8396;line-height:46px;letter-spacing:0;
+  white-space:nowrap;
   pointer-events:none;
 }
 .ar-card-type{
@@ -1439,12 +1446,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   pointer-events:none;
 }
 .ar-add-plus img{width:45px;height:45px;display:block}
-.ar-card-add .ar-card-name{left:84px;color:#7b8396}
+.ar-card-add .ar-card-name{position:absolute;left:84px;top:22px;color:#7b8396}
 
 /* 删除模式: 卡身全部 #23272e 灰、左侧 46×46 复选框 */
 .scene-archive[data-mode="delete"] .ar-card{cursor:pointer}
 .scene-archive[data-mode="delete"] .ar-card.is-current{background:#23272e;border-color:transparent}
-.scene-archive[data-mode="delete"] .ar-card.is-current .ar-card-name{color:#7b8396;left:90px}
+.scene-archive[data-mode="delete"] .ar-card.is-current .ar-card-name{color:#7b8396}
+.scene-archive[data-mode="delete"] .ar-card.is-current .ar-card-main{left:90px}
 .scene-archive[data-mode="delete"] .ar-card.is-current .ar-card-type{color:#7b8396}
 .scene-archive[data-mode="delete"] .ar-card-add{display:none}
 
@@ -1472,7 +1480,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .ar-card.is-checked .ar-check-tick{display:block}
 .ar-card.is-checked .ar-check-box{display:none}
 /* 删除模式下卡内文字往右挪给复选框位置 */
-.scene-archive[data-mode="delete"] .ar-card-name{left:90px}
+.scene-archive[data-mode="delete"] .ar-card-main{left:90px}
 
 /* 右下垃圾桶按钮 — Figma 4531:753 (1578,281) 46×47 */
 .ar-trash{

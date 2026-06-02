@@ -738,8 +738,10 @@ function renderArchive(){
           <span class="ar-check-box"></span>
           <span class="ar-check-tick"><img src="assets/archive/check-on.png" alt=""></span>
         </span>
-        <span class="ar-card-name">${ar.name}</span>
-        <span class="ar-card-rel">${ar.relation}</span>
+        <span class="ar-card-main">
+          <span class="ar-card-name">${ar.name}</span>
+          <span class="ar-card-rel">${ar.relation}</span>
+        </span>
         <span class="ar-card-type">${(ar.type || "").toLowerCase()}</span>
       </button>
     `;
