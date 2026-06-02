@@ -784,6 +784,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   height:50px;width:auto;
   z-index:6;pointer-events:none;
 }
+/* ENFP「快乐小狗」4 字最宽, 与"能量来源"卡片贴边 → 缩到 95%, 以左上为基准 */
+.scene-result[data-type="ENFP"] .rp-codename-img{
+  transform:scale(.95);transform-origin:left top;
+}
 
 /* 副标题 — Figma 4654:858 (131,229) 36/46 #3c3c3c Bold 双行 */
 .rp-subtitle-block{display:none}

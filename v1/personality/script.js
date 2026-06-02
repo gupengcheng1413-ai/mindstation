@@ -36,7 +36,9 @@ const state = {
   // archive 选中(等待"确定"提交)的目标档案 id
   archivePendingId: null,
   // 从"新建档案"入口进入 → 完成后强制追加新档案, 不覆盖原档案
-  forceNewArchive: false
+  forceNewArchive: false,
+  // result 页点"新建档案"进 menu 时的上下文快照; 在 menu 点返回可还原并回 result
+  newArchiveReturn: null
 };
 
 // ---------- 自适应缩放 ----------
@@ -246,6 +248,8 @@ function confirmExit(){
   closeExitModal();
   state.qIndex = 0;
   state.answers = [];
+  // 新建档案流程未完成 → 回到发起新建的 result
+  if(tryReturnToNewArchiveSource()) return;
   // 来源是 result 时回 result, 否则回 menu
   if(state.quizFrom === "result"){
     setScene("result");
@@ -264,7 +268,10 @@ function renderResult(type){
   // 按人格群组给 result 场景打主题色标记(analysts紫/diplomats绿/sentinels蓝/explorers黄)
   const groupKey = findGroup((type || "").toUpperCase(), groups);
   const resultScene = $('.scene[data-scene="result"]');
-  if(resultScene) resultScene.dataset.group = groupKey || "analysts";
+  if(resultScene){
+    resultScene.dataset.group = groupKey || "analysts";
+    resultScene.dataset.type = (type || "").toUpperCase();
+  }
 
   const codename  = data?.codename || "";
   const subtitle  = data?.subtitle || data?.tagline || "";
@@ -652,6 +659,8 @@ function ensureArchiveSeed(){
 // 若已有同名+同关系记录则更新, 否则新增, 并设为当前生效档案
 function upsertCurrentArchive(){
   if(!state.profile.name || !state.profile.relation || !state.currentType) return;
+  // 走到这里说明新建/重测已完成落档 → 旧 result 返回快照失效
+  state.newArchiveReturn = null;
   // 关系=自己 → 全局唯一: 若已存在"自己"档案则覆盖它(即便从"新建档案"入口进入)
   if(state.profile.relation === "自己"){
     const selfAr = state.archives.find(a => a.relation === "自己");
@@ -759,8 +768,31 @@ function openArchive(){
   setScene("archive");
 }
 
+// 新建档案流程未完成时, 任意"返回"入口都应回到发起新建的那个 result 页。
+// 有快照 → 还原上下文 + 回 result, 返回 true; 无快照 → 返回 false(走原返回逻辑)。
+function tryReturnToNewArchiveSource(){
+  const snap = state.newArchiveReturn;
+  if(!snap) return false;
+  state.currentType = snap.currentType;
+  state.currentArchiveId = snap.currentArchiveId;
+  state.profile.name = snap.profile.name;
+  state.profile.relation = snap.profile.relation;
+  state.newArchiveReturn = null;
+  state.forceNewArchive = false;
+  setScene("result");
+  return true;
+}
+
 // 新建档案: 回功能主页 menu, 清空 profile + 解绑生效档案, 后续流程追加为新档案, 原档案保留
 function startNewArchive(){
+  // 从 result 进来 → 先快照当前档案上下文, 以便 menu 返回时能回到原 result
+  if(state.scene === "result" && state.currentType){
+    state.newArchiveReturn = {
+      currentType: state.currentType,
+      currentArchiveId: state.currentArchiveId,
+      profile: { name: state.profile.name, relation: state.profile.relation }
+    };
+  }
   state.profile.name = "";
   state.profile.relation = "";
   state.currentArchiveId = null;
@@ -866,6 +898,8 @@ function lighten(hex){
 function bindEvents(){
   // menu
   $("#menuBack")?.addEventListener("click", () => {
+    // 新建档案流程未完成时, 返回回到发起新建的 result
+    if(tryReturnToNewArchiveSource()) return;
     // 主壳里返回首页(parent),独立页面下回 history
     if(window.parent !== window) window.parent.postMessage({ type:"personality-back" }, "*");
     else history.length > 1 ? history.back() : null;
@@ -882,7 +916,10 @@ function bindEvents(){
   });
 
   // profile
-  $("#profileBack")?.addEventListener("click", () => setScene("menu"));
+  $("#profileBack")?.addEventListener("click", () => {
+    if(tryReturnToNewArchiveSource()) return;
+    setScene("menu");
+  });
   const pfNameEl = $("#pfName");
   if(pfNameEl){
     let composing = false;
@@ -1021,7 +1058,7 @@ function bindEvents(){
         if(e.key === "Escape") closeRelationModal();
         return;
       }
-      if(e.key === "Escape") setScene("menu");
+      if(e.key === "Escape"){ if(!tryReturnToNewArchiveSource()) setScene("menu"); }
       if(e.key === "Enter" && state.profile.name && state.profile.relation){
         if(state.profileFor === "pick"){
           state.pickedType = null;
@@ -1042,7 +1079,7 @@ function bindEvents(){
       }
       if(e.key === "Escape"){
         if(state.qIndex > 0 || state.answers.some(Boolean)) openExitModal();
-        else setScene("menu");
+        else if(!tryReturnToNewArchiveSource()) setScene("menu");
         return;
       }
       if(e.key === "1" || e.key === "a" || e.key === "A") pickOption("a");
