@@ -130,7 +130,17 @@
         askAgain();
         break;
       case 'close':
-        reset();
+        // 嵌在心灵驿站 iframe 内：归位到提问页后通知父页直接返回主页；独立打开时退回内部菜单
+        if (window.parent !== window) {
+          askCount = 0;
+          lastIdx = -1;
+          ctaLabel.textContent = '再问一次';
+          writeAnswer(ANSWERS[0]);
+          setState('question');
+          window.parent.postMessage({ type: 'answer-back' }, '*');
+        } else {
+          reset();
+        }
         break;
     }
   });
