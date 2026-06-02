@@ -81,6 +81,47 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .scene-menu{
   background:linear-gradient(109.2deg,#D1E1FF 11.6%,#EDE9FF 103%);
 }
+
+/* ===== mbti-knowledge 关于 MBTI(Figma 4666:3438) ===== */
+.scene-knowledge{
+  background:linear-gradient(109.2deg,#D1E1FF 11.6%,#EDE9FF 103%);
+}
+.kn-back{
+  position:absolute;left:0;top:1px;width:80px;height:68px;
+  padding:0;background:transparent;border:0;display:block;z-index:20;cursor:pointer;
+  transition:opacity var(--t-fast),transform var(--t-fast);
+}
+.kn-back img{display:block;width:80px;height:68px;pointer-events:none;-webkit-user-drag:none}
+.kn-back:hover{opacity:.7}
+.kn-back:active{transform:scale(.92)}
+.kn-title{
+  position:absolute;left:80px;top:12px;
+  font-size:34px;font-weight:500;letter-spacing:1px;color:#3a444d;line-height:46px;z-index:10;
+}
+.kn-card{
+  position:absolute;left:83px;top:90px;width:1475px;height:764px;
+  background:rgba(255,255,255,.61);border-radius:35px;
+  box-sizing:border-box;padding:40px 43px;
+}
+.kn-p{
+  margin:0;font-family:var(--font-cn);font-size:32px;font-weight:500;
+  color:rgba(0,0,0,.6);line-height:1.46;
+}
+.kn-intro{margin-top:0}
+.kn-lead{margin-top:42px}
+.kn-dims{list-style:none;margin:18px 0 0;padding:0}
+.kn-dim{
+  position:relative;padding-left:24px;margin-bottom:18px;
+  font-family:var(--font-cn);font-size:30px;font-weight:400;
+  color:rgba(0,0,0,.6);line-height:1.4;
+}
+.kn-dim:last-child{margin-bottom:0}
+.kn-dim::before{
+  content:"";position:absolute;left:0;top:.6em;
+  width:15px;height:15px;border-radius:50%;background:#696969;
+}
+.kn-dim b{font-weight:700;color:rgba(0,0,0,.6)}
+.kn-outro{margin-top:42px}
 /* 左上返回 — Figma 4350:1804 Group 152(80×68 命中区,SVG 内置箭头位) */
 .m-back{
   position:absolute;left:0;top:1px;

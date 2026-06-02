@@ -871,7 +871,8 @@ function bindEvents(){
     if(window.parent !== window) window.parent.postMessage({ type:"personality-back" }, "*");
     else history.length > 1 ? history.back() : null;
   });
-  $("#menuHelp")?.addEventListener("click", () => toast("帮助说明 — 即将上线"));
+  $("#menuHelp")?.addEventListener("click", () => setScene("knowledge"));
+  $("#knowledgeBack")?.addEventListener("click", () => setScene("menu"));
   $("#ctaStart")?.addEventListener("click", () => {
     state.profileFor = "quiz";
     setScene("profile");
