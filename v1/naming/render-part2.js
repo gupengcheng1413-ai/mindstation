@@ -53,20 +53,7 @@
         M.mSurnameRhythm(d), M.mPeople(d, "同姓名人"),
         M.mSameName(d), M.mFamous(d), M.mEnglish(d), M.mFact(d));
     }
-    const A = "assets/bg/";
-    const bg = `<div class="rs-bg" aria-hidden="true">
-      <img class="b142" src="${A}e142.svg" alt="">
-      <img class="b125" src="${A}e125.svg" alt="">
-      <img class="b121" src="${A}e121.svg" alt="">
-      <img class="b150" src="${A}e150.svg" alt="">
-      <img class="b149" src="${A}e149.svg" alt="">
-      <img class="b151" src="${A}e151.svg" alt="">
-      <img class="b148" src="${A}e148.svg" alt="">
-      <div class="egg-clip egg1"><img src="${A}egg.png" alt=""></div>
-      <div class="egg-clip egg2"><img src="${A}egg.png" alt=""></div>
-      <img class="bU1" src="${A}union.svg" alt="">
-      <img class="bU2" src="${A}union1.svg" alt="">
-    </div>`;
+    const bg = `<div class="rs-bg" aria-hidden="true"><img class="bg-whole" src="assets/bg-top.png" alt=""></div>`;
     $("#resultScroll").innerHTML = bg + `<div class="rs-wrap">${out.join("")}</div>`;
   }
   window.__NM_render = renderResult;
