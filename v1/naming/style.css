@@ -186,19 +186,24 @@ img{user-select:none}
 .rs-bg{position:absolute;left:0;top:0;width:1640px;height:226px;z-index:0;pointer-events:none}
 .rs-bg img.bg-whole{position:absolute;inset:0;width:100%;height:100%;display:block}
 .rs-bg>:not(.bg-whole){display:none}
-.rs-topbar{position:absolute;left:0;right:0;top:0;height:92px;z-index:40;
-  background:transparent}
-.rs-chip{position:absolute;top:16px;height:60px;border-radius:20px;font-size:32px;font-weight:500;padding:0 22px;
+/* chips 现位于随滚动的 rs-head 内（右侧），不再固定 */
+.rs-chip{position:absolute;top:4px;height:60px;border-radius:20px;font-size:32px;font-weight:500;padding:0 22px;
   display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);color:#015C52;transition:transform var(--t-fast);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .rs-chip:active{transform:scale(.95)}
 .rs-chip-hist{right:198px}
-.rs-chip-hist::before{content:"";width:30px;height:30px;border:3px solid #015C52;border-radius:6px;opacity:.85}
-.rs-chip-again{right:24px}
+.rs-chip-hist::before{content:"";width:34px;height:34px;background:url("assets/chip-hist.png") center/contain no-repeat}
+.rs-chip-again{right:0}
 
-.rs-scroll{position:absolute;inset:0;overflow-y:auto;padding:92px 0 70px;scroll-behavior:smooth}
+.rs-scroll{position:absolute;inset:0;overflow-y:auto;padding:0 0 70px;scroll-behavior:smooth}
 .rs-scroll::-webkit-scrollbar{width:8px}
 .rs-scroll::-webkit-scrollbar-thumb{background:rgba(0,0,0,.16);border-radius:8px}
-.rs-wrap{position:relative;z-index:2;width:1640px;margin:0 auto;padding:0 78px;background:transparent}
+.rs-wrap{position:relative;z-index:2;width:1640px;margin:0 auto;padding:14px 78px 0;background:transparent}
+/* 随内容滚动的标题栏（返回 Group152 + 标题 + 右侧 chips），在内容流顶部 */
+.rs-head{position:relative;height:68px;margin-bottom:8px}
+.rs-head .nm-back{position:absolute;left:-70px;top:0;width:80px;height:68px;display:flex;align-items:center;justify-content:center;z-index:30;transition:transform var(--t-fast)}
+.rs-head .nm-back img{width:80px;height:68px;display:block}
+.rs-head .nm-back:active{transform:scale(.9)}
+.rs-head .nm-title{position:absolute;left:10px;top:12px;height:46px;line-height:46px;font-size:34px;font-weight:500;color:var(--title);white-space:nowrap;z-index:20}
 
 /* —— 花线分隔标题（金色双层绶带药丸 + 两侧空心圆描线，1:1 Figma 4901:8487） —— */
 .rs-sechead{position:relative;display:flex;align-items:center;justify-content:center;height:55px;margin:30px 0 20px;gap:0}

@@ -54,7 +54,13 @@
         M.mSameName(d), M.mFamous(d), M.mEnglish(d), M.mFact(d));
     }
     const bg = `<div class="rs-bg" aria-hidden="true"><img class="bg-whole" src="assets/bg-top.png" alt=""></div>`;
-    $("#resultScroll").innerHTML = bg + `<div class="rs-wrap">${out.join("")}</div>`;
+    const head = `<div class="rs-head">
+      <button type="button" class="nm-back" data-go="input" aria-label="返回"><img src="assets/nm-back.png" alt=""></button>
+      <h1 class="nm-title">姓名寓意</h1>
+      <button type="button" class="rs-chip rs-chip-hist" data-go="history">已测姓名</button>
+      <button type="button" class="rs-chip rs-chip-again" data-act="again">再测一个</button>
+    </div>`;
+    $("#resultScroll").innerHTML = bg + `<div class="rs-wrap">${head}${out.join("")}</div>`;
   }
   window.__NM_render = renderResult;
 
