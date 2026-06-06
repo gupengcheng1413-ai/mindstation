@@ -66,7 +66,7 @@
   // ===== 名字里的祝福 =====
   function mBlessing(d){
     return sechead("名字里的祝福") +
-      `<div class="rs-card"><div class="t">${esc(d.blessing)}</div>${corners}</div>`;
+      `<div class="rs-card rs-bless"><div class="t">${esc(d.blessing)}</div>${corners}</div>`;
   }
 
   // 单张奶白卡（姓氏故事 / 文化）
