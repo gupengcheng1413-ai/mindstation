@@ -283,8 +283,8 @@ img{user-select:none}
 /* ===== 嵌字诗（卷轴装饰=整图 poem-scroll.png 截图：卷轴/角标/IP/田字格全在图里；
    诗句=DOM文字叠在田字格区，可改自适应） ===== */
 .rs-poem{position:relative;margin-top:6px;width:1479px;height:281px;
-  background:url("assets/poem-scroll.png") center/100% 100% no-repeat}
-.rs-poem-grid{position:absolute;left:239px;top:98px;width:1001px;height:172px;
+  background:url("assets/poem-scroll.png?v=1780729012") center/100% 100% no-repeat}
+.rs-poem-grid{position:absolute;left:239px;top:37px;width:1001px;height:172px;
   display:grid;grid-template-columns:1fr 1fr;align-content:center;justify-items:center;gap:14px 0;z-index:2}
 .rs-poem-grid .ln{font-size:36px;line-height:46px;color:rgba(0,0,0,.8);font-family:var(--font-cn);font-weight:700;letter-spacing:2px;white-space:nowrap}
 .rs-poem-grid .ln.l{color:var(--rs-poem-l)}
