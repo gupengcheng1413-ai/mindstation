@@ -35,15 +35,14 @@
   }
 
   // ===== 嵌字诗（角标 + 双联田字格 + IP；容器自适应高度） =====
+  // ===== 嵌字诗（卷轴装饰=整图截图 poem-scroll.png；诗句=DOM文字叠在田字格区，可改） =====
   function mPoem(d){
     const ls = d.poem.lines;
     const half = Math.ceil(ls.length/2);
     const cells = ls.map((l,i) =>
       `<div class="ln${i<half?" l":""}">${esc(l)}</div>`).join("");
     return `<section class="rs-poem">
-      <div class="rs-poem-badge"><i><b>嵌</b></i><i><b>字</b></i><i><b>诗</b></i></div>
       <div class="rs-poem-grid">${cells}</div>
-      <img class="rs-poem-ip" src="assets/egg-result.png" alt="" draggable="false">
     </section>`;
   }
 

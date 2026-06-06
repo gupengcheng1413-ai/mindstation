@@ -280,21 +280,16 @@ img{user-select:none}
 .rs-tone.t2 .stem::after{background:#4FBFBD;border:3px solid #A6E8E7}
 .rs-tone.t3 .stem::after{background:#64A4B8;border:3px solid #ACD2E0}
 
-/* ===== 嵌字诗（角标/IP 固定装饰，诗句正文自适应居中） ===== */
-.rs-poem{position:relative;margin-top:6px;min-height:194px;display:flex;align-items:center;justify-content:center;
-  padding:34px 240px 34px 160px;
+/* ===== 嵌字诗（卷轴装饰=整图 poem-scroll.png 截图：卷轴/角标/IP/田字格全在图里；
+   诗句=DOM文字叠在田字格区，可改自适应） ===== */
+.rs-poem{position:relative;margin-top:6px;width:1479px;height:281px;
   background:url("assets/poem-scroll.png") center/100% 100% no-repeat}
-.rs-poem-bg{display:none}
-.rs-poem-badge{position:absolute;left:60px;top:30px;display:flex;gap:14px;z-index:3}
-.rs-poem-badge i{position:relative;width:47px;height:47px;font-style:normal;display:flex;align-items:center;justify-content:center}
-.rs-poem-badge i::before{content:"";position:absolute;inset:0;background:var(--rs-tag);border:2px solid var(--rs-gold);border-radius:8px;transform:rotate(45deg);box-shadow:0 4px 8px rgba(160,96,0,.07)}
-.rs-poem-badge i b{position:relative;font-size:32px;font-weight:700;color:var(--rs-gold-deep);font-family:var(--font-cn)}
-.rs-poem-grid{display:grid;grid-template-columns:auto auto;gap:14px 80px;z-index:2}
+.rs-poem-grid{position:absolute;left:239px;top:98px;width:1001px;height:172px;
+  display:grid;grid-template-columns:1fr 1fr;align-content:center;justify-items:center;gap:14px 0;z-index:2}
 .rs-poem-grid .ln{font-size:36px;line-height:46px;color:rgba(0,0,0,.8);font-family:var(--font-cn);font-weight:700;letter-spacing:2px;white-space:nowrap}
 .rs-poem-grid .ln.l{color:var(--rs-poem-l)}
 .rs-poem-grid .ln::first-letter{color:rgba(184,0,0,.8)}
 .rs-poem-grid .ln.l::first-letter{color:var(--rs-vermil)}
-.rs-poem-ip{position:absolute;right:60px;bottom:0;width:200px;height:auto;z-index:3}
 
 /* ===== 逐字解析（印章字框固定，出处/释义正文自适应；流式布局） ===== */
 .rs-chars{display:grid;gap:24px;align-items:stretch}
