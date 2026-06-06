@@ -39,6 +39,7 @@
   --rs-divider:#D4AD12;    /* 卡内竖分隔线 金 */
   --rs-role:#962B2B;       /* 名人 role 朱砂 */
 
+  --font-py:"Noto Sans","Noto Sans SC",system-ui,sans-serif;
   --font-cn:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
   --font-kai:"LXGW WenKai","Kaiti SC","STKaiti","KaiTi","Noto Serif SC",serif;
   --font-display:"ZCOOL XiaoWei","Noto Serif SC","Noto Sans SC",serif;
@@ -238,7 +239,7 @@ img{user-select:none}
 .rs-hero{position:relative;min-height:200px;padding-right:360px}
 .rs-hero-name{position:absolute;left:34px;top:6px;display:flex;align-items:flex-end;gap:8px}
 .rs-hero-char{display:flex;flex-direction:column;align-items:center}
-.rs-hero-char .py{height:34px;font-size:28px;color:#5B5A59;letter-spacing:.5px;font-family:var(--font-cn)}
+.rs-hero-char .py{height:34px;font-size:28px;color:#5B5A59;letter-spacing:.5px;font-family:var(--font-py)}
 .rs-hero-char .ch{font-size:90px;line-height:80px;color:var(--ink);font-family:var(--font-cn);font-weight:700;letter-spacing:6px}
 .rs-hero-name.translit{flex-direction:column;align-items:flex-start;gap:2px}
 .rs-hero-name.translit .kind{font-size:28px;color:#5B5A59}
@@ -333,7 +334,7 @@ img{user-select:none}
 .rs-rhythm{display:flex;justify-content:center;gap:80px;margin-top:34px}
 .rs-rhythm .one{position:relative;display:flex;flex-direction:column;align-items:center}
 .rs-rhythm .one+.one::before{content:"";position:absolute;left:-40px;top:6px;bottom:6px;width:2px;background:var(--rs-divider)}
-.rs-rhythm .py{font-size:54px;color:var(--ink);font-family:var(--font-cn)}
+.rs-rhythm .py{font-size:54px;color:var(--ink);font-family:var(--font-py)}
 .rs-rhythm .tn{margin-top:14px;font-size:28px;color:rgba(118,118,118,.85)}
 
 /* 同源变体 chips */
