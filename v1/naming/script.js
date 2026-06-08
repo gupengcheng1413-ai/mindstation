@@ -107,6 +107,7 @@
     setScene("loading");
     const fill = $("#loadFill"), sub = $(".scene-loading .ld-sub");
     if(fill) fill.style.width = "0%";
+    if(sub) sub.textContent = LOAD_TIPS[0];
     // 假进度：缓慢爬到 85% 停住，等真实返回再冲满
     let p = 0, ti = 0;
     clearInterval(loadT); clearInterval(tipT);
