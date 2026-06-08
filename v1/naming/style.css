@@ -244,8 +244,8 @@ img{user-select:none}
 .rs-hero-name.translit{flex-direction:column;align-items:flex-start;gap:2px}
 .rs-hero-name.translit .kind{font-size:28px;color:#5B5A59}
 .rs-hero-name.translit .ch{font-size:64px;line-height:72px;letter-spacing:2px}
-.rs-hero-underline{position:absolute;left:34px;top:194px;width:293px;height:14px;
-  background:radial-gradient(ellipse 60% 100% at 50% 0,rgba(236,151,9,.45),transparent 75%)}
+.rs-hero-underline{position:absolute;left:30px;top:118px;width:301px;height:32px;
+  background:url("assets/hero-underline.svg?v=1780879657") center/contain no-repeat}
 .rs-hero-tag{margin-left:332px;padding-top:6px}
 .rs-hero-tag .big{font-size:50px;line-height:72px;color:rgba(0,0,0,.7);font-weight:700;letter-spacing:6px;font-family:var(--font-cn)}
 .rs-hero-tag .desc{margin-top:10px;font-size:26px;color:rgba(49,49,49,.8);letter-spacing:.5px;line-height:38px;max-width:780px}
