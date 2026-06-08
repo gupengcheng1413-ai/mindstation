@@ -1,0 +1,398 @@
+/* ============================================================
+   心灵驿站 · 姓名寓意 — 长条屏 1640×348
+   颜色/字号取自 Figma 4815/4778/4795/4816/4901/4879
+   ============================================================ */
+/* 楷体（近似 Figma 付费 Kaiti SC）—— 开源霞鹜文楷 */
+@import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css");
+:root{
+  /* 背景 */
+  --bg-grad:linear-gradient(173deg,#E1E6DA 28.9%,#E8E8E8 106.6%);
+  --paper:#FBF6E9;
+  --card:#FFFFFF;
+  --stroke:#E8E2D2;
+
+  /* 文字 */
+  --ink:#1A1A1F;
+  --ink-2:#444444;
+  --ink-mute:#6B6B70;
+  --title:#3A444D;
+
+  /* 品牌色 */
+  --brand:#EC9709;     /* 主橙 / 光标 */
+  --green:#6E8B69;     /* 扫描按钮 / 确定 / 进度条 */
+  --green-2:#718B6C;
+  --gold:#BB9A5C;      /* 键盘按钮 */
+  --accent:#A12C11;    /* 朱砂 印章 */
+  --blue:#14669D;
+  --jade:#048C54;
+
+  /* 结果页·真实取色（Figma 4901 雷军页） */
+  --rs-gold:#B18E00;       /* 卡片金描边 / 印章描边 */
+  --rs-gold-txt:#A77C01;   /* 印章字 / 本义引申标签金字 */
+  --rs-gold-deep:#836204;  /* 嵌字角标字 */
+  --rs-cream:#FCF6E3;      /* 印章字底 奶白 */
+  --rs-cream2:#FFFEFB;     /* 嵌字诗框 奶白 */
+  --rs-pill:#AE8F35;       /* 分隔标题 金药丸 */
+  --rs-tag:#F9D996;        /* 嵌字角标 底 */
+  --rs-vermil:#C73332;     /* 诗句首字 朱砂 */
+  --rs-poem-l:#333D2A;     /* 左联诗句 墨绿 */
+  --rs-divider:#D4AD12;    /* 卡内竖分隔线 金 */
+  --rs-role:#962B2B;       /* 名人 role 朱砂 */
+
+  --font-py:"Noto Sans","Noto Sans SC",system-ui,sans-serif;
+  --font-cn:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --font-kai:"LXGW WenKai","Kaiti SC","STKaiti","KaiTi","Noto Serif SC",serif;
+  --font-display:"ZCOOL XiaoWei","Noto Serif SC","Noto Sans SC",serif;
+
+  --t-fast:160ms cubic-bezier(.2,.7,.3,1);
+  --t-mid:260ms cubic-bezier(.2,.7,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none !important}
+html,body{height:100%;overflow:hidden;font-family:var(--font-cn);background:#000;color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{user-select:none}
+
+/* ===== 舞台缩放骨架（与主壳/personality 一致） ===== */
+.stage{width:100vw;height:100vh;width:100dvw;height:100dvh;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden}
+.device{
+  position:relative;width:1640px;height:348px;
+  background:var(--bg-grad);overflow:hidden;border-radius:14px;
+  transform-origin:top left;--device-scale:1;transform:scale(var(--device-scale));
+  flex-shrink:0;
+  margin-right:calc(-1640px * (1 - var(--device-scale)));
+  margin-bottom:calc(-348px * (1 - var(--device-scale)));
+}
+.scene{position:absolute;inset:0;z-index:5;background:var(--bg-grad)}
+.scene[hidden]{display:none}
+.scene.is-entering{animation:sceneIn .42s cubic-bezier(.2,.7,.25,1) forwards}
+@keyframes sceneIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+.scene.is-leaving{animation:sceneOut .2s ease forwards}
+@keyframes sceneOut{to{opacity:0;transform:translateY(-8px)}}
+
+/* ===== 共用顶栏 ===== */
+.nm-back{position:absolute;left:0;top:1px;width:80px;height:68px;display:flex;align-items:center;justify-content:center;z-index:30;transition:transform var(--t-fast)}
+.nm-back img{width:80px;height:68px;display:block}
+.nm-back:active{transform:scale(.9)}
+.nm-back-quiet{opacity:.35;pointer-events:none}
+.nm-title{position:absolute;left:80px;top:12px;height:46px;line-height:46px;font-size:34px;font-weight:500;color:var(--title);white-space:nowrap;z-index:20}
+
+/* 右上历史图标（input/confirm 用），Figma 4815:586 46×46 @ (1575,13)，用真实图标 */
+.nm-hist-icon{position:absolute;right:19px;top:13px;width:46px;height:46px;z-index:20;
+  background:url("assets/hist-icon.png?v=1780897814") center/contain no-repeat}
+.nm-hist-icon:active{transform:scale(.92)}
+
+/* ============================================================
+   1. input 入口页
+   ============================================================ */
+.in-egg{position:absolute;left:90px;top:30px;width:760px;height:auto;pointer-events:none}
+.in-copy{position:absolute;right:120px;top:96px;width:520px;text-align:center}
+.in-headline{font-size:36px;font-weight:500;color:#000;line-height:46px}
+.in-sub{margin-top:10px;font-size:30px;font-weight:400;color:var(--ink-mute);letter-spacing:.5px;line-height:38px}
+.in-btns{display:flex;gap:22px;justify-content:center;margin-top:26px}
+.in-btn{width:228px;height:77px;border-radius:20px;color:#fff;font-size:36px;font-weight:500;
+  border:1px solid rgba(255,255,255,.85);box-shadow:0 6px 16px rgba(0,0,0,.12);transition:transform var(--t-fast),filter var(--t-fast)}
+.in-btn-scan{background:var(--green-2)}
+.in-btn-key{background:var(--gold)}
+.in-btn:active{transform:scale(.96);filter:brightness(.96)}
+
+/* ============================================================
+   2. confirm 请确定姓名
+   ============================================================ */
+.cf-blob{position:absolute;width:300px;height:auto;opacity:.5;pointer-events:none;filter:saturate(.7)}
+.cf-blob-l{left:-60px;bottom:-40px;transform:rotate(8deg)}
+.cf-blob-r{right:-50px;top:-70px;transform:scaleX(-1) rotate(6deg)}
+.cf-row{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;gap:20px;align-items:center;z-index:10}
+.cf-field{display:block}
+.cf-input{width:600px;height:90px;border-radius:20px;background:#fff;border:1px solid var(--stroke);
+  padding:0 28px;font-size:34px;font-weight:500;color:#000;caret-color:var(--brand);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.cf-input::placeholder{color:#C9C9CC}
+.cf-input:focus{outline:none;border-color:var(--green)}
+.cf-ok{width:140px;height:90px;border-radius:22px;background:var(--green);color:#fff;font-size:36px;font-weight:500;
+  border:1px solid rgba(255,255,255,.85);transition:transform var(--t-fast),filter var(--t-fast)}
+.cf-ok:active{transform:scale(.96);filter:brightness(.96)}
+
+/* ============================================================
+   3. scan 请扫描姓名
+   ============================================================ */
+.sc-frame{position:absolute;left:50%;top:128px;transform:translateX(-50%);width:560px;height:150px;border-radius:18px;
+  background:rgba(255,255,255,.45);border:1px dashed rgba(110,139,105,.5);overflow:hidden}
+.sc-corner{position:absolute;width:34px;height:34px;border:4px solid var(--green)}
+.sc-tl{left:10px;top:10px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}
+.sc-tr{right:10px;top:10px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
+.sc-bl{left:10px;bottom:10px;border-right:0;border-top:0;border-radius:0 0 0 8px}
+.sc-br{right:10px;bottom:10px;border-left:0;border-top:0;border-radius:0 0 8px 0}
+.sc-laser{position:absolute;top:14px;bottom:14px;width:3px;background:linear-gradient(180deg,transparent,var(--green),transparent);
+  left:24px;animation:scanMove 1.6s ease-in-out infinite}
+@keyframes scanMove{0%,100%{left:24px}50%{left:533px}}
+.sc-hint{position:absolute;left:0;right:0;top:300px;text-align:center;font-size:28px;color:var(--ink-mute)}
+
+/* ============================================================
+   4. loading 正在解读
+   ============================================================ */
+.ld-egg{position:absolute;left:50%;top:62px;transform:translateX(-50%);width:107px;height:124px;animation:eggBob 1.4s ease-in-out infinite alternate}
+@keyframes eggBob{0%{transform:translateX(-50%) translateY(0)}100%{transform:translateX(-50%) translateY(-9px)}}
+.ld-title{position:absolute;left:0;right:0;top:206px;text-align:center;font-size:36px;font-weight:500;color:#000}
+.ld-sub{position:absolute;left:0;right:0;top:252px;text-align:center;font-size:30px;color:var(--ink-mute);letter-spacing:.5px}
+.ld-bar{position:absolute;left:50%;top:302px;transform:translateX(-50%);width:546px;height:20px;border-radius:12px;background:rgba(195,195,195,.56);overflow:hidden}
+.ld-bar-fill{display:block;height:100%;width:0;border-radius:12px;background:var(--green);transition:width .25s linear}
+
+/* ============================================================
+   5. blocked 这不是名字哦
+   ============================================================ */
+.bk-box{position:absolute;left:200px;top:118px;width:760px}
+.bk-title{font-size:42px;font-weight:700;color:var(--ink)}
+.bk-sub{margin-top:18px;font-size:30px;color:var(--ink-mute);line-height:38px}
+.bk-retry{position:absolute;right:-360px;top:84px;width:340px;height:77px;border-radius:20px;background:var(--gold);color:#fff;font-size:36px;font-weight:500;border:1px solid rgba(255,255,255,.85);transition:transform var(--t-fast)}
+.bk-retry:active{transform:scale(.96)}
+
+/* ============================================================
+   6. history 测过的名字
+   ============================================================ */
+.hs-tip{position:absolute;left:289px;top:16px;font-size:24px;color:var(--ink-mute);white-space:nowrap;z-index:20}
+.hs-trash{position:absolute;right:24px;top:18px;width:46px;height:47px;z-index:20;opacity:.75}
+.hs-trash::before{content:"";position:absolute;left:8px;top:14px;right:8px;bottom:6px;border:3px solid var(--ink-2);border-radius:0 0 6px 6px;border-top:0}
+.hs-trash::after{content:"";position:absolute;left:4px;top:9px;right:4px;height:3px;background:var(--ink-2);box-shadow:0 -6px 0 -1px var(--ink-2)}
+.hs-trash:active{transform:scale(.92)}
+.hs-list{position:absolute;left:69px;right:69px;top:84px;bottom:18px;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:86px;gap:18px 28px;overflow-y:auto;align-content:start;padding-right:4px}
+.hs-card{position:relative;display:flex;align-items:center;height:86px;padding:0 28px;border-radius:18px;background:#fff;border:1px solid var(--stroke);box-shadow:0 4px 12px rgba(0,0,0,.05);transition:transform var(--t-fast)}
+.hs-card:active{transform:scale(.985)}
+.hs-card.is-top{border-color:var(--green);box-shadow:0 4px 14px rgba(110,139,105,.25)}
+.hs-card-name{font-size:34px;font-weight:500;color:var(--ink)}
+.hs-card-pin{margin-left:10px;font-size:22px;color:var(--green);display:none}
+.hs-card.is-top .hs-card-pin{display:inline}
+.hs-card-time{margin-left:auto;font-size:26px;color:var(--ink-mute)}
+.hs-card.is-picking{outline:2px solid var(--accent);outline-offset:2px}
+.hs-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--ink-mute)}
+.hs-empty img{width:96px;height:auto;opacity:.7}
+.hs-empty p{font-size:30px}
+
+/* ===== toast ===== */
+.toast{position:absolute;left:50%;top:24px;transform:translateX(-50%) translateY(-20px);background:rgba(26,26,31,.9);color:#fff;font-size:26px;padding:12px 28px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity var(--t-fast),transform var(--t-fast);z-index:200}
+.toast.is-show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ============================================================
+   7. result 结果页 — 1:1 还原（Figma 4901 雷军页 token）
+   内容列宽 1640，左右留白 ~78px，模块按真实样式贴版
+   ============================================================ */
+/* 背景（整张顶部图直接贴，含绿底+暖白渐变+祥云，设计稿原生相对位置，零叠加）：
+   ①整页底 #FFFDF6 暖白  ②顶部 0~226px 贴 bg-top-band（绿底+渐变+祥云一体）*/
+.scene-result{background:#FFFDF6}
+.scene-result .rs-scroll{background:transparent}
+/* ===== 顶部 bg 祥云（Figma 4901:8243 真实资源内联：9 个模糊椭圆 SVG + union + 蛋蛋）
+   组容器锚定页面坐标 frame(276,-23) 614×249；各元素整体 opacity .52 ===== */
+.rs-bg{position:absolute;left:0;top:0;width:1640px;height:226px;z-index:0;pointer-events:none}
+.rs-bg img.bg-whole{position:absolute;inset:0;width:100%;height:100%;display:block}
+.rs-bg>:not(.bg-whole){display:none}
+/* chips 现位于随滚动的 rs-head 内（右侧），不再固定 */
+.rs-chip{position:absolute;top:4px;height:60px;border-radius:20px;font-size:32px;font-weight:500;padding:0 22px;
+  display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);color:#015C52;transition:transform var(--t-fast);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.rs-chip:active{transform:scale(.95)}
+.rs-chip-hist{right:198px}
+.rs-chip-hist::before{content:"";width:34px;height:34px;background:url("assets/chip-hist.png") center/contain no-repeat}
+.rs-chip-again{right:0}
+
+.rs-scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:0 0 70px;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+.rs-scroll::-webkit-scrollbar{width:0;height:0;display:none}
+.rs-wrap{position:relative;z-index:2;width:1640px;margin:0 auto;padding:14px 78px 0;background:transparent}
+/* 随内容滚动的标题栏（返回 Group152 + 标题 + 右侧 chips），在内容流顶部 */
+.rs-head{position:relative;height:68px;margin-bottom:8px}
+.rs-head .nm-back{position:absolute;left:-70px;top:0;width:80px;height:68px;display:flex;align-items:center;justify-content:center;z-index:30;transition:transform var(--t-fast)}
+.rs-head .nm-back img{width:80px;height:68px;display:block}
+.rs-head .nm-back:active{transform:scale(.9)}
+.rs-head .nm-title{position:absolute;left:10px;top:12px;height:46px;line-height:46px;font-size:34px;font-weight:500;color:var(--title);white-space:nowrap;z-index:20}
+
+/* —— 花线分隔标题（金色双层绶带药丸 + 两侧空心圆描线，1:1 Figma 4901:8487） —— */
+.rs-sechead{position:relative;display:flex;align-items:center;justify-content:center;height:55px;margin:30px 0 20px;gap:0}
+.rs-sechead h3{position:relative;z-index:2;height:55px;line-height:55px;padding:0 30px;
+  color:#fff;font-size:36px;font-weight:500;letter-spacing:1px;white-space:nowrap;text-align:center}
+/* 前层：全圆角，随文字宽度（padding 决定）；后层：比前层窄 40px、高 12px，露出上下小凸耳 */
+.rs-sechead h3::before{content:"";position:absolute;z-index:-2;left:20px;right:20px;top:0;height:55px;background:var(--rs-pill);border-radius:3px}
+.rs-sechead h3::after{content:"";position:absolute;z-index:-1;left:0;right:0;top:6px;height:43px;background:var(--rs-pill);border-radius:57px}
+/* 两侧描线：空心金圆(靠标签那端) + 向外渐隐的金线 */
+.rs-sechead .ln{width:282px;height:16px;position:relative;flex:0 0 auto}
+.rs-sechead .ln::after{content:"";position:absolute;top:50%;height:3px;transform:translateY(-50%)}
+.rs-sechead .ln::before{content:"";position:absolute;top:50%;width:16px;height:16px;border-radius:50%;
+  border:3px solid #BEA24E;background:transparent;box-sizing:border-box;transform:translateY(-50%)}
+.rs-sechead .ln.l{margin-right:14px}
+.rs-sechead .ln.l::before{right:0}
+.rs-sechead .ln.l::after{left:0;right:16px;background:linear-gradient(90deg,#FFFDF6,#C2A859)}
+.rs-sechead .ln.r{margin-left:14px}
+.rs-sechead .ln.r::before{left:0}
+.rs-sechead .ln.r::after{right:0;left:16px;background:linear-gradient(270deg,#FFFDF6,#C2A859)}
+
+/* —— 通用卡片（纯白 + 金描边 + 四角缺口；雷军页实测卡底为 #FFF） —— */
+/* 卡片：四边描线用 CSS border(金 #D4AD12)，四角图案 Vector91-94 用 card-corner.png 叠加 */
+.rs-card{position:relative;background:#fff;border-radius:12px;padding:32px 38px;box-shadow:0 6px 18px rgba(0,0,0,.05);
+  border:2px solid var(--rs-divider)}
+.corner{position:absolute;width:22px;height:21px;background:url("assets/card-corner.png?v=1") center/contain no-repeat;z-index:2}
+.c-tl{left:-2px;top:-2px}
+.c-tr{right:-2px;top:-2px;transform:scaleX(-1)}
+.c-bl{left:-2px;bottom:-2px;transform:scaleY(-1)}
+.c-br{right:-2px;bottom:-2px;transform:scale(-1)}
+
+/* ===== HERO（标题/拼音/大字固定，标语正文自适应） ===== */
+.rs-hero{position:relative;min-height:200px;padding-right:360px}
+.rs-hero-name{position:absolute;left:34px;top:6px;display:flex;align-items:flex-end;gap:8px;z-index:1}
+.rs-hero-char{display:flex;flex-direction:column;align-items:center}
+.rs-hero-char .py{height:34px;font-size:28px;color:#5B5A59;letter-spacing:.5px;font-family:var(--font-py)}
+.rs-hero-char .ch{font-size:90px;line-height:80px;color:var(--ink);font-family:var(--font-cn);font-weight:700;letter-spacing:6px}
+.rs-hero-name.translit{flex-direction:column;align-items:flex-start;gap:2px}
+.rs-hero-name.translit .kind{font-size:28px;color:#5B5A59}
+.rs-hero-name.translit .ch{font-size:64px;line-height:72px;letter-spacing:2px;font-family:var(--font-cn);font-weight:700;color:var(--ink)}
+.rs-hero-underline{position:absolute;left:30px;top:108px;width:301px;height:32px;z-index:0;
+  background:url("assets/hero-underline.svg?v=1780879657") center/contain no-repeat}
+.rs-hero-tag{margin-left:400px;padding-top:6px}
+.rs-hero-tag .big{font-size:50px;line-height:72px;color:rgba(0,0,0,.7);font-weight:700;letter-spacing:6px;font-family:var(--font-cn)}
+.rs-hero-tag .desc{margin-top:10px;font-size:26px;color:rgba(49,49,49,.8);letter-spacing:.5px;line-height:38px;max-width:780px}
+.rs-hero .flag{display:inline-block;margin-left:12px;font-size:22px;color:#fff;background:var(--brand);border-radius:8px;padding:2px 10px;vertical-align:middle;letter-spacing:0;font-family:var(--font-cn)}
+
+/* 声调胶囊柱（束腰胶囊柱身 clip-path + 每柱连接线/菱形各色）—— 固定右上 */
+.rs-tones{position:absolute;right:34px;top:0;display:flex;align-items:flex-start;gap:18px}
+.rs-tone{position:relative;display:flex;flex-direction:column;align-items:center;width:66px}
+/* 连接线：竖直渐变，顶端透明 → 底端柱身主色（每柱不同）*/
+.rs-tone .stem{position:relative;width:5px;border-radius:3px}
+/* 顶点菱形：落在连接线最底端（线与柱身接触点），16px、r2、3px 描边（每柱不同色）*/
+.rs-tone .stem::after{content:"";position:absolute;left:50%;bottom:-8px;width:16px;height:16px;border-radius:2px;
+  transform:translateX(-50%) rotate(45deg);box-sizing:border-box;z-index:2}
+/* 柱身：束腰胶囊形状（clip-path 套 Figma path，高度 +40% = 66×134）*/
+.rs-tone .cap{width:66px;height:134px;
+  clip-path:path("M6.83403 10.8854 C9.12928 10.3879 11.1877 8.5118 12.4207 5.7561 L12.6451 5.2545 C14.1079 1.9853 16.6694 0.0000 19.4249 0.0000 H46.027 C48.4542 0.0000 50.7502 1.5427 52.2685 4.1939 L53.6888 6.6739 C54.9486 8.8735 56.7546 10.3271 58.7462 10.7444 L59.673 10.9386 C63.5904 11.7594 66.4889 16.4699 66.4889 22.0153 V114.1897 C66.4889 119.1425 64.0399 123.4356 60.5898 124.5310 C59.2636 124.9520 58.0824 126.0022 57.2464 127.5037 L56.1827 129.4142 C54.4773 132.4770 51.8584 134.2677 49.0845 134.2677 H15.9909 C13.156 134.2677 10.5534 132.0732 9.22792 128.5649 L9.12789 128.3002 C8.38004 126.3207 7.0523 124.8971 5.49247 124.4019 C2.28017 123.3820 0 119.3849 0 114.7734 V21.9661 C0 16.4422 2.93482 11.7306 6.83403 10.8854 Z");
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:16px 0}
+.rs-tone .cap span{font-size:24px;color:#fff;font-weight:700;line-height:28px}
+/* 各柱连接线高度（沿用 Figma 实测的错落感）*/
+.rs-tone.t0 .stem{height:42px}.rs-tone.t1 .stem{height:60px}.rs-tone.t2 .stem{height:37px}.rs-tone.t3 .stem{height:37px}
+/* 4 列：柱身竖向渐变 / 连接线渐变 / 菱形填充+描边（橙红/绿/青/蓝，实测自 Figma）*/
+.rs-tone.t0 .cap{background:linear-gradient(180deg,#F59A70,#E97B53)}
+.rs-tone.t1 .cap{background:linear-gradient(180deg,#7AD6BE,#3FBFA0)}
+.rs-tone.t2 .cap{background:linear-gradient(180deg,#88D4D3,#4FBFBD)}
+.rs-tone.t3 .cap{background:linear-gradient(180deg,#8AB7CC,#64A4B8)}
+.rs-tone.t0 .stem{background:linear-gradient(180deg,rgba(245,154,112,0),#E97B53)}
+.rs-tone.t1 .stem{background:linear-gradient(180deg,rgba(122,214,190,0),#3FBFA0)}
+.rs-tone.t2 .stem{background:linear-gradient(180deg,rgba(136,212,211,0),#4FBFBD)}
+.rs-tone.t3 .stem{background:linear-gradient(180deg,rgba(138,183,204,0),#64A4B8)}
+.rs-tone.t0 .stem::after{background:#F0805C;border:3px solid #FBD4C6}
+.rs-tone.t1 .stem::after{background:#3FBFA0;border:3px solid #9BEBD6}
+.rs-tone.t2 .stem::after{background:#4FBFBD;border:3px solid #A6E8E7}
+.rs-tone.t3 .stem::after{background:#64A4B8;border:3px solid #ACD2E0}
+
+/* ===== 嵌字诗（卷轴装饰=整图 poem-scroll.png 截图：卷轴/角标/IP/田字格全在图里；
+   诗句=DOM文字叠在田字格区，可改自适应） ===== */
+.rs-poem{position:relative;margin-top:6px;width:1479px;height:281px;
+  background:url("assets/poem-scroll.png?v=1780729012") center/100% 100% no-repeat}
+.rs-poem-grid{position:absolute;left:239px;top:37px;width:1001px;height:172px;
+  display:grid;grid-template-columns:1fr 1fr;align-content:center;justify-items:center;gap:14px 0;z-index:2}
+.rs-poem-grid .ln{font-size:36px;line-height:46px;color:rgba(0,0,0,.8);font-family:var(--font-cn);font-weight:700;letter-spacing:2px;white-space:nowrap}
+.rs-poem-grid .ln.l{color:var(--rs-poem-l)}
+.rs-poem-grid .ln::first-letter{color:rgba(184,0,0,.8)}
+.rs-poem-grid .ln.l::first-letter{color:var(--rs-vermil)}
+
+/* ===== 逐字解析（印章字框固定，出处/释义正文自适应；流式布局） ===== */
+.rs-chars{display:grid;gap:24px;align-items:stretch}
+.rs-chars.c2{grid-template-columns:1fr 1fr}
+.rs-chars.c3{grid-template-columns:1fr 1fr 1fr}
+.rs-char{position:relative;display:flex;flex-direction:column;min-height:379px;background:#fff;border-radius:12px;
+  border:2px solid var(--rs-divider);box-shadow:0 6px 18px rgba(0,0,0,.05);padding:24px}
+.rs-char-hd{display:flex;gap:20px;align-items:flex-start}
+.rs-char-seal{flex:0 0 137px;width:137px;height:137px;border-radius:11px;background:var(--rs-cream);
+  display:flex;align-items:center;justify-content:center;color:var(--rs-gold-txt);
+  font-size:90px;line-height:1;font-family:var(--font-cn);font-weight:700}
+.rs-char-src{flex:1;min-width:0;padding-top:6px}
+.rs-char-src .q{font-size:32px;color:rgba(0,0,0,.8);line-height:42px;font-weight:700}
+.rs-char-src .from{margin-top:14px;font-size:28px;color:rgba(118,118,118,.8)}
+.rs-char-mean{display:flex;margin-top:36px}
+.rs-char-mean .col{flex:1;padding:0 22px}
+.rs-char-mean .col+.col{border-left:2px solid var(--rs-divider)}
+.rs-char-mean .k{font-size:32px;font-weight:700;color:var(--rs-gold-txt)}
+.rs-char-mean .v1{margin-top:14px;font-size:32px;color:rgba(0,0,0,.8)}
+.rs-char-mean .v2{margin-top:12px;font-size:28px;color:rgba(118,118,118,.8)}
+
+/* ===== 名字里的祝福 ===== */
+.rs-bless{margin-top:6px}
+.rs-bless .t{font-size:36px;color:var(--ink);line-height:50px;letter-spacing:.5px}
+
+/* ===== 两栏卡（姓氏故事 + 音律 / 文化 + 同源） ===== */
+.rs-duo{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:6px}
+.rs-pcard{position:relative;min-height:360px;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:30px 38px;box-shadow:0 6px 20px rgba(160,96,0,.08)}
+.rs-pcard .pt{display:flex;align-items:center;justify-content:center;gap:14px;height:55px;margin-bottom:6px}
+.rs-pcard .pt h4{font-size:34px;font-weight:500;color:#fff;background:var(--rs-pill);border-radius:40px;height:43px;line-height:43px;padding:0 26px}
+.rs-pcard .pt .ln{width:90px;height:2px;background:linear-gradient(90deg,transparent,var(--rs-pill))}
+.rs-pcard .pt .ln.r{transform:scaleX(-1)}
+.rs-pcard .sub{margin-top:24px;font-size:32px;color:rgba(0,0,0,.8);text-align:center;font-weight:700}
+.rs-pcard .body{margin-top:22px;font-size:32px;color:rgba(0,0,0,.78);line-height:46px}
+
+/* 音律双拼柱 */
+.rs-rhythm{display:flex;justify-content:center;gap:80px;margin-top:34px}
+.rs-rhythm .one{position:relative;display:flex;flex-direction:column;align-items:center}
+.rs-rhythm .one+.one::before{content:"";position:absolute;left:-40px;top:6px;bottom:6px;width:2px;background:var(--rs-divider)}
+.rs-rhythm .py{font-size:54px;color:var(--ink);font-family:var(--font-py)}
+.rs-rhythm .tn{margin-top:14px;font-size:28px;color:rgba(118,118,118,.85)}
+
+/* 同源变体 chips */
+.rs-variants{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px;margin-top:24px}
+.rs-variants .v{display:flex;align-items:baseline;gap:18px}
+.rs-variants .v b{font-size:46px;font-weight:500;color:var(--ink);font-family:var(--font-cn)}
+.rs-variants .v span{font-size:28px;color:rgba(118,118,118,.85)}
+
+/* ===== 同姓名人 / 同名星光（3 列田字格 + 金竖线） ===== */
+.rs-people{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;min-height:246px;
+  background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:40px 30px}
+.rs-people .col{padding:0 30px;position:relative}
+.rs-people .col+.col::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--rs-divider)}
+.rs-people .ph{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.rs-people .ph b{font-size:34px;font-weight:700;color:var(--ink)}
+.rs-people .ph span{font-size:28px;color:rgba(118,118,118,.85)}
+.rs-people .work{margin-top:24px;font-size:32px;color:var(--ink);font-weight:500}
+.rs-people .line{margin-top:14px;font-size:28px;color:rgba(118,118,118,.85);line-height:38px}
+
+/* ===== 同名的「名人」介绍（公众人物声明，无卡片大字版） ===== */
+.rs-famous{position:relative;margin-top:6px;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:36px 40px;min-height:300px}
+.rs-famous h4{font-size:40px;line-height:60px;font-weight:700;color:var(--ink)}
+.rs-famous .role{margin-top:14px;font-size:32px;font-weight:700;color:rgba(150,43,43,.85)}
+.rs-famous .desc{margin-top:24px;font-size:36px;color:var(--ink);line-height:46px;letter-spacing:.5px}
+.rs-famous .quote{margin-top:28px;font-size:32px;color:rgba(0,0,0,.8);font-weight:700}
+.rs-famous .disc{margin-top:14px;font-size:26px;color:rgba(118,118,118,.8)}
+
+/* ===== 同名的人（中文 cn 模板，紧随祝福后的灰底说明） ===== */
+.rs-samename{position:relative;margin-top:6px;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:30px 40px}
+.rs-samename h4{font-size:40px;font-weight:700;color:var(--ink);line-height:50px}
+.rs-samename .role{margin-top:14px;font-size:32px;color:rgba(150,43,43,.85);font-weight:700}
+.rs-samename .body{margin-top:22px;font-size:36px;color:var(--ink);line-height:46px}
+
+/* ===== 英文名灵感（3 列） ===== */
+.rs-en{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;min-height:246px;
+  background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:40px 30px}
+.rs-en .col{padding:0 30px;position:relative}
+.rs-en .col+.col::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--rs-divider)}
+.rs-en .eh{display:flex;align-items:baseline;gap:14px}
+.rs-en .eh b{font-size:44px;font-weight:500;color:var(--ink);font-family:var(--font-cn)}
+.rs-en .eh span{font-size:26px;color:rgba(118,118,118,.85)}
+.rs-en .src{margin-top:34px;font-size:28px;color:rgba(118,118,118,.85)}
+.rs-en .map{margin-top:12px;font-size:34px;color:var(--ink)}
+
+/* ===== 中译选字 / 词源（音译模板，奶白卡 + 注脚） ===== */
+.rs-pick{position:relative;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:36px 40px}
+.rs-pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.rs-pick .pk .ph{display:flex;align-items:baseline;gap:16px}
+.rs-pick .pk .ph b{font-size:44px;font-weight:700;color:var(--ink);font-family:var(--font-cn)}
+.rs-pick .pk .ph span{font-size:28px;color:rgba(118,118,118,.85)}
+.rs-pick .pk .mean{margin-top:18px;font-size:32px;color:rgba(0,0,0,.8)}
+.rs-pick .note{margin-top:22px;text-align:center;font-size:30px;color:var(--rs-gold-txt);font-weight:500}
+
+/* ===== 词源模块（音译，按 Figma 4879:6833：小标+4列标签金字/值+金竖线+朱砂说明） ===== */
+.rs-ety{position:relative;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:30px 40px}
+.rs-ety-sub{font-size:32px;color:#A0A0A5;font-weight:500;margin-bottom:24px}
+.rs-ety-cols{display:flex;align-items:flex-start}
+.rs-ety-cols .col{flex:1;padding:0 28px;position:relative}
+.rs-ety-cols .col+.col::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--rs-divider)}
+.rs-ety-cols .k{font-size:32px;font-weight:700;color:var(--rs-gold-txt);letter-spacing:.5px}
+.rs-ety-cols .v{margin-top:16px;font-size:32px;font-weight:700;color:var(--ink);font-family:var(--font-cn)}
+.rs-ety-note{margin-top:24px;font-size:36px;line-height:46px;color:var(--ink)}
+.rs-ety-note::first-line{color:var(--rs-role)}
+
+/* ===== 冷知识 / 文本卡 ===== */
+.rs-fact{margin-top:6px}
+.rs-fact .t{font-size:36px;color:var(--ink);line-height:46px;letter-spacing:.5px}
+.rs-fallback-note{margin:18px 0 0;text-align:center;font-size:26px;color:var(--ink-mute)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

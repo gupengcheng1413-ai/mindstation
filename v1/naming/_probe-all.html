@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>html,body{margin:0}.probe{position:relative;width:1640px}.scene-result{position:relative;inset:auto;display:block}.rs-scroll{position:relative;inset:auto;height:auto;overflow:visible;padding:0 0 70px}</style></head>
+<body><div class="probe"><div class="scene scene-result" data-scene="result"><div class="rs-scroll" id="resultScroll"></div></div></div>
+<script>window.__NM={esc:function(s){return String(s).replace(/[&<>"]/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]||"&quot;")})},state:{prevScene:"input"},setScene:function(){},toast:function(){},backToHome:function(){},gotoConfirm:function(){},submitName:function(){},pushHistory:function(){},$:function(s){return document.querySelector(s)},$$:function(s){return Array.prototype.slice.call(document.querySelectorAll(s))},fitDevice:function(){},toggleTop:function(){},renderHistory:function(){}};</script>
+<script src="data/names.js"></script><script src="data/names-part2.js"></script><script src="data/api.js"></script>
+<script src="render.js"></script><script src="render-part2.js"></script>
+<script>
+(async()=>{var nm=decodeURIComponent((location.hash||"#雷军").slice(1));var d=await window.NAMING_DATA.fetchName(nm);window.__NM_render(d,nm);document.querySelector(".scene-result").hidden=false;document.querySelectorAll(".scene-result").forEach(function(s){s.hidden=false;s.style.display="block";});document.title="ok:"+nm;})();
+</script></body></html>

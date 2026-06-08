@@ -23,10 +23,12 @@
   <section class="scene scene-home" data-scene="home">
     <img class="home-bg" src="daily-words/assets/illustrations/home-bg.png" alt="" draggable="false">
     <button type="button" class="hcard hcard-1" data-card="answer" aria-label="答案之书"></button>
+    <img class="hcard-1-cover" src="answer-book/home-card-answer.png" alt="" draggable="false">
     <button type="button" class="hcard hcard-2" data-card="star" aria-label="每日星语"></button>
     <button type="button" class="hcard hcard-3" data-card="personality" aria-label="性格认知"></button>
     <img class="hcard-3-cover" src="personality/assets/home-card-personality.png" alt="" draggable="false">
     <button type="button" class="hcard hcard-4" data-card="naming" aria-label="姓名寓意"></button>
+    <img class="hcard-4-cover" src="naming/assets/home-card-naming.png" alt="" draggable="false">
   </section>
 
   <!-- ============== 2. 未绑定 unbound（整张 Figma 画布做背景，叠 2 个透明热区） ============== -->
@@ -172,6 +174,11 @@
   <!-- ============== 10. 性格认知 personality（集成 v1/personality 子项目，1640×348 同尺寸 iframe） ============== -->
   <section class="scene scene-personality" data-scene="personality" hidden>
     <iframe class="per-frame" id="perFrame" title="性格认知" src="about:blank" frameborder="0"></iframe>
+  </section>
+
+  <!-- ============== 11. 姓名寓意 naming（集成 v1/naming 子项目，1640×348 同尺寸 iframe） ============== -->
+  <section class="scene scene-naming" data-scene="naming" hidden>
+    <iframe class="nam-frame" id="namFrame" title="姓名寓意" src="about:blank" frameborder="0"></iframe>
   </section>
 
   <!-- 顶部 toast -->

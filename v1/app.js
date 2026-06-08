@@ -166,12 +166,19 @@ function onSceneEnter(name){
       fr.setAttribute("src", target);
     }
   }
+  if(name === "naming"){
+    const fr = $("#namFrame");
+    const target = "naming/index.html";
+    if(fr && fr.getAttribute("src") !== target){
+      fr.setAttribute("src", target);
+    }
+  }
 }
 
 // ---------- 子页 iframe 回首页消息 ----------
 addEventListener("message", (e) => {
   const t = e.data && e.data.type;
-  if(t === "personality-back" || t === "answer-back"){
+  if(t === "personality-back" || t === "answer-back" || t === "naming-back"){
     state.cameFrom = null;
     setScene("home");
   }
@@ -204,7 +211,7 @@ function bindEvents(){
       }else if(card === "personality"){
         setScene("personality");
       }else if(card === "naming"){
-        toast("姓名寓意 · 即将上线");
+        setScene("naming");
       }
     });
   });
@@ -537,7 +544,7 @@ function numToZh(n){
 function bootWithHash(){
   init();
   const hash = (location.hash || "").replace("#","");
-  const valid = ["home","unbound","reminder","select","loading","daily","collect","confirm","answer","personality"];
+  const valid = ["home","unbound","reminder","select","loading","daily","collect","confirm","answer","personality","naming"];
 
   // ?noanim=1 关闭入场动画（截图用）；?expand=1 展开为 1500 高（截图 daily 整页用）
   const params = new URLSearchParams(location.search);

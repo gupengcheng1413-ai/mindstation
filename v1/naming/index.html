@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e1e6da">
+<title>心灵驿站 · 姓名寓意</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="stage">
+<div class="device" id="device">
+
+  <!-- ============== 1. input 入口页 (Figma 4815:406) ============== -->
+  <section class="scene scene-input" data-scene="input">
+    <button type="button" class="nm-back" data-go="home" aria-label="返回">
+      <img src="assets/nm-back.png" alt="" draggable="false">
+    </button>
+    <h1 class="nm-title">姓名寓意</h1>
+    <button type="button" class="nm-hist-icon" data-go="history" aria-label="测过的名字"></button>
+
+    <img class="in-egg" src="assets/egg-input.png" alt="" draggable="false">
+
+    <div class="in-copy">
+      <h2 class="in-headline">解一字之义，知一姓之源</h2>
+      <p class="in-sub">告诉我姓名，看看背后藏着什么故事</p>
+      <div class="in-btns">
+        <button type="button" class="in-btn in-btn-scan"  data-act="scan">扫描录入</button>
+        <button type="button" class="in-btn in-btn-key"   data-act="keyboard">键盘录入</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== 2. confirm 请确定姓名 (Figma 4778:2852) ============== -->
+  <section class="scene scene-confirm" data-scene="confirm" hidden>
+    <button type="button" class="nm-back" data-go="input" aria-label="返回">
+      <img src="assets/nm-back.png" alt="" draggable="false">
+    </button>
+    <h1 class="nm-title">请确定姓名</h1>
+    <button type="button" class="nm-hist-icon" data-go="history" aria-label="测过的名字"></button>
+
+    <img class="cf-blob cf-blob-l" src="assets/bg-blob-result.png" alt="" draggable="false">
+    <img class="cf-blob cf-blob-r" src="assets/bg-blob-result.png" alt="" draggable="false">
+
+    <div class="cf-row">
+      <label class="cf-field">
+        <input type="text" id="nameInput" class="cf-input" placeholder="雷军"
+               autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="12">
+      </label>
+      <button type="button" class="cf-ok" id="confirmOk">确定</button>
+    </div>
+  </section>
+
+  <!-- ============== 3. scan 请扫描姓名 (Figma 4903:16) ============== -->
+  <section class="scene scene-scan" data-scene="scan" hidden>
+    <button type="button" class="nm-back" data-go="input" aria-label="返回">
+      <img src="assets/nm-back.png" alt="" draggable="false">
+    </button>
+    <h1 class="nm-title">提示：请扫描姓名</h1>
+
+    <div class="sc-frame" aria-hidden="true">
+      <span class="sc-corner sc-tl"></span><span class="sc-corner sc-tr"></span>
+      <span class="sc-corner sc-bl"></span><span class="sc-corner sc-br"></span>
+      <span class="sc-laser"></span>
+    </div>
+    <p class="sc-hint">正在识别手写姓名…</p>
+  </section>
+
+  <!-- ============== 4. loading 正在解读 (Figma 4795:415) ============== -->
+  <section class="scene scene-loading" data-scene="loading" hidden>
+    <button type="button" class="nm-back nm-back-quiet" aria-hidden="true">
+      <img src="assets/nm-back.png" alt="" draggable="false">
+    </button>
+    <h1 class="nm-title">姓名寓意</h1>
+
+    <img class="ld-egg" src="assets/egg-loading.png" alt="" draggable="false">
+    <h2 class="ld-title">正在解读……</h2>
+    <p class="ld-sub">翻越古今典籍 需要几秒</p>
+    <div class="ld-bar"><span class="ld-bar-fill" id="loadFill"></span></div>
+  </section>
+
+  <!-- ============== 5. blocked 这不是名字哦 (Figma 4816:590) ============== -->
+  <section class="scene scene-blocked" data-scene="blocked" hidden>
+    <button type="button" class="nm-back" data-go="input" aria-label="返回">
+      <img src="assets/nm-back.png" alt="" draggable="false">
+    </button>
+    <h1 class="nm-title">请确定姓名</h1>
+
+    <div class="bk-box">
+      <h2 class="bk-title">这不是名字哦</h2>
+      <p class="bk-sub">换个真实姓名试试，看看背后藏着什么故事</p>
+      <button type="button" class="bk-retry" data-act="retry">换一个</button>
+    </div>
+  </section>
+
+  <!-- ============== 6. history 测过的名字 (Figma 4778:2968) ============== -->
+  <section class="scene scene-history" data-scene="history" hidden>
+    <button type="button" class="nm-back" data-go="back" aria-label="返回">
+      <img src="assets/nm-back.png" alt="" draggable="false">
+    </button>
+    <h1 class="nm-title">测过的名字</h1>
+    <button type="button" class="hs-trash" id="histTrash" aria-label="清空历史"></button>
+
+    <div class="hs-list" id="histList"><!-- JS 渲染 --></div>
+    <div class="hs-empty" id="histEmpty" hidden>
+      <img src="assets/egg-loading.png" alt="" aria-hidden="true">
+      <p>还没有测过的名字</p>
+    </div>
+  </section>
+
+  <!-- ============== 7. result 结果页 (数据驱动 DOM) ============== -->
+  <section class="scene scene-result" data-scene="result" hidden>
+    <div class="rs-scroll" id="resultScroll"><!-- renderResult() 渲染 --></div>
+  </section>
+
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+</div><!-- /device -->
+</div><!-- /stage -->
+
+<script src="data/names.js"></script>
+<script src="data/names-part2.js"></script>
+<script src="data/api.js"></script>
+<script src="script.js"></script>
+<script src="render.js"></script>
+<script src="render-part2.js"></script>
+</body>
+</html>
