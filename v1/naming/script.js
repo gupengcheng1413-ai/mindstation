@@ -92,7 +92,7 @@
   let scanT;
   function runScan(){
     clearTimeout(scanT);
-    const pick = DATA.PRESET[Math.floor(Date.now() / 1000) % DATA.PRESET.length];
+    const pick = "雷军"; // 扫描默认识别为雷军
     scanT = setTimeout(() => {
       if(state.scene !== "scan") return;
       state.currentName = pick;

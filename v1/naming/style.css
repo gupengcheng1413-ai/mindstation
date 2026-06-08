@@ -122,9 +122,9 @@ img{user-select:none}
 .sc-tr{right:10px;top:10px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
 .sc-bl{left:10px;bottom:10px;border-right:0;border-top:0;border-radius:0 0 0 8px}
 .sc-br{right:10px;bottom:10px;border-left:0;border-top:0;border-radius:0 0 8px 0}
-.sc-laser{position:absolute;left:24px;right:24px;height:3px;background:linear-gradient(90deg,transparent,var(--green),transparent);
-  top:20px;animation:scanMove 1.6s ease-in-out infinite}
-@keyframes scanMove{0%,100%{top:24px}50%{top:122px}}
+.sc-laser{position:absolute;top:14px;bottom:14px;width:3px;background:linear-gradient(180deg,transparent,var(--green),transparent);
+  left:24px;animation:scanMove 1.6s ease-in-out infinite}
+@keyframes scanMove{0%,100%{left:24px}50%{left:533px}}
 .sc-hint{position:absolute;left:0;right:0;top:300px;text-align:center;font-size:28px;color:var(--ink-mute)}
 
 /* ============================================================
