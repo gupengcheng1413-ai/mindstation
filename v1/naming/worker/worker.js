@@ -40,7 +40,9 @@ export default {
       });
       if (!resp.ok) return json({ status: "error", message: "上游错误" });
       const out = await resp.json();
-      const data = JSON.parse(out.choices[0].message.content);
+      const content = out.choices?.[0]?.message?.content;
+      if (!content) return json({ status: "error", message: "上游返回异常" });
+      const data = JSON.parse(content);
       if (data.blocked) return json({ status: "blocked", reason: "无法解析为人名" });
       return json({ status: "ok", data });
     } catch (e) {
