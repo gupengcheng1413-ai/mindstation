@@ -80,12 +80,12 @@
     setScene("confirm");
   }
 
-  // 校验并跳转：preset/real → loading→result；invalid → blocked
+  // invalid → toast 留输入页；其余进 loading 由 fetchName 三状态分流
   function submitName(raw){
-    const kind = DATA.classify(raw);
-    if(kind === "invalid"){ setScene("blocked"); return; }
-    state.currentName = raw.trim();
-    runLoading(state.currentName);
+    const s = (raw || "").trim();
+    if(DATA.classify(s) === "invalid"){ toast("请输入真实姓名"); return; }
+    state.currentName = s;
+    runLoading(s);
   }
 
   // ---------- scan 模拟（停留 ~2s 自动识别一个预设名） ----------
@@ -100,29 +100,32 @@
     }, 2100);
   }
 
-  // ---------- loading 模拟进度 ----------
-  let loadT;
+  // ---------- loading 真实进度 + 文案轮播 + 三状态分流 ----------
+  const LOAD_TIPS = ["正在拆解字义……", "检索古今典故……", "推敲声律节奏……", "落笔成文……"];
+  let loadT, tipT;
   async function runLoading(name){
     setScene("loading");
-    const fill = $("#loadFill");
+    const fill = $("#loadFill"), sub = $(".scene-loading .ld-sub");
     if(fill) fill.style.width = "0%";
-    const data = await DATA.fetchName(name);   // 唯一取数边界（后续可换 LLM）
-    let p = 0;
-    clearInterval(loadT);
-    loadT = setInterval(() => {
-      p += Math.random() * 18 + 8;
-      if(fill) fill.style.width = Math.min(p, 100) + "%";
-      if(p >= 100){
-        clearInterval(loadT);
-        setTimeout(() => {
-          if(!data){ setScene("blocked"); return; }
-          pushHistory(name);
-          window.__NM_render(data, name);
-          setScene("result");
-          const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
-        }, 260);
-      }
-    }, 230);
+    // 假进度：缓慢爬到 85% 停住，等真实返回再冲满
+    let p = 0, ti = 0;
+    clearInterval(loadT); clearInterval(tipT);
+    loadT = setInterval(() => { p = Math.min(p + Math.random()*6 + 2, 85); if(fill) fill.style.width = p + "%"; }, 240);
+    tipT  = setInterval(() => { ti = (ti+1) % LOAD_TIPS.length; if(sub) sub.textContent = LOAD_TIPS[ti]; }, 1600);
+
+    const res = await DATA.fetchName(name);
+    clearInterval(loadT); clearInterval(tipT);
+
+    if(res.status === "blocked"){ setScene("blocked"); return; }
+    if(res.status !== "ok"){ setScene("input"); toast("生成失败，请重试"); return; }
+
+    if(fill) fill.style.width = "100%";
+    setTimeout(() => {
+      pushHistory(name);
+      window.__NM_render(res.data, name);
+      setScene("result");
+      const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
+    }, 300);
   }
 
   // ============================================================
