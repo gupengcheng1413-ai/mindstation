@@ -69,21 +69,20 @@
   //  事件绑定
   // ============================================================
   function bind(){
-    // input 页两按钮
-    $$(".in-btn[data-act]").forEach(b => b.addEventListener("click", () => {
-      if(b.dataset.act === "scan") NM.setScene("scan");
-      else NM.gotoConfirm(true);
-    }));
-
     // confirm 确定 —— demo 固定进入雷军结果页
     const input = $("#nameInput"), ok = $("#confirmOk");
     if(ok) ok.addEventListener("click", () => NM.submitName("雷军"));
     if(input) input.addEventListener("keydown", e => { if(e.key === "Enter") NM.submitName("雷军"); });
 
-    // blocked 换一个
-    $$('[data-act="retry"]').forEach(b => b.addEventListener("click", () => NM.gotoConfirm(true)));
-    // result 再测一个 —— 回录入入口页
-    $$('[data-act="again"]').forEach(b => b.addEventListener("click", () => NM.setScene("input")));
+    // 通用 data-act 委托（result/blocked 等动态渲染的按钮）
+    document.body.addEventListener("click", e => {
+      const a = e.target.closest("[data-act]"); if(!a) return;
+      const act = a.dataset.act;
+      if(act === "scan")      NM.setScene("scan");
+      else if(act === "keyboard") NM.gotoConfirm(true);
+      else if(act === "retry")    NM.gotoConfirm(true);   // blocked 换一个
+      else if(act === "again")    NM.setScene("input");   // result 再测一个
+    });
 
     // 通用 data-go 路由
     document.body.addEventListener("click", e => {
