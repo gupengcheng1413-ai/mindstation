@@ -19,10 +19,11 @@
 
   function mEtymology(d){
     const cols = d.etymology.cols.map(c =>
-      `<div class="pk"><div class="ph"><b>${esc(c.v)}</b></div><div class="mean">${esc(c.k)}</div></div>`).join("");
+      `<div class="col"><div class="k">${esc(c.k)}</div><div class="v">${esc(c.v)}</div></div>`).join("");
     return M.sechead("词源") +
-      `<div class="rs-pick"><div class="rs-pick-grid">${cols}</div>
-        <div class="note">${esc(d.etymology.note)}</div>${M.corners}</div>`;
+      `<div class="rs-ety"><div class="rs-ety-sub">${esc(d.etymology.sub)}</div>
+        <div class="rs-ety-cols">${cols}</div>
+        <div class="rs-ety-note">${esc(d.etymology.note)}</div>${M.corners}</div>`;
   }
 
   function mPick(d){

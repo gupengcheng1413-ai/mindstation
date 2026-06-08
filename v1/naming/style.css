@@ -243,7 +243,7 @@ img{user-select:none}
 .rs-hero-char .ch{font-size:90px;line-height:80px;color:var(--ink);font-family:var(--font-cn);font-weight:700;letter-spacing:6px}
 .rs-hero-name.translit{flex-direction:column;align-items:flex-start;gap:2px}
 .rs-hero-name.translit .kind{font-size:28px;color:#5B5A59}
-.rs-hero-name.translit .ch{font-size:64px;line-height:72px;letter-spacing:2px}
+.rs-hero-name.translit .ch{font-size:64px;line-height:72px;letter-spacing:2px;font-family:var(--font-cn);font-weight:700;color:var(--ink)}
 .rs-hero-underline{position:absolute;left:30px;top:108px;width:301px;height:32px;z-index:0;
   background:url("assets/hero-underline.svg?v=1780879657") center/contain no-repeat}
 .rs-hero-tag{margin-left:400px;padding-top:6px}
@@ -382,6 +382,17 @@ img{user-select:none}
 .rs-pick .pk .ph span{font-size:28px;color:rgba(118,118,118,.85)}
 .rs-pick .pk .mean{margin-top:18px;font-size:32px;color:rgba(0,0,0,.8)}
 .rs-pick .note{margin-top:22px;text-align:center;font-size:30px;color:var(--rs-gold-txt);font-weight:500}
+
+/* ===== 词源模块（音译，按 Figma 4879:6833：小标+4列标签金字/值+金竖线+朱砂说明） ===== */
+.rs-ety{position:relative;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:30px 40px}
+.rs-ety-sub{font-size:32px;color:#A0A0A5;font-weight:500;margin-bottom:24px}
+.rs-ety-cols{display:flex;align-items:flex-start}
+.rs-ety-cols .col{flex:1;padding:0 28px;position:relative}
+.rs-ety-cols .col+.col::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--rs-divider)}
+.rs-ety-cols .k{font-size:32px;font-weight:700;color:var(--rs-gold-txt);letter-spacing:.5px}
+.rs-ety-cols .v{margin-top:16px;font-size:32px;font-weight:700;color:var(--ink);font-family:var(--font-cn)}
+.rs-ety-note{margin-top:24px;font-size:36px;line-height:46px;color:var(--ink)}
+.rs-ety-note::first-line{color:var(--rs-role)}
 
 /* ===== 冷知识 / 文本卡 ===== */
 .rs-fact{margin-top:6px}
