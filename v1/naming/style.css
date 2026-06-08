@@ -71,7 +71,7 @@ img{user-select:none}
 @keyframes sceneOut{to{opacity:0;transform:translateY(-8px)}}
 
 /* ===== 共用顶栏 ===== */
-.nm-back{position:absolute;left:8px;top:6px;width:80px;height:68px;display:flex;align-items:center;justify-content:center;z-index:30;transition:transform var(--t-fast)}
+.nm-back{position:absolute;left:0;top:1px;width:80px;height:68px;display:flex;align-items:center;justify-content:center;z-index:30;transition:transform var(--t-fast)}
 .nm-back img{width:80px;height:68px;display:block}
 .nm-back:active{transform:scale(.9)}
 .nm-back-quiet{opacity:.35;pointer-events:none}
