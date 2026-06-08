@@ -11,8 +11,9 @@ const json = (obj, status = 200) =>
     status, headers: { "Content-Type": "application/json", ...CORS }
   });
 
+// 清洗：去控制字符（含换行/制表/DEL），保留空格（音译名如 Elon Musk），截断 16 字防注入
 function clean(raw) {
-  return String(raw || "").replace(/[ -]/g, "").trim().slice(0, 16);
+  return String(raw || "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 16);
 }
 
 export default {
