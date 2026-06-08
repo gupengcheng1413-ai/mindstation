@@ -7,15 +7,19 @@
   const $$ = sel => Array.from(document.querySelectorAll(sel));
   const DATA = window.NAMING_DATA;
 
+  // 预置历史名（须在 state 初始化前定义，loadHistory 依赖它）
+  const SEED_HISTORY = ["雷军", "刘庆升", "吴玉胜", "乔布斯", "埃隆马斯克"];
+
   // ---------- 状态 ----------
   const state = {
     scene: "input",
     prevScene: "input",     // history 返回用
     entry: "keyboard",      // 进入 confirm 的方式
     currentName: "",
-    history: loadHistory(),
+    history: [],            // 见下方 loadHistory()，定义后再赋值（避免 const 暂时性死区）
     pressTimer: null
   };
+  state.history = loadHistory();
 
   // ---------- 自适应缩放（与主壳一致） ----------
   function fitDevice(){
@@ -124,9 +128,21 @@
   // ============================================================
   //  history 历史记录（本地存储 + 置顶 + 删除）
   // ============================================================
+  // 预置历史：5 个预设名始终在「已测姓名」里（已有记录则合并，缺的补上）
   function loadHistory(){
-    try { return JSON.parse(localStorage.getItem("naming.history") || "[]"); }
-    catch(_) { return []; }
+    let list = [];
+    try {
+      const raw = localStorage.getItem("naming.history");
+      if(raw) list = JSON.parse(raw) || [];
+    } catch(_) { list = []; }
+    // 补齐缺失的预设名（保留用户已测记录与置顶状态）
+    const now = Date.now();
+    SEED_HISTORY.forEach((name, i) => {
+      if(!list.some(h => h && h.name === name)){
+        list.push({ name, time: now - i * 60000, top: false });
+      }
+    });
+    return list;
   }
   function saveHistory(){ localStorage.setItem("naming.history", JSON.stringify(state.history)); }
 
