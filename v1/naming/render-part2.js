@@ -123,21 +123,30 @@
     });
   }
 
-  // 从 history 点名字 → loading → result（命中预设/真名走数据，否则兜底）
+  // 从 history 点名字 → loading → result（消费 fetchName 四状态：ok→result / blocked→blocked / 其余→input+toast）
+  const HS_TIPS = ["正在拆解字义……", "检索古今典故……", "推敲声律节奏……", "落笔成文……"];
+  let hsLoadT, hsTipT;
   async function runFromHistory(name){
     NM.setScene("loading");
-    const fill = $("#loadFill"); if(fill) fill.style.width = "0%";
-    const data = await window.NAMING_DATA.fetchName(name);
-    let p = 0;
-    const t = setInterval(() => {
-      p += Math.random()*20 + 10;
-      if(fill) fill.style.width = Math.min(p,100) + "%";
-      if(p >= 100){ clearInterval(t); setTimeout(() => {
-        if(!data){ NM.setScene("input"); return; }
-        NM.pushHistory(name); renderResult(data, name);
-        NM.setScene("result"); const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
-      }, 220); }
-    }, 200);
+    const fill = $("#loadFill"), sub = $(".scene-loading .ld-sub");
+    if(fill) fill.style.width = "0%";
+    if(sub) sub.textContent = HS_TIPS[0];
+    let p = 0, ti = 0;
+    clearInterval(hsLoadT); clearInterval(hsTipT);
+    hsLoadT = setInterval(() => { p = Math.min(p + Math.random()*6 + 2, 85); if(fill) fill.style.width = p + "%"; }, 240);
+    hsTipT  = setInterval(() => { ti = (ti+1) % HS_TIPS.length; if(sub) sub.textContent = HS_TIPS[ti]; }, 1600);
+
+    const res = await window.NAMING_DATA.fetchName(name);
+    clearInterval(hsLoadT); clearInterval(hsTipT);
+
+    if(res.status === "blocked"){ NM.setScene("blocked"); return; }
+    if(res.status !== "ok"){ NM.setScene("input"); NM.toast("生成失败，请重试"); return; }
+
+    if(fill) fill.style.width = "100%";
+    setTimeout(() => {
+      NM.pushHistory(name); renderResult(res.data, name);
+      NM.setScene("result"); const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
+    }, 300);
   }
 
   // ---------- init ----------
