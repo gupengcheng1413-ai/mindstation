@@ -72,17 +72,14 @@ img{user-select:none}
 
 /* ===== 共用顶栏 ===== */
 .nm-back{position:absolute;left:8px;top:6px;width:80px;height:68px;display:flex;align-items:center;justify-content:center;z-index:30;transition:transform var(--t-fast)}
-.nm-back img{width:18px;height:32px;display:block;opacity:.7}
+.nm-back img{width:80px;height:68px;display:block}
 .nm-back:active{transform:scale(.9)}
 .nm-back-quiet{opacity:.35;pointer-events:none}
 .nm-title{position:absolute;left:80px;top:12px;height:46px;line-height:46px;font-size:34px;font-weight:500;color:var(--title);white-space:nowrap;z-index:20}
 
-/* 右上历史图标（input/confirm 用），Figma 4815:586 46×46 @ (1575,13) */
-.nm-hist-icon{position:absolute;right:19px;top:13px;width:46px;height:46px;border-radius:12px;z-index:20;
-  background:rgba(110,139,105,.12);
-  -webkit-mask:none}
-.nm-hist-icon::before{content:"";position:absolute;inset:11px;border:3px solid var(--green);border-radius:4px}
-.nm-hist-icon::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:3px;background:var(--green);transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;box-shadow:0 -6px 0 -1px var(--green),0 6px 0 -1px var(--green)}
+/* 右上历史图标（input/confirm 用），Figma 4815:586 46×46 @ (1575,13)，用真实图标 */
+.nm-hist-icon{position:absolute;right:19px;top:13px;width:46px;height:46px;z-index:20;
+  background:url("assets/hist-icon.png?v=1780897814") center/contain no-repeat}
 .nm-hist-icon:active{transform:scale(.92)}
 
 /* ============================================================

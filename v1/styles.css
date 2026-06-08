@@ -200,6 +200,22 @@ img{display:block;user-select:none;-webkit-user-drag:none}
   user-select:none;
   -webkit-user-drag:none;
 }
+.scene-home .hcard-1-cover{
+  position:absolute;left:75px;top:44px;
+  width:373px;height:291px;
+  pointer-events:none;
+  z-index:2;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.scene-home .hcard-4-cover{
+  position:absolute;left:1202px;top:44px;
+  width:358px;height:304px;
+  pointer-events:none;
+  z-index:2;
+  user-select:none;
+  -webkit-user-drag:none;
+}
 .scene-home .hcard-4{left:1202px;cursor:default}
 
 /* ============================================================
