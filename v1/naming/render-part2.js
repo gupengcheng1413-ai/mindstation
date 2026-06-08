@@ -82,8 +82,8 @@
 
     // blocked 换一个
     $$('[data-act="retry"]').forEach(b => b.addEventListener("click", () => NM.gotoConfirm(true)));
-    // result 再测一个
-    $$('[data-act="again"]').forEach(b => b.addEventListener("click", () => NM.gotoConfirm(true)));
+    // result 再测一个 —— 回录入入口页
+    $$('[data-act="again"]').forEach(b => b.addEventListener("click", () => NM.setScene("input")));
 
     // 通用 data-go 路由
     document.body.addEventListener("click", e => {
