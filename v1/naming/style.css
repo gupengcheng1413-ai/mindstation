@@ -226,25 +226,25 @@ img{user-select:none}
 .rs-sechead .ln.r::after{right:0;left:16px;background:linear-gradient(270deg,#FFFDF6,#C2A859)}
 
 /* —— 通用卡片（纯白 + 金描边 + 四角缺口；雷军页实测卡底为 #FFF） —— */
-.rs-card{position:relative;background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:32px 38px;
-  box-shadow:0 6px 18px rgba(0,0,0,.05)}
-.rs-card .corner{position:absolute;width:21px;height:20px;border:0}
-.rs-card .corner::before{content:"";position:absolute;inset:0;border:3px solid var(--rs-gold)}
-.rs-card .c-tl{left:2px;top:2px}.rs-card .c-tl::before{border-right:0;border-bottom:0;border-radius:6px 0 0 0}
-.rs-card .c-tr{right:2px;top:2px}.rs-card .c-tr::before{border-left:0;border-bottom:0;border-radius:0 6px 0 0}
-.rs-card .c-bl{left:2px;bottom:2px}.rs-card .c-bl::before{border-right:0;border-top:0;border-radius:0 0 0 6px}
-.rs-card .c-br{right:2px;bottom:2px}.rs-card .c-br::before{border-left:0;border-top:0;border-radius:0 0 6px 0}
+/* 卡片：四边描线用 CSS border(金 #D4AD12)，四角图案 Vector91-94 用 card-corner.png 叠加 */
+.rs-card{position:relative;background:#fff;border-radius:12px;padding:32px 38px;box-shadow:0 6px 18px rgba(0,0,0,.05);
+  border:2px solid var(--rs-divider)}
+.corner{position:absolute;width:22px;height:21px;background:url("assets/card-corner.png?v=1") center/contain no-repeat;z-index:2}
+.c-tl{left:-2px;top:-2px}
+.c-tr{right:-2px;top:-2px;transform:scaleX(-1)}
+.c-bl{left:-2px;bottom:-2px;transform:scaleY(-1)}
+.c-br{right:-2px;bottom:-2px;transform:scale(-1)}
 
 /* ===== HERO（标题/拼音/大字固定，标语正文自适应） ===== */
 .rs-hero{position:relative;min-height:200px;padding-right:360px}
-.rs-hero-name{position:absolute;left:34px;top:6px;display:flex;align-items:flex-end;gap:8px}
+.rs-hero-name{position:absolute;left:34px;top:6px;display:flex;align-items:flex-end;gap:8px;z-index:1}
 .rs-hero-char{display:flex;flex-direction:column;align-items:center}
 .rs-hero-char .py{height:34px;font-size:28px;color:#5B5A59;letter-spacing:.5px;font-family:var(--font-py)}
 .rs-hero-char .ch{font-size:90px;line-height:80px;color:var(--ink);font-family:var(--font-cn);font-weight:700;letter-spacing:6px}
 .rs-hero-name.translit{flex-direction:column;align-items:flex-start;gap:2px}
 .rs-hero-name.translit .kind{font-size:28px;color:#5B5A59}
 .rs-hero-name.translit .ch{font-size:64px;line-height:72px;letter-spacing:2px}
-.rs-hero-underline{position:absolute;left:30px;top:118px;width:301px;height:32px;
+.rs-hero-underline{position:absolute;left:30px;top:108px;width:301px;height:32px;z-index:0;
   background:url("assets/hero-underline.svg?v=1780879657") center/contain no-repeat}
 .rs-hero-tag{margin-left:332px;padding-top:6px}
 .rs-hero-tag .big{font-size:50px;line-height:72px;color:rgba(0,0,0,.7);font-weight:700;letter-spacing:6px;font-family:var(--font-cn)}
@@ -295,8 +295,8 @@ img{user-select:none}
 .rs-chars{display:grid;gap:24px;align-items:stretch}
 .rs-chars.c2{grid-template-columns:1fr 1fr}
 .rs-chars.c3{grid-template-columns:1fr 1fr 1fr}
-.rs-char{display:flex;flex-direction:column;min-height:379px;background:#fff;border-radius:18px;
-  border:1px solid rgba(177,142,0,.35);box-shadow:0 6px 18px rgba(0,0,0,.05);padding:24px}
+.rs-char{position:relative;display:flex;flex-direction:column;min-height:379px;background:#fff;border-radius:12px;
+  border:2px solid var(--rs-divider);box-shadow:0 6px 18px rgba(0,0,0,.05);padding:24px}
 .rs-char-hd{display:flex;gap:20px;align-items:flex-start}
 .rs-char-seal{flex:0 0 137px;width:137px;height:137px;border-radius:11px;background:var(--rs-cream);
   display:flex;align-items:center;justify-content:center;color:var(--rs-gold-txt);
@@ -317,7 +317,7 @@ img{user-select:none}
 
 /* ===== 两栏卡（姓氏故事 + 音律 / 文化 + 同源） ===== */
 .rs-duo{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:6px}
-.rs-pcard{position:relative;min-height:360px;background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:30px 38px;box-shadow:0 6px 20px rgba(160,96,0,.08)}
+.rs-pcard{position:relative;min-height:360px;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:30px 38px;box-shadow:0 6px 20px rgba(160,96,0,.08)}
 .rs-pcard .pt{display:flex;align-items:center;justify-content:center;gap:14px;height:55px;margin-bottom:6px}
 .rs-pcard .pt h4{font-size:34px;font-weight:500;color:#fff;background:var(--rs-pill);border-radius:40px;height:43px;line-height:43px;padding:0 26px}
 .rs-pcard .pt .ln{width:90px;height:2px;background:linear-gradient(90deg,transparent,var(--rs-pill))}
@@ -340,7 +340,7 @@ img{user-select:none}
 
 /* ===== 同姓名人 / 同名星光（3 列田字格 + 金竖线） ===== */
 .rs-people{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;min-height:246px;
-  background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:40px 30px}
+  background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:40px 30px}
 .rs-people .col{padding:0 30px;position:relative}
 .rs-people .col+.col::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--rs-divider)}
 .rs-people .ph{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
@@ -350,7 +350,7 @@ img{user-select:none}
 .rs-people .line{margin-top:14px;font-size:28px;color:rgba(118,118,118,.85);line-height:38px}
 
 /* ===== 同名的「名人」介绍（公众人物声明，无卡片大字版） ===== */
-.rs-famous{position:relative;margin-top:6px;background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:36px 40px;min-height:300px}
+.rs-famous{position:relative;margin-top:6px;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:36px 40px;min-height:300px}
 .rs-famous h4{font-size:40px;line-height:60px;font-weight:700;color:var(--ink)}
 .rs-famous .role{margin-top:14px;font-size:32px;font-weight:700;color:rgba(150,43,43,.85)}
 .rs-famous .desc{margin-top:24px;font-size:36px;color:var(--ink);line-height:46px;letter-spacing:.5px}
@@ -358,14 +358,14 @@ img{user-select:none}
 .rs-famous .disc{margin-top:14px;font-size:26px;color:rgba(118,118,118,.8)}
 
 /* ===== 同名的人（中文 cn 模板，紧随祝福后的灰底说明） ===== */
-.rs-samename{position:relative;margin-top:6px;background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:30px 40px}
+.rs-samename{position:relative;margin-top:6px;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:30px 40px}
 .rs-samename h4{font-size:40px;font-weight:700;color:var(--ink);line-height:50px}
 .rs-samename .role{margin-top:14px;font-size:32px;color:rgba(150,43,43,.85);font-weight:700}
 .rs-samename .body{margin-top:22px;font-size:36px;color:var(--ink);line-height:46px}
 
 /* ===== 英文名灵感（3 列） ===== */
 .rs-en{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;min-height:246px;
-  background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:40px 30px}
+  background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:40px 30px}
 .rs-en .col{padding:0 30px;position:relative}
 .rs-en .col+.col::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--rs-divider)}
 .rs-en .eh{display:flex;align-items:baseline;gap:14px}
@@ -375,7 +375,7 @@ img{user-select:none}
 .rs-en .map{margin-top:12px;font-size:34px;color:var(--ink)}
 
 /* ===== 中译选字 / 词源（音译模板，奶白卡 + 注脚） ===== */
-.rs-pick{position:relative;background:#fff;border:3px solid var(--rs-divider);border-radius:12px;padding:36px 40px}
+.rs-pick{position:relative;background:#fff;border:2px solid var(--rs-divider);border-radius:12px;padding:36px 40px}
 .rs-pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .rs-pick .pk .ph{display:flex;align-items:baseline;gap:16px}
 .rs-pick .pk .ph b{font-size:44px;font-weight:700;color:var(--ink);font-family:var(--font-cn)}

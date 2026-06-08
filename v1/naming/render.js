@@ -59,6 +59,7 @@
           <div class="col"><div class="k">本义</div><div class="v1">${esc(a.benyi)}</div><div class="v2">${esc(a.benyiSub)}</div></div>
           <div class="col"><div class="k">引申</div><div class="v1">${esc(a.yinshen)}</div><div class="v2">${esc(a.yinshenSub)}</div></div>
         </div>
+        ${corners}
       </div>`).join("");
     return sechead("逐字解析") + `<div class="rs-chars ${cls}">${cards}</div>`;
   }
