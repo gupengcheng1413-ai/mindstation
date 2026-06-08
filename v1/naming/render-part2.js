@@ -69,10 +69,11 @@
   //  事件绑定
   // ============================================================
   function bind(){
-    // confirm 确定 —— demo 固定进入雷军结果页
+    // confirm 确定 —— 读输入框真实姓名，交 submitName 三状态分流（空则占位名「雷军」）
     const input = $("#nameInput"), ok = $("#confirmOk");
-    if(ok) ok.addEventListener("click", () => NM.submitName("雷军"));
-    if(input) input.addEventListener("keydown", e => { if(e.key === "Enter") NM.submitName("雷军"); });
+    const submitInput = () => NM.submitName((input && input.value.trim()) || "雷军");
+    if(ok) ok.addEventListener("click", submitInput);
+    if(input) input.addEventListener("keydown", e => { if(e.key === "Enter") submitInput(); });
 
     // 通用 data-act 委托（result/blocked 等动态渲染的按钮）
     document.body.addEventListener("click", e => {
