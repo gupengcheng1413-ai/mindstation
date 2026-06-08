@@ -11,8 +11,8 @@
   /* 预设名（命中即出对应详情页） */
   var PRESET = ["雷军", "刘庆升", "吴玉胜", "乔布斯", "埃隆马斯克"];
 
-  // 部署 Worker 后把这里替换成真实地址（见 worker/README.md）
-  var WORKER_URL = "https://naming-worker.CHANGEME.workers.dev/";
+  // 已部署的 Cloudflare Worker 地址（见 worker/README.md）
+  var WORKER_URL = "https://naming-worker.gupengcheng9577.workers.dev/";
 
   function cacheGet(name) {
     try { var v = localStorage.getItem("naming.cache." + name); return v ? JSON.parse(v) : null; }
