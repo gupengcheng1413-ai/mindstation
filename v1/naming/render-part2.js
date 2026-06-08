@@ -75,10 +75,10 @@
       else NM.gotoConfirm(true);
     }));
 
-    // confirm 确定
+    // confirm 确定 —— demo 固定进入雷军结果页
     const input = $("#nameInput"), ok = $("#confirmOk");
-    if(ok) ok.addEventListener("click", () => NM.submitName(input.value));
-    if(input) input.addEventListener("keydown", e => { if(e.key === "Enter") NM.submitName(input.value); });
+    if(ok) ok.addEventListener("click", () => NM.submitName("雷军"));
+    if(input) input.addEventListener("keydown", e => { if(e.key === "Enter") NM.submitName("雷军"); });
 
     // blocked 换一个
     $$('[data-act="retry"]').forEach(b => b.addEventListener("click", () => NM.gotoConfirm(true)));
