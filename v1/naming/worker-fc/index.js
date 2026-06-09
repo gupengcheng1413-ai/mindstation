@@ -119,21 +119,33 @@ const server = http.createServer(async (req, res) => {
     if (!name || name.length < 2) return send({ status: "error", message: "姓名无效" });
     if (hitBlocklist(name)) return send({ status: "blocked", reason: "内容不当" });
 
-    const r = await fetch("https://api.deepseek.com/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.DEEPSEEK_KEY}`
-      },
-      body: JSON.stringify({
-        model: "deepseek-v4-flash",
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userMessage(name) }
-        ]
-      })
-    });
+    console.log("[diag] before fetch deepseek, name=", name, "keyLen=", (process.env.DEEPSEEK_KEY || "").length);
+    const t0 = Date.now();
+    const ctrl = new AbortController();
+    const killer = setTimeout(() => ctrl.abort(), 25000); // 25s 主动中断，防挂死到平台60s
+    let r;
+    try {
+      r = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        signal: ctrl.signal,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.DEEPSEEK_KEY}`
+        },
+        body: JSON.stringify({
+          model: "deepseek-v4-flash",
+          response_format: { type: "json_object" },
+          max_tokens: 2200,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage(name) }
+          ]
+        })
+      });
+    } finally {
+      clearTimeout(killer);
+    }
+    console.log("[diag] fetch returned in", Date.now() - t0, "ms, ok=", r.ok, "status=", r.status);
     if (!r.ok) return send({ status: "error", message: "上游错误" });
     const out = await r.json();
     const content = out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content;
@@ -142,6 +154,7 @@ const server = http.createServer(async (req, res) => {
     if (data.blocked) return send({ status: "blocked", reason: "无法解析为人名" });
     return send({ status: "ok", data });
   } catch (e) {
+    console.error("[diag] caught error:", e && e.name, e && e.message);
     try { send({ status: "error", message: "生成失败" }); } catch (_) {}
   }
 });
