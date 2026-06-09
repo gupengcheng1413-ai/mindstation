@@ -122,7 +122,7 @@ const server = http.createServer(async (req, res) => {
     console.log("[diag] before fetch deepseek, name=", name, "keyLen=", (process.env.DEEPSEEK_KEY || "").length);
     const t0 = Date.now();
     const ctrl = new AbortController();
-    const killer = setTimeout(() => ctrl.abort(), 25000); // 25s 主动中断，防挂死到平台60s
+    const killer = setTimeout(() => ctrl.abort(), 30000); // 30s 主动中断，防挂死到平台60s
     let r;
     try {
       r = await fetch("https://api.deepseek.com/chat/completions", {
@@ -135,7 +135,7 @@ const server = http.createServer(async (req, res) => {
         body: JSON.stringify({
           model: "deepseek-v4-flash",
           response_format: { type: "json_object" },
-          max_tokens: 4000,
+          max_tokens: 3000,
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: userMessage(name) }

@@ -32,7 +32,7 @@ export default {
         body: JSON.stringify({
           model: "deepseek-v4-flash",
           response_format: { type: "json_object" },
-          max_tokens: 4000,
+          max_tokens: 3000,
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: userMessage(name) }
