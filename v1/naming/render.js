@@ -56,8 +56,8 @@
           <div class="rs-char-src"><div class="q">${esc(a.q)}</div><div class="from">${esc(a.from)}</div></div>
         </div>
         <div class="rs-char-mean">
-          <div class="col"><div class="k">本义</div><div class="v1">${esc(a.benyi)}</div><div class="v2">${esc(a.benyiSub)}</div></div>
-          <div class="col"><div class="k">引申</div><div class="v1">${esc(a.yinshen)}</div><div class="v2">${esc(a.yinshenSub)}</div></div>
+          <div class="col"><div class="k">本义</div><div class="v1">${esc(a.benyi)}</div></div>
+          <div class="col"><div class="k">引申</div><div class="v1">${esc(a.yinshen)}</div></div>
         </div>
         ${corners}
       </div>`).join("");
