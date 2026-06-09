@@ -22,20 +22,19 @@
     try { localStorage.setItem("naming.cache." + name, JSON.stringify(data)); } catch (_) {}
   }
 
-  /* 姓名分类：
+  /* 姓名分类（前端只拦"明显垃圾"，是不是真名交后端 DeepSeek 判）：
      "preset"  命中 5 个预设
-     "real"    疑似真实姓名（2-4 汉字 / 含空格音译串）→ Worker 生成
-     "invalid" 纯数字/乱码/单字/空 → 拦截 */
+     "real"    其余一律放行给 Worker（含长译名、间隔号、生僻字、少数民族名）
+     "invalid" 仅拦：空 / 单字 / 纯数字 / 纯标点 / 纯英文乱码无空格 */
   function classify(raw) {
     var s = (raw || "").trim();
     if (!s) return "invalid";
     if (PRESET.indexOf(s) >= 0) return "preset";
-    // 含空格的拉丁音译串（如 "Elon Musk"）
-    if (/^[A-Za-z][A-Za-z\s.]{2,}$/.test(s) && /\s/.test(s)) return "real";
-    // 纯汉字 2-4 字
-    var han = s.replace(/\s/g, "");
-    if (/^[一-龥]{2,4}$/.test(han)) return "real";
-    return "invalid";
+    var core = s.replace(/[\s·•・.]/g, ""); // 去空格与各种间隔号后看实体长度
+    if (core.length < 2) return "invalid";          // 空或单字
+    if (/^\d+$/.test(core)) return "invalid";        // 纯数字
+    if (/^[^一-鿿A-Za-z]+$/.test(core)) return "invalid"; // 纯标点/符号，无任何汉字或字母
+    return "real"; // 其余放行，后端判真假
   }
 
   // 统一取数：返回 {status:"ok",data} / {status:"blocked"} / {status:"error"} / {status:"invalid"}
