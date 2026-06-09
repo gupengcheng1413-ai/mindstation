@@ -130,13 +130,11 @@ img{user-select:none}
 /* ============================================================
    4. loading 正在解读
    ============================================================ */
-.ld-row{position:absolute;left:50%;top:50%;transform:translate(calc(-50% + 180px),-50%);display:flex;align-items:center;gap:48px}
-.ld-egg{width:107px;height:124px;flex:none;animation:eggBob 1.4s ease-in-out infinite alternate}
+.ld-egg{position:absolute;left:578px;top:90px;width:107px;height:124px;animation:eggBob 1.4s ease-in-out infinite alternate}
 @keyframes eggBob{0%{transform:translateY(0)}100%{transform:translateY(-9px)}}
-.ld-text{display:flex;flex-direction:column;gap:14px}
-.ld-title{font-size:36px;font-weight:500;color:#000}
-.ld-sub{font-size:30px;color:var(--ink-mute);letter-spacing:.5px}
-.ld-bar{position:absolute;left:50%;top:302px;transform:translateX(-50%);width:546px;height:20px;border-radius:12px;background:rgba(195,195,195,.56);overflow:hidden}
+.ld-title{position:absolute;left:699px;top:116px;font-size:36px;font-weight:500;color:#000}
+.ld-sub{position:absolute;left:699px;top:164px;font-size:30px;color:var(--ink-mute);letter-spacing:.5px}
+.ld-bar{position:absolute;left:517px;top:241px;width:546px;height:20px;border-radius:12px;background:rgba(195,195,195,.56);overflow:hidden}
 .ld-bar-fill{display:block;height:100%;width:0;border-radius:12px;background:var(--green);transition:width .25s linear}
 
 /* ============================================================
