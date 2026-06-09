@@ -11,8 +11,8 @@
   /* 预设名（命中即出对应详情页） */
   var PRESET = ["雷军", "刘庆升", "吴玉胜", "乔布斯", "埃隆马斯克"];
 
-  // 已部署的 Cloudflare Worker 地址（见 worker/README.md）
-  var WORKER_URL = "https://naming-worker.gupengcheng9577.workers.dev/";
+  // 已部署的后端地址（阿里云函数计算 FC，国内直连；见 worker-fc/index.js）
+  var WORKER_URL = "https://t-mvp-liefcrkzog.cn-hangzhou.fcapp.run/";
 
   function cacheGet(name) {
     try { var v = localStorage.getItem("naming.cache." + name); return v ? JSON.parse(v) : null; }
