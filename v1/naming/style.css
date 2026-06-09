@@ -130,7 +130,7 @@ img{user-select:none}
 /* ============================================================
    4. loading 正在解读
    ============================================================ */
-.ld-row{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:48px}
+.ld-row{position:absolute;left:50%;top:50%;transform:translate(calc(-50% + 180px),-50%);display:flex;align-items:center;gap:48px}
 .ld-egg{width:107px;height:124px;flex:none;animation:eggBob 1.4s ease-in-out infinite alternate}
 @keyframes eggBob{0%{transform:translateY(0)}100%{transform:translateY(-9px)}}
 .ld-text{display:flex;flex-direction:column;gap:14px}
