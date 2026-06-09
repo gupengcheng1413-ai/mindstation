@@ -136,7 +136,7 @@ img{user-select:none}
 .ld-text{display:flex;flex-direction:column;gap:14px}
 .ld-title{font-size:36px;font-weight:500;color:#000}
 .ld-sub{font-size:30px;color:var(--ink-mute);letter-spacing:.5px}
-.ld-bar{width:546px;height:20px;border-radius:12px;background:rgba(195,195,195,.56);overflow:hidden;margin-top:6px}
+.ld-bar{position:absolute;left:50%;top:302px;transform:translateX(-50%);width:546px;height:20px;border-radius:12px;background:rgba(195,195,195,.56);overflow:hidden}
 .ld-bar-fill{display:block;height:100%;width:0;border-radius:12px;background:var(--green);transition:width .25s linear}
 
 /* ============================================================
