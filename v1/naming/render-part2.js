@@ -52,7 +52,7 @@
     }else{
       out.push(M.mHeroCn(d), M.mPoem(d), M.mAnalysis(d), M.mBlessing(d),
         M.mSurnameRhythm(d), M.mPeople(d, "同姓名人"),
-        M.mSameName(d), M.mFamous(d), M.mEnglish(d), M.mFact(d));
+        d.famous ? M.mFamous(d) : M.mSameName(d), M.mEnglish(d), M.mFact(d));
     }
     const bg = `<div class="rs-bg" aria-hidden="true"><img class="bg-whole" src="assets/bg-top.png" alt=""></div>`;
     const head = `<div class="rs-head">

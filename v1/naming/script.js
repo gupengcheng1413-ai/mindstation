@@ -101,18 +101,18 @@
   }
 
   // ---------- loading 真实进度 + 文案轮播 + 三状态分流 ----------
-  const LOAD_TIPS = ["正在拆解字义……", "检索古今典故……", "推敲声律节奏……", "落笔成文……"];
+  const LOAD_TIPS = ["拆解字义中……", "检索古今典故……", "推敲声律节奏……", "落笔成文……"];
   let loadT, tipT;
   async function runLoading(name){
     setScene("loading");
-    const fill = $("#loadFill"), sub = $(".scene-loading .ld-sub");
+    const fill = $("#loadFill"), title = $("#loadTitle");
     if(fill) fill.style.width = "0%";
-    if(sub) sub.textContent = LOAD_TIPS[0];
+    if(title) title.textContent = LOAD_TIPS[0];
     // 假进度：缓慢爬到 85% 停住，等真实返回再冲满
     let p = 0, ti = 0;
     clearInterval(loadT); clearInterval(tipT);
     loadT = setInterval(() => { p = Math.min(p + Math.random()*6 + 2, 85); if(fill) fill.style.width = p + "%"; }, 240);
-    tipT  = setInterval(() => { ti = (ti+1) % LOAD_TIPS.length; if(sub) sub.textContent = LOAD_TIPS[ti]; }, 1600);
+    tipT  = setInterval(() => { ti = (ti+1) % LOAD_TIPS.length; if(title) title.textContent = LOAD_TIPS[ti]; }, 1600);
 
     const res = await DATA.fetchName(name);
     clearInterval(loadT); clearInterval(tipT);
