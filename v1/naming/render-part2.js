@@ -81,7 +81,7 @@
       const act = a.dataset.act;
       if(act === "scan")      NM.setScene("scan");
       else if(act === "keyboard") NM.gotoConfirm(true);
-      else if(act === "retry")    NM.gotoConfirm(true);   // blocked 换一个
+      else if(act === "retry")    NM.backToHome();        // blocked 换一个 → 回主页未选择态
       else if(act === "again")    NM.setScene("input");   // result 再测一个
     });
 
