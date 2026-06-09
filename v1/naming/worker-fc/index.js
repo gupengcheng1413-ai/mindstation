@@ -126,7 +126,7 @@ const server = http.createServer(async (req, res) => {
         Authorization: `Bearer ${process.env.DEEPSEEK_KEY}`
       },
       body: JSON.stringify({
-        model: "deepseek-v4-pro",
+        model: "deepseek-v4-flash",
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
