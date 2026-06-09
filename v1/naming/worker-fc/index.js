@@ -119,38 +119,48 @@ const server = http.createServer(async (req, res) => {
     if (!name || name.length < 2) return send({ status: "error", message: "姓名无效" });
     if (hitBlocklist(name)) return send({ status: "blocked", reason: "内容不当" });
 
-    console.log("[diag] before fetch deepseek, name=", name, "keyLen=", (process.env.DEEPSEEK_KEY || "").length);
-    const t0 = Date.now();
-    const ctrl = new AbortController();
-    const killer = setTimeout(() => ctrl.abort(), 30000); // 30s 主动中断，防挂死到平台60s
-    let r;
-    try {
-      r = await fetch("https://api.deepseek.com/chat/completions", {
-        method: "POST",
-        signal: ctrl.signal,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.DEEPSEEK_KEY}`
-        },
-        body: JSON.stringify({
-          model: "deepseek-v4-flash",
-          response_format: { type: "json_object" },
-          max_tokens: 3000,
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: userMessage(name) }
-          ]
-        })
-      });
-    } finally {
-      clearTimeout(killer);
+    // Flash 偶发输出漏转义的非法 JSON（同名 ok/error 随机），解析失败自动重试一次
+    async function callOnce() {
+      const ctrl = new AbortController();
+      const killer = setTimeout(() => ctrl.abort(), 28000);
+      try {
+        const r = await fetch("https://api.deepseek.com/chat/completions", {
+          method: "POST",
+          signal: ctrl.signal,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.DEEPSEEK_KEY}`
+          },
+          body: JSON.stringify({
+            model: "deepseek-v4-flash",
+            response_format: { type: "json_object" },
+            max_tokens: 3000,
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              { role: "user", content: userMessage(name) }
+            ]
+          })
+        });
+        if (!r.ok) throw new Error("upstream " + r.status);
+        const out = await r.json();
+        const content = out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content;
+        if (!content) throw new Error("empty content");
+        return JSON.parse(content); // 漏转义时在此抛 SyntaxError
+      } finally {
+        clearTimeout(killer);
+      }
     }
-    console.log("[diag] fetch returned in", Date.now() - t0, "ms, ok=", r.ok, "status=", r.status);
-    if (!r.ok) return send({ status: "error", message: "上游错误" });
-    const out = await r.json();
-    const content = out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content;
-    if (!content) return send({ status: "error", message: "上游返回异常" });
-    const data = JSON.parse(content);
+
+    let data;
+    const t0 = Date.now();
+    console.log("[diag] before fetch deepseek, name=", name, "keyLen=", (process.env.DEEPSEEK_KEY || "").length);
+    try {
+      data = await callOnce();
+    } catch (e1) {
+      console.warn("[diag] attempt1 failed:", e1 && e1.name, e1 && e1.message, "— retrying");
+      data = await callOnce(); // 重试一次；再失败由外层 catch 兜底
+    }
+    console.log("[diag] generated in", Date.now() - t0, "ms");
     if (data.blocked) return send({ status: "blocked", reason: "无法解析为人名" });
     return send({ status: "ok", data });
   } catch (e) {
