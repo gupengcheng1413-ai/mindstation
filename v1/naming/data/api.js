@@ -50,7 +50,7 @@
     if (cached) return { status: "ok", data: cached };
 
     var ctrl = new AbortController();
-    var timer = setTimeout(function () { ctrl.abort(); }, 30000);
+    var timer = setTimeout(function () { ctrl.abort(); }, 45000);
     try {
       var resp = await fetch(WORKER_URL + "?name=" + encodeURIComponent(s), { signal: ctrl.signal });
       clearTimeout(timer);

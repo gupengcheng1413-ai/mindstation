@@ -122,7 +122,7 @@ const server = http.createServer(async (req, res) => {
     // Flash 偶发输出漏转义的非法 JSON（同名 ok/error 随机），解析失败自动重试一次
     async function callOnce() {
       const ctrl = new AbortController();
-      const killer = setTimeout(() => ctrl.abort(), 28000);
+      const killer = setTimeout(() => ctrl.abort(), 45000);
       try {
         const r = await fetch("https://api.deepseek.com/chat/completions", {
           method: "POST",
