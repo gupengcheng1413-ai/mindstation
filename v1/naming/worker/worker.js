@@ -30,7 +30,7 @@ export default {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${env.DEEPSEEK_KEY}` },
         body: JSON.stringify({
-          model: "deepseek-chat",
+          model: "deepseek-v4-pro",
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
