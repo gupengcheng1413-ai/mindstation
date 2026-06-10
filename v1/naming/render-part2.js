@@ -268,8 +268,9 @@
   window.__NM_runTwoStage = runTwoStage;
 
   // 新四段式流程：hero → core → culture → extra，逐段渲染
+  // onHeroReady: hero 渲染完成后的回调（用于切换到 result 场景）
   // 返回 {status}；调用方据此决定 loading 页后续（blocked/error 分流）
-  async function runFourStage(name){
+  async function runFourStage(name, onHeroReady){
     let hero;
     try {
       hero = await window.NAMING_DATA.fetchHero(name);
@@ -287,11 +288,13 @@
       // 预设/缓存：完整页一次到位
       if(hero.full){
         renderResult(hero.data, name);
+        if(onHeroReady) onHeroReady(); // 通知主流程切换场景
         return { status: "ok" };
       }
 
       // 渲染首屏 + 占位符
       renderHero(hero.data, name);
+      if(onHeroReady) onHeroReady(); // 首屏渲染完成，立即通知主流程切换到 result 场景
       let data = hero.data;
 
       // 第2段：core detail（带重试）

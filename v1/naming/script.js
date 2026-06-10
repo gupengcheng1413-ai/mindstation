@@ -115,17 +115,31 @@
     loadT = setInterval(() => { p = Math.min(p + Math.random()*6 + 2, 85); if(fill) fill.style.width = p + "%"; }, 240);
     tipT  = setInterval(() => { ti = (ti+1) % LOAD_TIPS.length; if(title) title.textContent = LOAD_TIPS[ti]; }, 1600);
 
-    const res = await window.__NM_runFourStage(name);
-    clearInterval(loadT); clearInterval(tipT);
+    // 首屏渲染完成后的回调：立即切换到 result 场景
+    const onHeroReady = () => {
+      clearInterval(loadT); clearInterval(tipT);
+      if(fill) fill.style.width = "100%";
+      setTimeout(() => {
+        setScene("result");
+        const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
+      }, 300);
+    };
 
-    if(res.status === "blocked"){ setScene("blocked"); return; }
-    if(res.status !== "ok"){ setScene("input"); toast("生成失败，请重试"); return; }
+    const res = await window.__NM_runFourStage(name, onHeroReady);
 
-    if(fill) fill.style.width = "100%";
-    setTimeout(() => {
-      setScene("result");
-      const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
-    }, 300);
+    // 如果首屏就失败（blocked/error），处理错误
+    if(res.status === "blocked"){
+      clearInterval(loadT); clearInterval(tipT);
+      setScene("blocked");
+      return;
+    }
+    if(res.status !== "ok"){
+      clearInterval(loadT); clearInterval(tipT);
+      setScene("input");
+      toast("生成失败，请重试");
+      return;
+    }
+  }
   }
 
   // ============================================================
