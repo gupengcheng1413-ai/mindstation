@@ -37,24 +37,15 @@
     return "real"; // 其余放行，后端判真假
   }
 
-  // 统一取数：返回 {status:"ok",data} / {status:"blocked"} / {status:"error"} / {status:"invalid"}
-  // preset 走本地秒出；其余先查缓存，未命中调 Worker；15s 超时。
-  async function fetchName(name) {
-    var s = (name || "").trim();
-    var kind = classify(s);
-    if (kind === "invalid") return { status: "invalid" };
-    if (kind === "preset")  return { status: "ok", data: NAMES[s] };
-
-    var cached = cacheGet(s);
-    if (cached) return { status: "ok", data: cached };
-
+  // 单段取数：part="core"|"extra"。返回 {status:"ok",data}/{status:"blocked"}/{status:"error"}
+  async function callPart(s, part) {
     var ctrl = new AbortController();
     var timer = setTimeout(function () { ctrl.abort(); }, 45000);
     try {
-      var resp = await fetch(WORKER_URL + "?name=" + encodeURIComponent(s), { signal: ctrl.signal });
+      var resp = await fetch(WORKER_URL + "?name=" + encodeURIComponent(s) + "&part=" + part, { signal: ctrl.signal });
       clearTimeout(timer);
       var out = await resp.json();
-      if (out.status === "ok" && out.data) { cacheSet(s, out.data); return { status: "ok", data: out.data }; }
+      if (out.status === "ok" && out.data) return { status: "ok", data: out.data };
       if (out.status === "blocked") return { status: "blocked" };
       return { status: "error" };
     } catch (e) {
@@ -63,5 +54,46 @@
     }
   }
 
-  root.NAMING_DATA = { PRESET: PRESET, classify: classify, fetchName: fetchName };
+  // 第一段：核心模块（含判定）。preset/完整缓存命中则直接返回 {full:true} 标记，调用方跳过第二段。
+  // 返回 {status, data, full?}：full=true 表示 data 已是完整页（无需再取 extra）。
+  async function fetchCore(name) {
+    var s = (name || "").trim();
+    var kind = classify(s);
+    if (kind === "invalid") return { status: "invalid" };
+    if (kind === "preset")  return { status: "ok", data: NAMES[s], full: true };
+
+    var cached = cacheGet(s);
+    if (cached) return { status: "ok", data: cached, full: true };
+
+    var r = await callPart(s, "core");
+    return { status: r.status, data: r.data, full: false };
+  }
+
+  // 第二段：外围模块。成功则与 core 合并、写完整缓存，返回合并后的完整 data。
+  // 返回 {status:"ok",data} 或 {status:"error"}（外围失败不阻断，结果页保留核心）。
+  async function fetchExtra(name, coreData) {
+    var s = (name || "").trim();
+    var r = await callPart(s, "extra");
+    if (r.status === "ok" && r.data) {
+      // core 字段权威：合并时 core 覆盖 extra（防 extra 误吐核心字段）
+      var merged = Object.assign({}, r.data, coreData);
+      cacheSet(s, merged);
+      return { status: "ok", data: merged };
+    }
+    return { status: "error" };
+  }
+
+  // 兼容旧入口：完整单请求（preset/缓存优先），仅供不分段的调用点使用
+  async function fetchName(name) {
+    var s = (name || "").trim();
+    var kind = classify(s);
+    if (kind === "invalid") return { status: "invalid" };
+    if (kind === "preset")  return { status: "ok", data: NAMES[s] };
+    var cached = cacheGet(s);
+    if (cached) return { status: "ok", data: cached };
+    var r = await callPart(s, "core");
+    return r;
+  }
+
+  root.NAMING_DATA = { PRESET: PRESET, classify: classify, fetchName: fetchName, fetchCore: fetchCore, fetchExtra: fetchExtra };
 })(window);

@@ -43,17 +43,26 @@
     </div>`;
   }
 
-  // —— 组装（外层包 .rs-wrap 居中 1640 内容列） —— //
-  function renderResult(d, name){
-    const out = [];
+  // —— 核心模块 HTML（第一段，~12s 即可渲染） —— //
+  function coreHTML(d){
     if(d.template === "translit"){
-      out.push(mHeroTl(d), mEtymology(d), mPick(d), mCultureVariants(d),
-        M.mPeople(d, "同名星光"), M.mFamous(d), M.mFact(d));
-    }else{
-      out.push(M.mHeroCn(d), M.mPoem(d), M.mAnalysis(d), M.mBlessing(d),
-        M.mSurnameRhythm(d), M.mPeople(d, "同姓名人"),
-        d.famous ? M.mFamous(d) : M.mSameName(d), M.mEnglish(d), M.mFact(d));
+      return [mHeroTl(d), mEtymology(d), mPick(d)].join("");
     }
+    return [M.mHeroCn(d), M.mPoem(d), M.mAnalysis(d), M.mBlessing(d)].join("");
+  }
+
+  // —— 外围模块 HTML（第二段，异步补；d 须为合并后完整对象） —— //
+  function extraHTML(d){
+    if(d.template === "translit"){
+      return [mCultureVariants(d), M.mPeople(d, "同名星光"), M.mFamous(d), M.mFact(d)].join("");
+    }
+    return [M.mSurnameRhythm(d), M.mPeople(d, "同姓名人"),
+      d.famous ? M.mFamous(d) : M.mSameName(d), M.mEnglish(d), M.mFact(d)].join("");
+  }
+
+  const EXTRA_PLACEHOLDER = `<div class="rs-extra-loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="txt">更多内容生成中…</span></div>`;
+
+  function shell(inner){
     const bg = `<div class="rs-bg" aria-hidden="true"><img class="bg-whole" src="assets/bg-top.png" alt=""></div>`;
     const head = `<div class="rs-head">
       <button type="button" class="nm-back" data-go="input" aria-label="返回"><img src="assets/nm-back.png" alt=""></button>
@@ -61,9 +70,25 @@
       <button type="button" class="rs-chip rs-chip-hist" data-go="history">已测姓名</button>
       <button type="button" class="rs-chip rs-chip-again" data-act="again">再测一个</button>
     </div>`;
-    $("#resultScroll").innerHTML = bg + `<div class="rs-wrap">${head}${out.join("")}</div>`;
+    return bg + `<div class="rs-wrap">${head}${inner}</div>`;
+  }
+
+  // 完整渲染（预设/缓存命中：核心+外围一次到位，无占位）
+  function renderResult(d, name){
+    $("#resultScroll").innerHTML = shell(coreHTML(d) + `<div id="rsExtra">${extraHTML(d)}</div>`);
+  }
+  // 只渲核心 + 外围占位（两段式第一段）
+  function renderCore(d, name){
+    $("#resultScroll").innerHTML = shell(coreHTML(d) + `<div id="rsExtra">${EXTRA_PLACEHOLDER}</div>`);
+  }
+  // 外围到达后填充（第二段；d 为合并后完整对象）
+  function fillExtra(d){
+    const box = $("#rsExtra");
+    if(box) box.innerHTML = extraHTML(d);
   }
   window.__NM_render = renderResult;
+  window.__NM_renderCore = renderCore;
+  window.__NM_fillExtra = fillExtra;
 
   // ============================================================
   //  事件绑定
@@ -123,9 +148,50 @@
     });
   }
 
-  // 从 history 点名字 → loading → result（消费 fetchName 四状态：ok→result / blocked→blocked / 其余→input+toast）
+  // 从 history 点名字 → loading → result（两段式：核心先出，外围异步补）
   const HS_TIPS = ["正在拆解字义……", "检索古今典故……", "推敲声律节奏……", "落笔成文……"];
   let hsLoadT, hsTipT;
+
+  // 两段式核心流程，主入口与历史入口共用。
+  // showResult()：核心就绪、即将切到 result 时由调用方收尾（冲满进度条等）。
+  // 返回 {status}；调用方据此决定 loading 页后续（blocked/error 分流）。
+  async function runTwoStage(name){
+    let core;
+    try {
+      core = await window.NAMING_DATA.fetchCore(name);
+    } catch(err){
+      console.error("[two-stage] fetchCore 异常:", err);
+      return { status: "error" };
+    }
+    if(core.status === "invalid") return { status: "error" };
+    if(core.status === "blocked") return { status: "blocked" };
+    if(core.status !== "ok") return { status: "error" };
+
+    try {
+      NM.pushHistory(name);
+      if(core.full){
+        // 预设/缓存：完整页一次到位
+        renderResult(core.data, name);
+      }else{
+        // 核心页 + 外围占位，并发起第二段
+        renderCore(core.data, name);
+        window.NAMING_DATA.fetchExtra(name, core.data).then(ex => {
+          if(ex.status === "ok") fillExtra(ex.data);
+          else { const box = $("#rsExtra"); if(box) box.innerHTML = ""; } // 外围失败：移除占位，保留核心页
+        }).catch(err => {
+          console.error("[two-stage] fetchExtra 异常:", err);
+          const box = $("#rsExtra"); if(box) box.innerHTML = "";
+        });
+      }
+    } catch(err){
+      // 渲染抛错绝不能静默卡在 loading：明确返回 error，让调用方回输入页 + toast
+      console.error("[two-stage] 渲染异常:", err);
+      return { status: "error" };
+    }
+    return { status: "ok" };
+  }
+  window.__NM_runTwoStage = runTwoStage;
+
   async function runFromHistory(name){
     NM.setScene("loading");
     const fill = $("#loadFill"), sub = $(".scene-loading .ld-sub");
@@ -136,7 +202,7 @@
     hsLoadT = setInterval(() => { p = Math.min(p + Math.random()*6 + 2, 85); if(fill) fill.style.width = p + "%"; }, 240);
     hsTipT  = setInterval(() => { ti = (ti+1) % HS_TIPS.length; if(sub) sub.textContent = HS_TIPS[ti]; }, 1600);
 
-    const res = await window.NAMING_DATA.fetchName(name);
+    const res = await runTwoStage(name);
     clearInterval(hsLoadT); clearInterval(hsTipT);
 
     if(res.status === "blocked"){ NM.setScene("blocked"); return; }
@@ -144,7 +210,6 @@
 
     if(fill) fill.style.width = "100%";
     setTimeout(() => {
-      NM.pushHistory(name); renderResult(res.data, name);
       NM.setScene("result"); const sc = $("#resultScroll"); if(sc) sc.scrollTop = 0;
     }, 300);
   }

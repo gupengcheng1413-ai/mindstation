@@ -395,4 +395,13 @@ img{user-select:none}
 .rs-fact .t{font-size:36px;color:var(--ink);line-height:46px;letter-spacing:.5px}
 .rs-fallback-note{margin:18px 0 0;text-align:center;font-size:26px;color:var(--ink-mute)}
 
+/* 外围模块异步加载占位（两段式：核心先出，外围补） */
+#rsExtra{min-height:1px}
+.rs-extra-loading{display:flex;align-items:center;justify-content:center;gap:12px;padding:64px 0 48px}
+.rs-extra-loading .dot{width:12px;height:12px;border-radius:50%;background:var(--gold,#c89b5a);opacity:.4;animation:rsExtraDot 1.2s ease-in-out infinite}
+.rs-extra-loading .dot:nth-child(2){animation-delay:.2s}
+.rs-extra-loading .dot:nth-child(3){animation-delay:.4s}
+.rs-extra-loading .txt{margin-left:6px;font-size:28px;color:var(--ink-mute)}
+@keyframes rsExtraDot{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
