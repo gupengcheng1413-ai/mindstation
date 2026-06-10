@@ -266,7 +266,7 @@ img{user-select:none}
   justify-content:center;
   gap:2px;
   padding:16px 0;
-  writing-mode:vertical-rl;
+  writing-mode:vertical-lr;
   text-orientation:upright;
 }
 .rs-tone .cap span{font-size:24px;color:#fff;font-weight:700;line-height:28px}
