@@ -34,18 +34,19 @@
   window.visualViewport?.addEventListener("resize", fitDevice);
 
   // ---------- 场景切换 ----------
+  let sceneT;
   function setScene(name){
     if(state.scene === name) return;
-    const cur = $(`.scene[data-scene="${state.scene}"]`);
     const nxt = $(`.scene[data-scene="${name}"]`);
     if(!nxt) return;
+    const cur = $(`.scene[data-scene="${state.scene}"]`);
+    clearTimeout(sceneT);                 // 取消上一次未完成的过渡，杜绝孤儿定时器竞态
     state.prevScene = state.scene;
     state.scene = name;
-    if(cur && !cur.hidden){
-      cur.classList.add("is-leaving");
-      setTimeout(() => { cur.hidden = true; cur.classList.remove("is-leaving"); }, 180);
-    }
-    setTimeout(() => {
+    if(cur && cur !== nxt && !cur.hidden) cur.classList.add("is-leaving");
+    sceneT = setTimeout(() => {
+      // 强制隐藏除目标外的所有场景，防止滞后定时器残留旧场景（如快速 loading→blocked）
+      $$(".scene").forEach(s => { if(s !== nxt){ s.hidden = true; s.classList.remove("is-leaving","is-entering"); } });
       nxt.hidden = false;
       nxt.classList.remove("is-entering"); void nxt.offsetWidth;
       nxt.classList.add("is-entering");
