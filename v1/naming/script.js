@@ -115,7 +115,7 @@
     loadT = setInterval(() => { p = Math.min(p + Math.random()*6 + 2, 85); if(fill) fill.style.width = p + "%"; }, 240);
     tipT  = setInterval(() => { ti = (ti+1) % LOAD_TIPS.length; if(title) title.textContent = LOAD_TIPS[ti]; }, 1600);
 
-    const res = await window.__NM_runTwoStage(name);
+    const res = await window.__NM_runFourStage(name);
     clearInterval(loadT); clearInterval(tipT);
 
     if(res.status === "blocked"){ setScene("blocked"); return; }

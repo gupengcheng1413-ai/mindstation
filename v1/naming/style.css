@@ -404,4 +404,13 @@ img{user-select:none}
 .rs-extra-loading .txt{margin-left:6px;font-size:28px;color:var(--ink-mute)}
 @keyframes rsExtraDot{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
 
+/* 新四段式占位符（复用 rs-extra-loading 样式） */
+#rsCoreDetail,#rsCulture{min-height:1px}
+.rs-loading{display:flex;align-items:center;justify-content:center;gap:12px;padding:64px 0 48px}
+.rs-loading .dot{width:12px;height:12px;border-radius:50%;background:var(--gold,#c89b5a);opacity:.4;animation:rsExtraDot 1.2s ease-in-out infinite}
+.rs-loading .dot:nth-child(2){animation-delay:.2s}
+.rs-loading .dot:nth-child(3){animation-delay:.4s}
+.rs-loading .txt{margin-left:6px;font-size:28px;color:var(--ink-mute)}
+
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

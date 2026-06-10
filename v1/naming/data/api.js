@@ -37,7 +37,7 @@
     return "real"; // 其余放行，后端判真假
   }
 
-  // 单段取数：part="core"|"extra"。返回 {status:"ok",data}/{status:"blocked"}/{status:"error"}
+  // 单段取数：part="hero"|"core"|"culture"|"extra"。返回 {status:"ok",data}/{status:"blocked"}/{status:"error"}
   async function callPart(s, part) {
     var ctrl = new AbortController();
     var timer = setTimeout(function () { ctrl.abort(); }, 45000);
@@ -54,7 +54,55 @@
     }
   }
 
-  // 第一段：核心模块（含判定）。preset/完整缓存命中则直接返回 {full:true} 标记，调用方跳过第二段。
+  // 新四段式 API：hero（首屏，含判定）
+  async function fetchHero(name) {
+    var s = (name || "").trim();
+    var kind = classify(s);
+    if (kind === "invalid") return { status: "invalid" };
+    if (kind === "preset")  return { status: "ok", data: NAMES[s], full: true }; // preset 直接返回完整数据
+
+    var cached = cacheGet(s);
+    if (cached) return { status: "ok", data: cached, full: true }; // 缓存命中，返回完整数据
+
+    var r = await callPart(s, "hero");
+    return { status: r.status, data: r.data, full: false };
+  }
+
+  // 新四段式 API：core（核心详情）
+  async function fetchCoreDetail(name, heroData) {
+    var s = (name || "").trim();
+    var r = await callPart(s, "core");
+    if (r.status === "ok" && r.data) {
+      var merged = Object.assign({}, heroData, r.data);
+      return { status: "ok", data: merged };
+    }
+    return { status: "error" };
+  }
+
+  // 新四段式 API：culture（姓氏文化）
+  async function fetchCulture(name, prevData) {
+    var s = (name || "").trim();
+    var r = await callPart(s, "culture");
+    if (r.status === "ok" && r.data) {
+      var merged = Object.assign({}, prevData, r.data);
+      return { status: "ok", data: merged };
+    }
+    return { status: "error" };
+  }
+
+  // 新四段式 API：extra（外围补充）
+  async function fetchExtraFinal(name, prevData) {
+    var s = (name || "").trim();
+    var r = await callPart(s, "extra");
+    if (r.status === "ok" && r.data) {
+      var merged = Object.assign({}, prevData, r.data);
+      cacheSet(s, merged); // 只有在全部完成后才写缓存
+      return { status: "ok", data: merged };
+    }
+    return { status: "error" };
+  }
+
+  // 旧两段式 API：第一段核心模块（含判定）。preset/完整缓存命中则直接返回 {full:true} 标记，调用方跳过第二段。
   // 返回 {status, data, full?}：full=true 表示 data 已是完整页（无需再取 extra）。
   async function fetchCore(name) {
     var s = (name || "").trim();
@@ -69,7 +117,7 @@
     return { status: r.status, data: r.data, full: false };
   }
 
-  // 第二段：外围模块。成功则与 core 合并、写完整缓存，返回合并后的完整 data。
+  // 旧两段式 API：第二段外围模块。成功则与 core 合并、写完整缓存，返回合并后的完整 data。
   // 返回 {status:"ok",data} 或 {status:"error"}（外围失败不阻断，结果页保留核心）。
   async function fetchExtra(name, coreData) {
     var s = (name || "").trim();
@@ -95,5 +143,16 @@
     return r;
   }
 
-  root.NAMING_DATA = { PRESET: PRESET, classify: classify, fetchName: fetchName, fetchCore: fetchCore, fetchExtra: fetchExtra };
+  root.NAMING_DATA = {
+    PRESET: PRESET,
+    classify: classify,
+    fetchName: fetchName,
+    fetchCore: fetchCore,
+    fetchExtra: fetchExtra,
+    // 新四段式 API
+    fetchHero: fetchHero,
+    fetchCoreDetail: fetchCoreDetail,
+    fetchCulture: fetchCulture,
+    fetchExtraFinal: fetchExtraFinal
+  };
 })(window);
