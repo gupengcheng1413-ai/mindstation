@@ -258,7 +258,7 @@ img{user-select:none}
 /* 柱身：束腰胶囊形状（clip-path 套 Figma path，高度 +40% = 66×134）*/
 .rs-tone .cap{width:66px;height:134px;
   clip-path:path("M6.83403 10.8854 C9.12928 10.3879 11.1877 8.5118 12.4207 5.7561 L12.6451 5.2545 C14.1079 1.9853 16.6694 0.0000 19.4249 0.0000 H46.027 C48.4542 0.0000 50.7502 1.5427 52.2685 4.1939 L53.6888 6.6739 C54.9486 8.8735 56.7546 10.3271 58.7462 10.7444 L59.673 10.9386 C63.5904 11.7594 66.4889 16.4699 66.4889 22.0153 V114.1897 C66.4889 119.1425 64.0399 123.4356 60.5898 124.5310 C59.2636 124.9520 58.0824 126.0022 57.2464 127.5037 L56.1827 129.4142 C54.4773 132.4770 51.8584 134.2677 49.0845 134.2677 H15.9909 C13.156 134.2677 10.5534 132.0732 9.22792 128.5649 L9.12789 128.3002 C8.38004 126.3207 7.0523 124.8971 5.49247 124.4019 C2.28017 123.3820 0 119.3849 0 114.7734 V21.9661 C0 16.4422 2.93482 11.7306 6.83403 10.8854 Z");
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:16px 0}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:16px 0;writing-mode:vertical-rl;text-orientation:upright}
 .rs-tone .cap span{font-size:24px;color:#fff;font-weight:700;line-height:28px}
 /* 各柱连接线高度（沿用 Figma 实测的错落感）*/
 .rs-tone.t0 .stem{height:42px}.rs-tone.t1 .stem{height:60px}.rs-tone.t2 .stem{height:37px}.rs-tone.t3 .stem{height:37px}

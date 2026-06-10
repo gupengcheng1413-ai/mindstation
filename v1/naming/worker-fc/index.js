@@ -152,7 +152,7 @@ const server = http.createServer(async (req, res) => {
           body: JSON.stringify({
             model: "deepseek-v4-flash",
             response_format: { type: "json_object" },
-            max_tokens: 2200,
+            max_tokens: part === "extra" ? 2800 : 2200,
             messages: [
               { role: "system", content: systemPrompt },
               { role: "user", content: userMessage(name) }
@@ -161,6 +161,8 @@ const server = http.createServer(async (req, res) => {
         });
         if (!r.ok) throw new Error("upstream " + r.status);
         const out = await r.json();
+        const usage = out.usage || {};
+        console.log("[diag] tokens:", "in=", usage.prompt_tokens || "?", "out=", usage.completion_tokens || "?", "finish=", out.choices && out.choices[0] && out.choices[0].finish_reason);
         const content = out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content;
         if (!content) throw new Error("empty content");
         return JSON.parse(content);
@@ -172,15 +174,27 @@ const server = http.createServer(async (req, res) => {
     let data;
     const t0 = Date.now();
     console.log("[diag] fetch deepseek, name=", name, "part=", part || "full", "keyLen=", (process.env.DEEPSEEK_KEY || "").length);
-    try {
-      data = await callOnce();
-    } catch (e1) {
-      if (e1 && e1.name === "AbortError") {
-        console.warn("[diag] aborted by timeout, no retry");
-        return send({ status: "error", message: "生成超时" });
+
+    // core 失败必须 retry(整页依赖);extra 失败直接返回(前端已有核心页,外围丢失可接受)
+    if(part === "extra"){
+      try {
+        data = await callOnce();
+      } catch (e) {
+        console.warn("[diag] extra failed (no retry):", e && e.name, e && e.message);
+        if (e && e.name === "AbortError") return send({ status: "error", message: "生成超时" });
+        return send({ status: "error", message: "生成失败" });
       }
-      console.warn("[diag] attempt1 failed:", e1 && e1.name, e1 && e1.message, "— retrying");
-      data = await callOnce();
+    }else{
+      try {
+        data = await callOnce();
+      } catch (e1) {
+        if (e1 && e1.name === "AbortError") {
+          console.warn("[diag] aborted by timeout, no retry");
+          return send({ status: "error", message: "生成超时" });
+        }
+        console.warn("[diag] attempt1 failed:", e1 && e1.name, e1 && e1.message, "— retrying");
+        data = await callOnce();
+      }
     }
     console.log("[diag] generated in", Date.now() - t0, "ms part=", part || "full");
     if (data.blocked) return send({ status: "blocked", reason: "无法解析为人名" });
