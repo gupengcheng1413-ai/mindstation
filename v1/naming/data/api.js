@@ -14,12 +14,28 @@
   // 已部署的后端地址（阿里云函数计算 FC，国内直连；见 worker-fc/index.js）
   var WORKER_URL = "https://t-mvp-liefcrkzog.cn-hangzhou.fcapp.run/";
 
+  // 缓存版本号：修改样式或数据结构后递增，自动清除旧缓存
+  var CACHE_VERSION = 2;
+
   function cacheGet(name) {
-    try { var v = localStorage.getItem("naming.cache." + name); return v ? JSON.parse(v) : null; }
-    catch (_) { return null; }
+    try {
+      var v = localStorage.getItem("naming.cache." + name);
+      if (!v) return null;
+      var cached = JSON.parse(v);
+      // 检查版本号，旧版本缓存自动失效
+      if (!cached._v || cached._v < CACHE_VERSION) {
+        localStorage.removeItem("naming.cache." + name);
+        return null;
+      }
+      return cached;
+    } catch (_) { return null; }
   }
   function cacheSet(name, data) {
-    try { localStorage.setItem("naming.cache." + name, JSON.stringify(data)); } catch (_) {}
+    try {
+      // 写入时打上版本号
+      data._v = CACHE_VERSION;
+      localStorage.setItem("naming.cache." + name, JSON.stringify(data));
+    } catch (_) {}
   }
 
   /* 姓名分类（前端只拦"明显垃圾"，是不是真名交后端 DeepSeek 判）：
