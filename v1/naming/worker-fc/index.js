@@ -32,6 +32,7 @@ const PROMPT_CORE = SHARED + `
 {
  "template":"cn",
  "chars":[{"ch":"雷","py":"léi"},{"ch":"军","py":"jūn"}],
+ // chars 必须包含姓名的每一个汉字（包括间隔号之后的所有字），按顺序逐字列出；长名字（4字及以上）也要完整输出全部字符
  "hero":{"big":"雷动千军 一往无前","desc":"声势浩大又自带统帅气场，名字念出来像擂鼓出征，干脆有力。","tones":[["有","声","势"],["统","帅","力"],["果","决"],["自","带","气","场"]]},
  // big=4到8字对仗主题句；desc=30~45字气质描写；tones=正好4组气质词，每组1~4字
  "poem":{"lines":["雷动九天惊四海","军临城下势如虹"]},
@@ -40,7 +41,7 @@ const PROMPT_CORE = SHARED + `
    {"seal":"雷","q":"春雷响，万物长","from":"《月令七十二候》","benyi":"雷电之声","yinshen":"声势壮大"},
    {"seal":"军","q":"兵者，国之大事","from":"《孙子兵法》","benyi":"军队、军营","yinshen":"纪律严明"}
  ],
- // 每字一条，与 chars 对应；q=古籍引文，from=真实出处，benyi=本义，yinshen=引申；各不超过10字。引文出处要多样：诗经/楚辞/论语/史记/唐诗宋词/成语典故等都可，不要每字都用《说文解字》。
+ // analysis 每字一条，与 chars 完全对应（chars 有几个字就给几条）。但遇到叠字（如"娜娜"）时，相同的字只需解析一次，重复字的 analysis 项直接复制第一次的内容即可。q=古籍引文，from=真实出处，benyi=本义，yinshen=引申；各不超过10字。引文出处要多样：诗经/楚辞/论语/史记/唐诗宋词/成语典故等都可，不要每字都用《说文解字》。
  "blessing":"长辈把「雷」的声势与「军」的纪律一同写进名字，盼你做个有担当、能扛事、令出如山的人，气场里带着定力。"
  // 50~75字，温厚的长辈口吻，扣住每个字的寓意
 }
@@ -152,7 +153,7 @@ const server = http.createServer(async (req, res) => {
           body: JSON.stringify({
             model: "deepseek-v4-flash",
             response_format: { type: "json_object" },
-            max_tokens: part === "extra" ? 2800 : 2200,
+            max_tokens: part === "extra" ? 2800 : 3500,
             messages: [
               { role: "system", content: systemPrompt },
               { role: "user", content: userMessage(name) }

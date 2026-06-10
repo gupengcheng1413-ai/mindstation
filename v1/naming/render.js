@@ -48,8 +48,15 @@
 
   // ===== 逐字解析（印章字固定 + 出处/释义自适应；flex 流式） =====
   function mAnalysis(d){
-    const cls = d.analysis.length >= 3 ? "c3" : "c2";
-    const cards = d.analysis.map(a => `
+    // 去重：叠字名只保留第一次出现的字（如"王娜娜"只显示"王"和"娜"）
+    const seen = new Set();
+    const unique = d.analysis.filter(a => {
+      if(seen.has(a.seal)) return false;
+      seen.add(a.seal);
+      return true;
+    });
+    const cls = unique.length >= 3 ? "c3" : "c2";
+    const cards = unique.map(a => `
       <div class="rs-char">
         <div class="rs-char-hd">
           <div class="rs-char-seal">${esc(a.seal)}</div>
